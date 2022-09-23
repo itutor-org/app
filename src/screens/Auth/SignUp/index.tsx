@@ -73,8 +73,8 @@ export function SignUp({ navigation, route }: Props) {
         color={theme.colors.dark_yellow}
         style={{
           position: 'absolute',
-          left: 10,
-          top: StatusBar.currentHeight + 5
+          left: 15,
+          top: StatusBar.currentHeight + 15
         }}
         onPress={() => navigation.navigate('SignIn')}
       />
