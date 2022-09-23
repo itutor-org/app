@@ -17,7 +17,8 @@ interface UserContextData {
   user: FirebaseAuthTypes.User | null;
   signIn: (email: string, password: string) => Promise<void>;
   logoff: () => Promise<void>;
-  recoverPassword?: (email: string) => Promise<void>;
+  recoverPassword: (email: string) => Promise<void>;
+  registerUser: (email: string, password: string) => Promise<void>;
 }
 
 const UserContext = createContext<UserContextData>({} as UserContextData);
@@ -74,6 +75,17 @@ export function UserProvider({ children }: UserProviderProps) {
       });
   }
 
+  async function registerUser(email: string, password: string) {
+    await auth()
+      .createUserWithEmailAndPassword(email, password)
+      .then(() => {
+        auth().signOut();
+      })
+      .catch((error) => {
+        throw error.message;
+      });
+  }
+
   return (
     <UserContext.Provider
       value={{
@@ -81,7 +93,8 @@ export function UserProvider({ children }: UserProviderProps) {
         user: user || null,
         signIn,
         logoff,
-        recoverPassword
+        recoverPassword,
+        registerUser
       }}>
       {children}
     </UserContext.Provider>
