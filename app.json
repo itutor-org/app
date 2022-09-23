@@ -1,0 +1,10 @@
+{
+  "expo": {
+    "name": "itutor-app",
+    "slug": "itutor-app",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
