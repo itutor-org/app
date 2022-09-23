@@ -1,21 +1,31 @@
-import { StatusBar } from "expo-status-bar";
-import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import React from 'react';
+import { StatusBar } from 'expo-status-bar';
+import {
+  useFonts,
+  Montserrat_400Regular,
+  Montserrat_500Medium,
+  Montserrat_700Bold
+} from '@expo-google-fonts/montserrat';
+
+import { Routes } from './src/routes';
+import { Loading } from './src/components/Loading';
+import { GlobalContext } from './src/contexts/GlobalContext';
 
 export default function App() {
+  const [fontsLoaded] = useFonts({
+    Montserrat_400Regular,
+    Montserrat_500Medium,
+    Montserrat_700Bold
+  });
+
   return (
-    <View style={styles.container}>
-      <Text>Hello</Text>
-      <StatusBar style="auto" />
-    </View>
+    <GlobalContext>
+      {fontsLoaded ? (
+        <Routes />
+      ) : (
+        <Loading isTransparent={false} size="large" />
+      )}
+      <StatusBar />
+    </GlobalContext>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
