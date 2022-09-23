@@ -25,6 +25,14 @@ export const theme = {
   font_size: {
     SM: 14,
     MD: 16,
-    LG: 24
+    LG: 24,
+    XL: 36
+  },
+
+  margins: {
+    SM: 8,
+    MD: 16,
+    LG: 24,
+    XL: 36
   }
 };
