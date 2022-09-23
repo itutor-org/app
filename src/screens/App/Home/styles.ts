@@ -2,7 +2,7 @@ import styled from 'styled-components/native';
 
 export const HomeContainer = styled.View`
   flex: 1;
-  background-color: ${({ theme }) => theme.colors.red_900};
+  background-color: ${({ theme }) => theme.colors.light_red};
   align-items: center;
   justify-content: center;
   font-family: ${({ theme }) => theme.font_family.bold};
