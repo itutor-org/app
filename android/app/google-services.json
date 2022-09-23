@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1020977752098",
+    "project_id": "itutor-app",
+    "storage_bucket": "itutor-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1020977752098:android:1cf9291b3c4b7efa79c27b",
+        "android_client_info": {
+          "package_name": "com.itutorapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1020977752098-l8o8rv077hi7rdppgt3ko5s7jo98l169.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.itutorapp",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "1020977752098-cnkeqnl1v3mi9gs75da9mogpll6bvjvd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC-MJRs228A6l1KfuDvdasZbiLm5aFdwtY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1020977752098-cnkeqnl1v3mi9gs75da9mogpll6bvjvd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
