@@ -5,7 +5,7 @@ import { AppStackParamList } from '../../../routes/app.routes';
 import {
   HomeContainer,
   GroupContainer,
-  ActionText,
+  Title,
   SearchInputWrapper,
   SearchInput,
   SearchWrapper,
@@ -80,7 +80,7 @@ export function Home({ navigation, route }: Props) {
         />
       </TopBar>
       <GroupContainer>
-        <ActionText>GRUPOS</ActionText>
+        <Title>GRUPOS</Title>
 
         <SearchWrapper>
           <SearchInputWrapper>
@@ -97,6 +97,7 @@ export function Home({ navigation, route }: Props) {
             name="add-circle-outline"
             size={30}
             color={theme.colors.white}
+            onPress={() => navigation.navigate('AddGroup')}
           />
         </SearchWrapper>
 

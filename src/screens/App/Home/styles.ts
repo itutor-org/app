@@ -19,7 +19,7 @@ export const GroupContainer = styled.View`
   height: 100%;
 `;
 
-export const ActionText = styled.Text`
+export const Title = styled.Text`
   font-size: ${({ theme }) => theme.font_size.LG}px;
   font-family: ${({ theme }) => theme.font_family.bold};
   color: ${({ theme }) => theme.colors.white};
