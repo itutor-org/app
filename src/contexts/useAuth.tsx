@@ -51,7 +51,7 @@ export function UserProvider({ children }: UserProviderProps) {
         await SecureStore.setItemAsync('user', JSON.stringify(info.user));
       })
       .catch((error) => {
-        throw error.message;
+        throw error.code;
       });
   }
 
