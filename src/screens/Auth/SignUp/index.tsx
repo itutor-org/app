@@ -24,6 +24,8 @@ type Props = NativeStackScreenProps<AuthStackParamList, 'SignUp'>;
 export function SignUp({ navigation, route }: Props) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [registration, setRegistration] = useState('');
+  const [name, setName] = useState('');
   const [hasMoreThanEightChar, setHasMoreThanEightChar] = useState(false);
   const [hasSpecialChar, setHasSpecialChar] = useState(false);
   const [hasUpperAndLowercaseChar, setHasUpperAndLowercaseChar] =
@@ -31,12 +33,19 @@ export function SignUp({ navigation, route }: Props) {
 
   const { registerUser } = useAuth();
 
-  async function handleSignUp(email: string, password: string) {
+  async function handleSignUp(
+    email: string,
+    password: string,
+    registration: string
+  ) {
     if (!hasMoreThanEightChar || !hasSpecialChar || !hasUpperAndLowercaseChar) {
       Alert.alert('Erro', 'As senha não atende aos requisitos mínimos');
       return;
+    } else if (!email.includes('@aluno.cesupa.br')) {
+      Alert.alert('Erro', 'Você precisa usar um email institucional');
+      return;
     } else {
-      await registerUser(email, password)
+      await registerUser(name, email, registration, password)
         .then(() => {
           Alert.alert('Sucesso', 'Usuário cadastrado com sucesso', [
             {
@@ -83,13 +92,28 @@ export function SignUp({ navigation, route }: Props) {
       <ActionText>Cadastro</ActionText>
       <InputWrapper>
         <MaterialIcons
+          name="person"
+          size={19}
+          color={'#8D8D99'}
+          style={{ marginRight: 7 }}
+        />
+        <Input
+          placeholder="John Doe"
+          onChangeText={(value) => {
+            setName(value);
+          }}
+        />
+      </InputWrapper>
+      <InputWrapper>
+        <MaterialIcons
           name="email"
           size={19}
           color={'#8D8D99'}
           style={{ marginRight: 7 }}
         />
         <Input
-          placeholder="E-mail"
+          placeholder="johndoe@mail.com"
+          keyboardType="email-address"
           onChangeText={(value) => {
             setEmail(value);
           }}
@@ -103,9 +127,24 @@ export function SignUp({ navigation, route }: Props) {
           style={{ marginRight: 7 }}
         />
         <Input
-          placeholder="Password"
+          placeholder="**********"
           onChangeText={(value) => {
             setPassword(value), handlePasswordVerification(value);
+          }}
+        />
+      </InputWrapper>
+      <InputWrapper>
+        <MaterialIcons
+          name="lock"
+          size={19}
+          color={'#8D8D99'}
+          style={{ marginRight: 7 }}
+        />
+        <Input
+          placeholder="19070002"
+          keyboardType="numeric"
+          onChangeText={(value) => {
+            setRegistration(value);
           }}
         />
       </InputWrapper>
@@ -122,7 +161,7 @@ export function SignUp({ navigation, route }: Props) {
         </HintText>
       </Hints>
 
-      <SubmitButton onPress={() => handleSignUp(email, password)}>
+      <SubmitButton onPress={() => handleSignUp(email, password, registration)}>
         <SubmitButtonText>Cadastrar</SubmitButtonText>
       </SubmitButton>
     </Container>
