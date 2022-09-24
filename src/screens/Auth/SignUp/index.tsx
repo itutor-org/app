@@ -35,9 +35,6 @@ export function SignUp({ navigation, route }: Props) {
     if (!hasMoreThanEightChar || !hasSpecialChar || !hasUpperAndLowercaseChar) {
       Alert.alert('Erro', 'As senha não atende aos requisitos mínimos');
       return;
-    } else if (!email.includes('@') && !email.includes('.')) {
-      Alert.alert('Erro', 'Email inválido');
-      return;
     } else {
       await registerUser(email, password)
         .then(() => {
