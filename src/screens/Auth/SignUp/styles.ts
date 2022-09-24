@@ -76,10 +76,10 @@ export const Hints = styled.View`
   margin: ${({ theme }) => theme.margins.MD}px 0;
 `;
 
-export const HintText = styled.Text`
+export const HintText = styled.Text<HintTextProps>`
   font-size: ${({ theme }) => theme.font_size.SM}px;
   font-family: ${({ theme }) => theme.font_family.regular};
-  color: ${(props: HintTextProps) =>
+  color: ${(props) =>
     props.isPresent
       ? props.theme.colors.medium_green
       : props.theme.colors.light_red};
