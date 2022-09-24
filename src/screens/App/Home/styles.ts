@@ -1,11 +1,22 @@
 import styled from 'styled-components/native';
 
+interface TopBarProps {
+  marginTop: number;
+}
+
 export const HomeContainer = styled.View`
-  flex: 1;
   background-color: ${({ theme }) => theme.colors.dark_blue};
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+`;
+
+export const GroupContainer = styled.View`
+  flex: 1;
   align-items: center;
   justify-content: flex-end;
-  font-family: ${({ theme }) => theme.font_family.bold};
+  height: 100%;
 `;
 
 export const ActionText = styled.Text`
@@ -47,16 +58,16 @@ export const SearchInput = styled.TextInput`
 
 export const GroupsWrapper = styled.View`
   width: 90%;
-  height: 60%;
-  background-color: #d8d8d8;
+  height: 75%;
+  background-color: #f1f1f1;
   border-top-right-radius: ${({ theme }) => theme.margins.MD}px;
   border-top-left-radius: ${({ theme }) => theme.margins.MD}px;
-  padding-bottom: ${({ theme }) => theme.margins.LG}px;
+  padding: ${({ theme }) => theme.margins.LG}px
+    ${({ theme }) => theme.margins.LG}px 0 ${({ theme }) => theme.margins.LG}px;
 `;
 
 export const GroupList = styled.FlatList`
   width: 100%;
-  padding: ${({ theme }) => theme.margins.LG}px;
 `;
 
 export const GroupCard = styled.View`
@@ -70,6 +81,7 @@ export const GroupCard = styled.View`
   justify-content: center;
   margin-bottom: ${({ theme }) => theme.margins.LG}px;
   padding: ${({ theme }) => theme.margins.MD}px;
+  border: 2px solid #d1d1d1;
 `;
 
 export const GroupCardSection = styled.View`
@@ -79,7 +91,10 @@ export const GroupCardSection = styled.View`
   justify-content: space-evenly;
   height: 100%;
   width: 50%;
-  border: 1px solid red;
+`;
+
+export const GroupCardRightSection = styled(GroupCardSection)`
+  align-items: flex-end;
 `;
 
 export const GroupNameText = styled.Text`
@@ -90,7 +105,7 @@ export const GroupNameText = styled.Text`
 
 export const GroupButton = styled.TouchableOpacity`
   width: 120px;
-  height: 40px;
+  height: 33px;
   background-color: ${({ theme }) => theme.colors.dark_yellow};
   border-radius: 6px;
   display: flex;
@@ -106,15 +121,43 @@ export const GroupButtonText = styled.Text`
   text-transform: uppercase;
 `;
 
-export const GroupCardRightSection = styled(GroupCardSection)`
-  align-items: flex-end;
-`;
-
-export const ActionButtonsWrapper = styled.View`
+export const GroupSectionWrapper = styled.View`
   display: flex;
   flex-direction: row;
-  width: 75%;
   align-items: center;
-  justify-content: space-evenly;
-  border: 1px solid red;
+  justify-content: flex-end;
+`;
+
+export const TopBar = styled.View<TopBarProps>`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 90%;
+  margin-top: ${({ marginTop }) => marginTop}px;
+`;
+
+export const TeacherInfo = styled.View`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+`;
+
+export const TeacherName = styled.Text`
+  font-size: ${({ theme }) => theme.font_size.MD}px;
+  font-family: ${({ theme }) => theme.font_family.bold};
+  color: ${({ theme }) => theme.colors.white};
+`;
+
+export const TeacherEmail = styled.Text`
+  font-size: ${({ theme }) => theme.font_size.SM}px;
+  font-family: ${({ theme }) => theme.font_family.regular};
+  color: ${({ theme }) => theme.colors.gray_200};
+`;
+
+export const GroupCountText = styled.Text`
+  font-size: ${({ theme }) => theme.font_size.MD}px;
+  font-family: ${({ theme }) => theme.font_family.regular};
+  color: ${({ theme }) => theme.colors.white};
 `;

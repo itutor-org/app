@@ -1,9 +1,10 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { StatusBar, Text, TouchableOpacity } from 'react-native';
+import { StatusBar, Text } from 'react-native';
 import { useAuth } from '../../../contexts/useAuth';
 import { AppStackParamList } from '../../../routes/app.routes';
 import {
   HomeContainer,
+  GroupContainer,
   ActionText,
   SearchInputWrapper,
   SearchInput,
@@ -16,15 +17,21 @@ import {
   GroupButton,
   GroupButtonText,
   GroupCardRightSection,
-  ActionButtonsWrapper
+  GroupSectionWrapper,
+  TopBar,
+  TeacherInfo,
+  TeacherName,
+  TeacherEmail
 } from './styles';
-import { MaterialIcons } from '@expo/vector-icons';
 import { theme } from '../../../styles/theme';
+import { FontAwesome5, MaterialIcons, Feather } from '@expo/vector-icons';
+import { useState } from 'react';
 
 type Props = NativeStackScreenProps<AppStackParamList, 'Home'>;
 
 export function Home({ navigation, route }: Props) {
   const { logoff } = useAuth();
+  const [totalUsers, setTotalUsers] = useState<number>(15);
 
   const groups = [
     {
@@ -49,61 +56,87 @@ export function Home({ navigation, route }: Props) {
 
   return (
     <HomeContainer>
-      <ActionText>GRUPOS</ActionText>
-
-      <SearchWrapper>
-        <SearchInputWrapper>
-          <SearchInput placeholder="Pesquisar" />
-          <MaterialIcons
-            name="search"
-            size={30}
-            color={theme.colors.gray_200}
-            style={{ marginLeft: 5 }}
-          />
-        </SearchInputWrapper>
-
+      <TopBar marginTop={StatusBar.currentHeight + 15}>
+        <TeacherInfo>
+          <TeacherName>Prof. Lucas</TeacherName>
+          <TeacherEmail>lucas@mail.com</TeacherEmail>
+        </TeacherInfo>
         <MaterialIcons
-          name="add-circle-outline"
+          name="logout"
           size={30}
           color={theme.colors.white}
+          onPress={logoff}
         />
-      </SearchWrapper>
+      </TopBar>
+      <GroupContainer>
+        <ActionText>GRUPOS</ActionText>
 
-      <TouchableOpacity onPress={logoff}>
-        <Text> Sign Out</Text>
-      </TouchableOpacity>
+        <SearchWrapper>
+          <SearchInputWrapper>
+            <SearchInput placeholder="Pesquisar" />
+            <MaterialIcons
+              name="search"
+              size={30}
+              color={theme.colors.gray_200}
+              style={{ marginLeft: 5 }}
+            />
+          </SearchInputWrapper>
 
-      <GroupsWrapper>
-        <GroupList
-          data={groups}
-          renderItem={() => (
-            <GroupCard>
-              <GroupCardSection>
-                <GroupNameText>MED TARDE 2022</GroupNameText>
-                <GroupButton>
-                  <GroupButtonText>ACESSAR GRUPO</GroupButtonText>
-                </GroupButton>
-              </GroupCardSection>
-              <GroupCardRightSection>
-                <ActionButtonsWrapper>
-                  <MaterialIcons
-                    name="edit"
-                    size={30}
-                    color={theme.colors.gray_200}
-                  />
+          <MaterialIcons
+            name="add-circle-outline"
+            size={30}
+            color={theme.colors.white}
+          />
+        </SearchWrapper>
 
-                  <MaterialIcons
-                    name="delete"
-                    size={30}
-                    color={theme.colors.gray_200}
-                  />
-                </ActionButtonsWrapper>
-              </GroupCardRightSection>
-            </GroupCard>
-          )}
-          keyExtractor={(item) => item.id}
-        />
-      </GroupsWrapper>
+        <GroupsWrapper>
+          <GroupList
+            showsVerticalScrollIndicator={false}
+            data={groups}
+            renderItem={() => (
+              <GroupCard>
+                <GroupCardSection>
+                  <GroupNameText>MED TARDE 2022</GroupNameText>
+                  <GroupButton>
+                    <GroupButtonText>ACESSAR GRUPO</GroupButtonText>
+                  </GroupButton>
+                </GroupCardSection>
+                <GroupCardRightSection>
+                  <GroupSectionWrapper>
+                    <FontAwesome5 name="users" size={20} color="#4e4e4e" />
+                    <Text
+                      style={{
+                        fontWeight: '900',
+                        marginLeft: 10,
+                        marginRight: 5
+                      }}>
+                      {totalUsers}
+                    </Text>
+                  </GroupSectionWrapper>
+
+                  <GroupSectionWrapper>
+                    <Feather
+                      name="edit"
+                      size={25}
+                      color={theme.colors.gray_200}
+                    />
+
+                    <MaterialIcons
+                      name="delete"
+                      size={25}
+                      color={theme.colors.gray_200}
+                      style={{
+                        marginLeft: 15
+                      }}
+                    />
+                  </GroupSectionWrapper>
+                </GroupCardRightSection>
+              </GroupCard>
+            )}
+            keyExtractor={(item) => item.id}
+          />
+        </GroupsWrapper>
+      </GroupContainer>
     </HomeContainer>
   );
 }
