@@ -24,26 +24,31 @@ export function RecoverPassword({ navigation, route }: Props) {
   const { recoverPassword } = useAuth();
 
   async function handleRecoverPassword(email: string) {
-    await recoverPassword(email)
-      .then(() => {
-        Alert.alert(
-          'Sucesso',
-          'Email enviado com sucesso, cheque seu email para recuperar a senha',
-          [
-            {
-              text: 'Ok',
-              onPress: () => navigation.navigate('SignIn')
-            }
-          ]
-        );
-      })
-      .catch((error) => {
-        if (error === 'auth/email-already-in-use') {
-          Alert.alert('Erro', 'Email já cadastrado');
-        } else if (error === 'auth/user-not-found') {
-          Alert.alert('Erro', 'Usuário não encontrado');
-        }
-      });
+    if (!email.includes('@aluno.cesupa.br')) {
+      Alert.alert('Erro', 'Você precisa usar um email institucional');
+      return;
+    } else {
+      await recoverPassword(email)
+        .then(() => {
+          Alert.alert(
+            'Sucesso',
+            'Email enviado com sucesso, cheque seu email para recuperar a senha',
+            [
+              {
+                text: 'Ok',
+                onPress: () => navigation.navigate('SignIn')
+              }
+            ]
+          );
+        })
+        .catch((error) => {
+          if (error === 'auth/email-already-in-use') {
+            Alert.alert('Erro', 'Email já cadastrado');
+          } else if (error === 'auth/user-not-found') {
+            Alert.alert('Erro', 'Usuário não encontrado');
+          }
+        });
+    }
   }
 
   return (
