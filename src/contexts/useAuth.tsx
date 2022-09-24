@@ -82,7 +82,7 @@ export function UserProvider({ children }: UserProviderProps) {
         auth().signOut();
       })
       .catch((error) => {
-        throw error.message;
+        throw error.code;
       });
   }
 
