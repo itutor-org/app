@@ -37,16 +37,12 @@ export function RecoverPassword({ navigation, route }: Props) {
           ]
         );
       })
-      .catch(() => {
-        Alert.alert(
-          'Erro',
-          'Erro ao enviar email, cheque se o email está correto',
-          [
-            {
-              text: 'Ok'
-            }
-          ]
-        );
+      .catch((error) => {
+        if (error === 'auth/email-already-in-use') {
+          Alert.alert('Erro', 'Email já cadastrado');
+        } else if (error === 'auth/user-not-found') {
+          Alert.alert('Erro', 'Usuário não encontrado');
+        }
       });
   }
 
