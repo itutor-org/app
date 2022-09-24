@@ -33,7 +33,11 @@ export function SignIn({ navigation, route }: Props) {
 
   async function handleSignIn(email: string, password: string) {
     await signIn(email, password).catch((error: string) => {
-      Alert.alert('Erro', error);
+      if (error === 'auth/user-not-found') {
+        Alert.alert('Erro', 'Usuário não encontrado');
+      } else if (error === 'auth/wrong-password') {
+        Alert.alert('Erro', 'Senha incorreta');
+      }
     });
   }
 
