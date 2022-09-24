@@ -1,3 +1,4 @@
 import { Home } from './Home/index';
+import { AddGroup } from './AddGroup/index';
 
-export { Home };
+export { Home, AddGroup };
