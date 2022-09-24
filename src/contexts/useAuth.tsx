@@ -7,6 +7,7 @@ import {
 } from 'react';
 import * as SecureStore from 'expo-secure-store';
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
+import { createUser, getUser, User } from '../services/userService';
 
 interface UserProviderProps {
   children: ReactNode;
@@ -14,24 +15,29 @@ interface UserProviderProps {
 
 interface UserContextData {
   isLoggedIn: boolean;
-  user: FirebaseAuthTypes.User | null;
+  user: User | null;
   signIn: (email: string, password: string) => Promise<void>;
   logoff: () => Promise<void>;
   recoverPassword: (email: string) => Promise<void>;
-  registerUser: (email: string, password: string) => Promise<void>;
+  registerUser: (
+    name: string,
+    email: string,
+    registration: string,
+    password: string
+  ) => Promise<void>;
 }
 
 const UserContext = createContext<UserContextData>({} as UserContextData);
 
 export function UserProvider({ children }: UserProviderProps) {
-  const [user, setUser] = useState<FirebaseAuthTypes.User | null>();
+  const [user, setUser] = useState<User | null>();
 
   useEffect(() => {
     async function loadStoredData() {
       const storedUser = await SecureStore.getItemAsync('user');
 
       if (storedUser) {
-        const userData: FirebaseAuthTypes.User = JSON.parse(storedUser);
+        const userData: User = JSON.parse(storedUser);
         if (userData.email) {
           setUser(userData);
         }
@@ -47,8 +53,9 @@ export function UserProvider({ children }: UserProviderProps) {
     await auth()
       .signInWithEmailAndPassword(email, password)
       .then(async (info) => {
-        setUser(info.user);
-        await SecureStore.setItemAsync('user', JSON.stringify(info.user));
+        const data = await getUser(info.user.uid);
+        setUser(data);
+        await SecureStore.setItemAsync('user', JSON.stringify(data));
       })
       .catch((error) => {
         throw error.code;
@@ -75,10 +82,17 @@ export function UserProvider({ children }: UserProviderProps) {
       });
   }
 
-  async function registerUser(email: string, password: string) {
+  async function registerUser(
+    name: string,
+    email: string,
+    registration: string,
+    password: string
+  ) {
     await auth()
       .createUserWithEmailAndPassword(email, password)
-      .then(() => {
+      .then(async () => {
+        const id = auth().currentUser.uid;
+        await createUser({ name, email, id, registration });
         auth().signOut();
       })
       .catch((error) => {
@@ -89,8 +103,8 @@ export function UserProvider({ children }: UserProviderProps) {
   return (
     <UserContext.Provider
       value={{
-        isLoggedIn: auth().currentUser && user !== null,
-        user: user || null,
+        isLoggedIn: user !== null,
+        user: user,
         signIn,
         logoff,
         recoverPassword,
