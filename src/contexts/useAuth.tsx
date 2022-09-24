@@ -63,7 +63,7 @@ export function UserProvider({ children }: UserProviderProps) {
         setUser(null);
       })
       .catch((error) => {
-        throw error.message;
+        throw error.code;
       });
   }
 
@@ -71,7 +71,7 @@ export function UserProvider({ children }: UserProviderProps) {
     await auth()
       .sendPasswordResetEmail(email)
       .catch((error) => {
-        throw error.message;
+        throw error.code;
       });
   }
 
