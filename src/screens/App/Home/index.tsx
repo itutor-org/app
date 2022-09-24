@@ -25,41 +25,52 @@ import {
 } from './styles';
 import { theme } from '../../../styles/theme';
 import { FontAwesome5, MaterialIcons, Feather } from '@expo/vector-icons';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { Alert } from 'react-native';
+import { getGroups, Group } from '../../../services/groupService';
 
 type Props = NativeStackScreenProps<AppStackParamList, 'Home'>;
 
 export function Home({ navigation, route }: Props) {
-  const { logoff } = useAuth();
+  const { logoff, user } = useAuth();
+  const [groups, setGroups] = useState<Group[]>([]);
   const [totalUsers, setTotalUsers] = useState<number>(15);
 
-  const groups = [
-    {
-      id: 1
-    },
-    {
-      id: 2
-    },
-    {
-      id: 3
-    },
-    {
-      id: 4
-    },
-    {
-      id: 5
-    },
-    {
-      id: 6
-    }
-  ];
+  function handleDeleteGroup() {
+    Alert.alert('Deletar grupo', 'Tem certeza que deseja deletar este grupo?', [
+      {
+        text: 'NÃO',
+        style: 'cancel'
+      },
+      {
+        text: 'SIM',
+        onPress: () => {
+          console.log('deletar');
+        }
+      }
+    ]);
+  }
+
+  async function loadGroups() {
+    await getGroups(user.id)
+      .then((data) => {
+        setGroups(data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
+  useEffect(() => {
+    loadGroups();
+  }, []);
 
   return (
     <HomeContainer>
       <TopBar marginTop={StatusBar.currentHeight + 15}>
         <TeacherInfo>
-          <TeacherName>Prof. Lucas</TeacherName>
-          <TeacherEmail>lucas@mail.com</TeacherEmail>
+          <TeacherName>Prof. {user.name}</TeacherName>
+          <TeacherEmail>{user.email}</TeacherEmail>
         </TeacherInfo>
         <MaterialIcons
           name="logout"
@@ -93,10 +104,11 @@ export function Home({ navigation, route }: Props) {
           <GroupList
             showsVerticalScrollIndicator={false}
             data={groups}
-            renderItem={() => (
+            extraData={groups}
+            renderItem={({ item }) => (
               <GroupCard>
                 <GroupCardSection>
-                  <GroupNameText>MED TARDE 2022</GroupNameText>
+                  <GroupNameText>{item.name}</GroupNameText>
                   <GroupButton>
                     <GroupButtonText>ACESSAR GRUPO</GroupButtonText>
                   </GroupButton>
@@ -110,7 +122,7 @@ export function Home({ navigation, route }: Props) {
                         marginLeft: 10,
                         marginRight: 5
                       }}>
-                      {totalUsers}
+                      {item.participants_number}
                     </Text>
                   </GroupSectionWrapper>
 
@@ -128,12 +140,13 @@ export function Home({ navigation, route }: Props) {
                       style={{
                         marginLeft: 15
                       }}
+                      onPress={handleDeleteGroup}
                     />
                   </GroupSectionWrapper>
                 </GroupCardRightSection>
               </GroupCard>
             )}
-            keyExtractor={(item) => item.id}
+            keyExtractor={({ id }: Group) => id}
           />
         </GroupsWrapper>
       </GroupContainer>
