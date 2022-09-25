@@ -15,13 +15,22 @@ import {
   StudentName,
   ActionsButtonsWrapper
 } from './styles';
-import { MaterialIcons, Feather } from '@expo/vector-icons';
+import { MaterialIcons, Feather, Octicons } from '@expo/vector-icons';
 import { theme } from '../../../styles/theme';
-import { StatusBar } from 'react-native';
+import {
+  Alert,
+  Modal,
+  Pressable,
+  StatusBar,
+  View,
+  StyleSheet
+} from 'react-native';
 
 type Props = NativeStackScreenProps<AppStackParamList, 'AddGroup'>;
 
 export function AddGroup({ navigation, route }: Props) {
+  const [modalVisible, setModalVisible] = React.useState(false);
+
   return (
     <Container>
       <MaterialIcons
@@ -76,7 +85,7 @@ export function AddGroup({ navigation, route }: Props) {
       </InputWrapper>
 
       <AddStudentArea>
-        <AddStudentButton>
+        <AddStudentButton onPress={() => setModalVisible(!modalVisible)}>
           <ButtonText>Adicionar aluno</ButtonText>
         </AddStudentButton>
         <ActionsButtonsWrapper>
@@ -97,11 +106,101 @@ export function AddGroup({ navigation, route }: Props) {
         </ActionsButtonsWrapper>
       </AddStudentArea>
 
+      <Modal
+        animationType="fade"
+        hardwareAccelerated
+        presentationStyle="overFullScreen"
+        onOrientationChange={() => setModalVisible(!modalVisible)}
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert('Modal has been closed.');
+          setModalVisible(!modalVisible);
+        }}>
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Title style={{ color: 'black' }}>Adicionar aluno</Title>
+            <InputWrapper>
+              <MaterialIcons
+                name="person"
+                size={19}
+                color={'#8D8D99'}
+                style={{ marginRight: 7 }}
+              />
+              <Input
+                placeholder="Nome da turma"
+                // onChangeText={(value) => setEmail(value)}
+              />
+            </InputWrapper>
+            <InputWrapper>
+              <Octicons
+                name="number"
+                size={19}
+                color={'#8D8D99'}
+                style={{ marginRight: 7 }}
+              />
+              <Input
+                placeholder="Nome da turma"
+                // onChangeText={(value) => setEmail(value)}
+              />
+            </InputWrapper>
+            <SubmitButton onPress={() => setModalVisible(!modalVisible)}>
+              <ButtonText>Cadastrar</ButtonText>
+            </SubmitButton>
+          </View>
+        </View>
+      </Modal>
+
       <SubmitButton>
         <ButtonText>Cadastrar</ButtonText>
       </SubmitButton>
     </Container>
   );
 }
+
+const styles = StyleSheet.create({
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    backgroundColor: '#0000007f'
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#ffffff',
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2
+  },
+  buttonOpen: {
+    backgroundColor: '#F194FF'
+  },
+  buttonClose: {
+    backgroundColor: '#2196F3'
+  },
+  textStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center'
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: 'center'
+  }
+});
 
 export default AddGroup;
