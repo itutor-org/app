@@ -27,14 +27,18 @@ import { theme } from '../../../styles/theme';
 import { FontAwesome5, MaterialIcons, Feather } from '@expo/vector-icons';
 import { useEffect, useState } from 'react';
 import { Alert } from 'react-native';
-import { getGroups, Group } from '../../../services/groupService';
+import {
+  getGroupByName,
+  getGroups,
+  Group
+} from '../../../services/groupService';
 
 type Props = NativeStackScreenProps<AppStackParamList, 'Home'>;
 
 export function Home({ navigation, route }: Props) {
   const { logoff, user } = useAuth();
   const [groups, setGroups] = useState<Group[]>([]);
-  const [totalUsers, setTotalUsers] = useState<number>(15);
+  const [filteredGroups, setFilteredGroups] = useState<Group[]>([]);
 
   function handleDeleteGroup() {
     Alert.alert('Deletar grupo', 'Tem certeza que deseja deletar este grupo?', [
@@ -51,10 +55,23 @@ export function Home({ navigation, route }: Props) {
     ]);
   }
 
+  async function handleSearch(text: string) {
+    if (text) {
+      const newData = filteredGroups.filter((item) => {
+        return item ? item.name.includes(text) : '';
+      });
+
+      setFilteredGroups(newData);
+    } else {
+      setFilteredGroups(groups);
+    }
+  }
+
   async function loadGroups() {
     await getGroups(user.id)
       .then((data) => {
         setGroups(data);
+        setFilteredGroups(data);
       })
       .catch((error) => {
         console.log(error);
@@ -84,7 +101,12 @@ export function Home({ navigation, route }: Props) {
 
         <SearchWrapper>
           <SearchInputWrapper>
-            <SearchInput placeholder="Pesquisar" />
+            <SearchInput
+              placeholder="Pesquisar"
+              onChangeText={(value: string) => {
+                handleSearch(value);
+              }}
+            />
             <MaterialIcons
               name="search"
               size={30}
@@ -104,8 +126,8 @@ export function Home({ navigation, route }: Props) {
         <GroupsWrapper>
           <GroupList
             showsVerticalScrollIndicator={false}
-            data={groups}
-            extraData={groups}
+            data={filteredGroups}
+            keyExtractor={({ id }: Group) => id}
             renderItem={({ item }) => (
               <GroupCard>
                 <GroupCardSection>
@@ -147,7 +169,6 @@ export function Home({ navigation, route }: Props) {
                 </GroupCardRightSection>
               </GroupCard>
             )}
-            keyExtractor={({ id }: Group) => id}
           />
         </GroupsWrapper>
       </GroupContainer>

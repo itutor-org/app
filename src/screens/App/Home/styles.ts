@@ -58,6 +58,7 @@ export const SearchInput = styled.TextInput`
 
 export const GroupsWrapper = styled.View`
   width: 90%;
+  min-width: 90%;
   height: 75%;
   background-color: #f1f1f1;
   border-top-right-radius: ${({ theme }) => theme.margins.MD}px;
@@ -68,6 +69,7 @@ export const GroupsWrapper = styled.View`
 
 export const GroupList = styled.FlatList`
   width: 100%;
+  min-width: 100%;
 `;
 
 export const GroupCard = styled.View`
