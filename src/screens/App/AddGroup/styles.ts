@@ -30,7 +30,7 @@ export const InputWrapper = styled.View`
 `;
 
 export const Input = styled.TextInput`
-  width: 90%;
+  width: 87.5%;
   height: 100%;
   background-color: ${({ theme }) => theme.colors.white};
   border: none;
@@ -81,6 +81,7 @@ export const StudentCard = styled.View`
   width: 100%;
   padding: ${({ theme }) => theme.margins.MD}px;
   border-radius: 10px;
+  margin-bottom: ${({ theme }) => theme.margins.SM}px;
 `;
 
 export const StudentName = styled.Text`
@@ -93,4 +94,16 @@ export const ActionsButtonsWrapper = styled.View`
   display: flex;
   flex-direction: row;
   align-items: center;
+`;
+
+export const StudentsList = styled.FlatList`
+  width: 100%;
+  min-width: 100%;
+`;
+
+export const InfoModalText = styled.Text`
+  font-size: ${({ theme }) => theme.font_size.MD}px;
+  font-family: ${({ theme }) => theme.font_family.bold};
+  color: ${({ theme }) => theme.colors.black};
+  margin: ${({ theme }) => theme.margins.MD}px 0;
 `;

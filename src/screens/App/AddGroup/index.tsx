@@ -13,23 +13,48 @@ import {
   AddStudentButton,
   StudentCard,
   StudentName,
-  ActionsButtonsWrapper
+  ActionsButtonsWrapper,
+  StudentsList,
+  InfoModalText
 } from './styles';
 import { MaterialIcons, Feather, Octicons } from '@expo/vector-icons';
 import { theme } from '../../../styles/theme';
-import {
-  Alert,
-  Modal,
-  Pressable,
-  StatusBar,
-  View,
-  StyleSheet
-} from 'react-native';
+import { StatusBar } from 'react-native';
+import ModalComponent from '../../../components/Modal';
+import { useAuth } from '../../../contexts/useAuth';
+import { createGroup } from '../../../services/groupService';
 
 type Props = NativeStackScreenProps<AppStackParamList, 'AddGroup'>;
 
+export interface Student {
+  id: string;
+  name: string;
+  registration: string;
+  email: string;
+}
+
 export function AddGroup({ navigation, route }: Props) {
+  const { user } = useAuth();
+
   const [modalVisible, setModalVisible] = React.useState(false);
+  const [infoModalVisible, setInfoModalVisible] = React.useState(false);
+  const [groupName, setGroupName] = React.useState('');
+  const [participantsNumber, setParticipantsNumber] = React.useState(0);
+  const [className, setClassName] = React.useState('');
+  const [students, setStudents] = React.useState<Student[]>([]);
+  const [student, setStudent] = React.useState<Student>();
+
+  async function handleCreateGroup() {
+    await createGroup(
+      user.id,
+      groupName,
+      participantsNumber,
+      className,
+      students
+    ).then(() => {
+      setInfoModalVisible(!infoModalVisible);
+    });
+  }
 
   return (
     <Container>
@@ -54,7 +79,7 @@ export function AddGroup({ navigation, route }: Props) {
         />
         <Input
           placeholder="Nome"
-          // onChangeText={(value) => setEmail(value)}
+          onChangeText={(value: string) => setGroupName(value)}
         />
       </InputWrapper>
       <InputWrapper>
@@ -67,7 +92,7 @@ export function AddGroup({ navigation, route }: Props) {
         <Input
           keyboardType="numeric"
           placeholder="Número de participantes"
-          // onChangeText={(value) => setEmail(value)}
+          onChangeText={(value: number) => setParticipantsNumber(value)}
         />
       </InputWrapper>
 
@@ -80,7 +105,7 @@ export function AddGroup({ navigation, route }: Props) {
         />
         <Input
           placeholder="Nome da turma"
-          // onChangeText={(value) => setEmail(value)}
+          onChangeText={(value: string) => setClassName(value)}
         />
       </InputWrapper>
 
@@ -89,37 +114,39 @@ export function AddGroup({ navigation, route }: Props) {
           <ButtonText>Adicionar aluno</ButtonText>
         </AddStudentButton>
         <ActionsButtonsWrapper>
-          <StudentCard>
-            <StudentName>Lucas Freitas</StudentName>
-            <ActionsButtonsWrapper>
-              <Feather name="edit" size={25} color={theme.colors.gray_200} />
-              <MaterialIcons
-                name="delete"
-                size={25}
-                color={theme.colors.gray_200}
-                style={{
-                  marginLeft: 15
-                }}
-              />
-            </ActionsButtonsWrapper>
-          </StudentCard>
+          <StudentsList
+            data={students}
+            keyExtractor={({ registration }: Student) => registration}
+            renderItem={({ item }) => (
+              <StudentCard key={item.id}>
+                <StudentName>{item.name}</StudentName>
+                <ActionsButtonsWrapper>
+                  <Feather
+                    name="edit"
+                    size={25}
+                    color={theme.colors.gray_200}
+                  />
+                  <MaterialIcons
+                    name="delete"
+                    size={25}
+                    color={theme.colors.gray_200}
+                    style={{
+                      marginLeft: 15
+                    }}
+                  />
+                </ActionsButtonsWrapper>
+              </StudentCard>
+            )}
+          />
         </ActionsButtonsWrapper>
       </AddStudentArea>
 
-      <Modal
-        animationType="fade"
-        hardwareAccelerated
-        presentationStyle="overFullScreen"
-        onOrientationChange={() => setModalVisible(!modalVisible)}
-        transparent={true}
+      <ModalComponent
+        title="Adicionar aluno"
+        showModal={setModalVisible}
         visible={modalVisible}
-        onRequestClose={() => {
-          Alert.alert('Modal has been closed.');
-          setModalVisible(!modalVisible);
-        }}>
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <Title style={{ color: 'black' }}>Adicionar aluno</Title>
+        children={
+          <>
             <InputWrapper>
               <MaterialIcons
                 name="person"
@@ -129,7 +156,9 @@ export function AddGroup({ navigation, route }: Props) {
               />
               <Input
                 placeholder="Nome da turma"
-                // onChangeText={(value) => setEmail(value)}
+                onChangeText={(value: string) =>
+                  setStudent({ ...student, name: value })
+                }
               />
             </InputWrapper>
             <InputWrapper>
@@ -137,70 +166,59 @@ export function AddGroup({ navigation, route }: Props) {
                 name="number"
                 size={19}
                 color={'#8D8D99'}
+                style={{ marginRight: 10 }}
+              />
+              <Input
+                placeholder="Matricula"
+                onChangeText={(value: string) =>
+                  setStudent({ ...student, registration: value })
+                }
+              />
+            </InputWrapper>
+            <InputWrapper>
+              <MaterialIcons
+                name="email"
+                size={19}
+                color={'#8D8D99'}
                 style={{ marginRight: 7 }}
               />
               <Input
-                placeholder="Nome da turma"
-                // onChangeText={(value) => setEmail(value)}
+                placeholder="Email"
+                onChangeText={(value: string) =>
+                  setStudent({ ...student, email: value })
+                }
               />
             </InputWrapper>
-            <SubmitButton onPress={() => setModalVisible(!modalVisible)}>
-              <ButtonText>Cadastrar</ButtonText>
+            <SubmitButton
+              onPress={() => {
+                setStudents((prevState) => [...prevState, student]),
+                  setModalVisible(!modalVisible);
+              }}>
+              <ButtonText>Adicionar Aluno</ButtonText>
             </SubmitButton>
-          </View>
-        </View>
-      </Modal>
+          </>
+        }
+      />
 
-      <SubmitButton>
+      <ModalComponent
+        title="Sucesso"
+        showModal={setInfoModalVisible}
+        visible={infoModalVisible}
+        children={
+          <>
+            <InfoModalText>Grupo criado com sucesso</InfoModalText>
+            <SubmitButton onPress={() => navigation.navigate('Home')}>
+              <ButtonText>Ok</ButtonText>
+            </SubmitButton>
+          </>
+        }
+      />
+
+      <SubmitButton onPress={handleCreateGroup}>
         <ButtonText>Cadastrar</ButtonText>
       </SubmitButton>
     </Container>
   );
 }
-
-const styles = StyleSheet.create({
-  centeredView: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '100%',
-    backgroundColor: '#0000007f'
-  },
-  modalView: {
-    margin: 20,
-    backgroundColor: 'white',
-    borderRadius: 20,
-    padding: 35,
-    alignItems: 'center',
-    shadowColor: '#ffffff',
-    shadowOffset: {
-      width: 0,
-      height: 2
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5
-  },
-  button: {
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2
-  },
-  buttonOpen: {
-    backgroundColor: '#F194FF'
-  },
-  buttonClose: {
-    backgroundColor: '#2196F3'
-  },
-  textStyle: {
-    color: 'white',
-    fontWeight: 'bold',
-    textAlign: 'center'
-  },
-  modalText: {
-    marginBottom: 15,
-    textAlign: 'center'
-  }
-});
 
 export default AddGroup;
