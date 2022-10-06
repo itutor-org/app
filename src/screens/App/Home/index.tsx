@@ -21,17 +21,18 @@ import {
   TopBar,
   TeacherInfo,
   TeacherName,
-  TeacherEmail
+  TeacherEmail,
+  CMText,
+  CMConfirmButton,
+  CMDenyButton,
+  CMButtonsWrapper,
+  CMButtonText
 } from './styles';
 import { theme } from '../../../styles/theme';
 import { FontAwesome5, MaterialIcons, Feather } from '@expo/vector-icons';
 import { useEffect, useState } from 'react';
-import { Alert } from 'react-native';
-import {
-  getGroupByName,
-  getGroups,
-  Group
-} from '../../../services/groupService';
+import ModalComponent from '../../../components/Modal';
+import { deleteGroup, getGroups, Group } from '../../../services/groupService';
 
 type Props = NativeStackScreenProps<AppStackParamList, 'Home'>;
 
@@ -39,20 +40,12 @@ export function Home({ navigation, route }: Props) {
   const { logoff, user } = useAuth();
   const [groups, setGroups] = useState<Group[]>([]);
   const [filteredGroups, setFilteredGroups] = useState<Group[]>([]);
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
 
-  function handleDeleteGroup() {
-    Alert.alert('Deletar grupo', 'Tem certeza que deseja deletar este grupo?', [
-      {
-        text: 'NÃO',
-        style: 'cancel'
-      },
-      {
-        text: 'SIM',
-        onPress: () => {
-          console.log('deletar');
-        }
-      }
-    ]);
+  async function handleDeleteGroup(groupId: string) {
+    await deleteGroup(groupId).then(() => {
+      setShowConfirmationModal(!showConfirmationModal);
+    });
   }
 
   async function handleSearch(text: string) {
@@ -80,7 +73,7 @@ export function Home({ navigation, route }: Props) {
 
   useEffect(() => {
     loadGroups();
-  }, []);
+  }, [groups]);
 
   return (
     <HomeContainer>
@@ -154,6 +147,14 @@ export function Home({ navigation, route }: Props) {
                       name="edit"
                       size={25}
                       color={theme.colors.gray_200}
+                      onPress={() => {
+                        navigation.navigate('EditGroup', {
+                          groupId: item.id,
+                          name: item.name,
+                          participantsNumber: item.participants_number,
+                          className: item.class_name
+                        });
+                      }}
                     />
 
                     <MaterialIcons
@@ -163,7 +164,34 @@ export function Home({ navigation, route }: Props) {
                       style={{
                         marginLeft: 15
                       }}
-                      onPress={handleDeleteGroup}
+                      onPress={() =>
+                        setShowConfirmationModal(!showConfirmationModal)
+                      }
+                    />
+
+                    <ModalComponent
+                      title=""
+                      showModal={setShowConfirmationModal}
+                      visible={showConfirmationModal}
+                      children={
+                        <>
+                          <CMText>
+                            Tem certeza que deseja excluir o grupo?
+                          </CMText>
+                          <CMButtonsWrapper>
+                            <CMConfirmButton
+                              onPress={() => handleDeleteGroup(item.id)}>
+                              <CMButtonText>SIM</CMButtonText>
+                            </CMConfirmButton>
+                            <CMDenyButton
+                              onPress={() =>
+                                setShowConfirmationModal(!showConfirmationModal)
+                              }>
+                              <CMButtonText>NÃO</CMButtonText>
+                            </CMDenyButton>
+                          </CMButtonsWrapper>
+                        </>
+                      }
                     />
                   </GroupSectionWrapper>
                 </GroupCardRightSection>
