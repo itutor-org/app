@@ -1,4 +1,5 @@
 import { Home } from './Home/index';
 import { AddGroup } from './AddGroup/index';
+import { EditGroup } from './EditGroup';
 
-export { Home, AddGroup };
+export { Home, AddGroup, EditGroup };
