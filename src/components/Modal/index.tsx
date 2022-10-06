@@ -9,13 +9,15 @@ interface ModalComponentProps {
   visible: boolean;
   showModal: (value: boolean) => void;
   children: React.ReactNode;
+  showCloseButton?: boolean;
 }
 
 export function ModalComponent({
   title,
   visible,
   showModal,
-  children
+  children,
+  showCloseButton
 }: ModalComponentProps) {
   return (
     <Modal
@@ -30,18 +32,20 @@ export function ModalComponent({
       }}>
       <ModalContainer>
         <ModalContent>
-          <MaterialIcons
-            name="close"
-            size={30}
-            color={'#8D8D99'}
-            style={{
-              position: 'absolute',
-              right: 10,
-              top: 10
-            }}
-            onPress={() => showModal(!visible)}
-          />
-          <ModalTitle>{title}</ModalTitle>
+          {showCloseButton && (
+            <MaterialIcons
+              name="close"
+              size={30}
+              color={'#8D8D99'}
+              style={{
+                position: 'absolute',
+                right: 10,
+                top: 10
+              }}
+              onPress={() => showModal(!visible)}
+            />
+          )}
+          {title && <ModalTitle>{title}</ModalTitle>}
           {children}
         </ModalContent>
       </ModalContainer>
