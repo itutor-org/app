@@ -79,6 +79,7 @@ export function AddGroup({ navigation, route }: Props) {
         />
         <Input
           placeholder="Nome"
+          autoCapitalize="characters"
           onChangeText={(value: string) => setGroupName(value)}
         />
       </InputWrapper>
@@ -91,6 +92,7 @@ export function AddGroup({ navigation, route }: Props) {
         />
         <Input
           keyboardType="numeric"
+          maxLength={2}
           placeholder="Número de participantes"
           onChangeText={(value: number) => setParticipantsNumber(value)}
         />
@@ -105,6 +107,7 @@ export function AddGroup({ navigation, route }: Props) {
         />
         <Input
           placeholder="Nome da turma"
+          autoCapitalize="characters"
           onChangeText={(value: string) => setClassName(value)}
         />
       </InputWrapper>
@@ -133,6 +136,9 @@ export function AddGroup({ navigation, route }: Props) {
                     style={{
                       marginLeft: 15
                     }}
+                    onPress={() => {
+                      setStudents(students.filter((s) => s.id !== item.id));
+                    }}
                   />
                 </ActionsButtonsWrapper>
               </StudentCard>
@@ -145,6 +151,7 @@ export function AddGroup({ navigation, route }: Props) {
         title="Adicionar aluno"
         showModal={setModalVisible}
         visible={modalVisible}
+        showCloseButton={true}
         children={
           <>
             <InputWrapper>
@@ -155,7 +162,7 @@ export function AddGroup({ navigation, route }: Props) {
                 style={{ marginRight: 7 }}
               />
               <Input
-                placeholder="Nome da turma"
+                placeholder="Nome"
                 onChangeText={(value: string) =>
                   setStudent({ ...student, name: value })
                 }
@@ -170,6 +177,8 @@ export function AddGroup({ navigation, route }: Props) {
               />
               <Input
                 placeholder="Matricula"
+                maxLength={8}
+                keyboardType="numeric"
                 onChangeText={(value: string) =>
                   setStudent({ ...student, registration: value })
                 }
@@ -184,6 +193,7 @@ export function AddGroup({ navigation, route }: Props) {
               />
               <Input
                 placeholder="Email"
+                keyboardType="email-address"
                 onChangeText={(value: string) =>
                   setStudent({ ...student, email: value })
                 }
@@ -191,8 +201,12 @@ export function AddGroup({ navigation, route }: Props) {
             </InputWrapper>
             <SubmitButton
               onPress={() => {
-                setStudents((prevState) => [...prevState, student]),
-                  setModalVisible(!modalVisible);
+                if (student.email.includes('@aluno.cesupa.br')) {
+                  setStudents((prevState) => [...prevState, student]),
+                    setModalVisible(!modalVisible);
+                } else {
+                  console.log('Email inválido');
+                }
               }}>
               <ButtonText>Adicionar Aluno</ButtonText>
             </SubmitButton>
