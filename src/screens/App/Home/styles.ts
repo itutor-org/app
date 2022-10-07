@@ -165,29 +165,3 @@ export const GroupCountText = styled.Text`
   font-family: ${({ theme }) => theme.font_family.regular};
   color: ${({ theme }) => theme.colors.white};
 `;
-
-export const CMText = styled.Text`
-  font-size: ${({ theme }) => theme.font_size.MD}px;
-  font-family: ${({ theme }) => theme.font_family.bold};
-  color: ${({ theme }) => theme.colors.dark_blue};
-  text-align: center;
-  margin: ${({ theme }) => theme.margins.LG}px 0;
-`;
-
-export const CMButtonsWrapper = styled.View`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-`;
-
-export const CMConfirmButton = styled(GroupButton)``;
-
-export const CMDenyButton = styled(GroupButton)`
-  background-color: ${({ theme }) => theme.colors.light_red};
-`;
-
-export const CMButtonText = styled(GroupButtonText)`
-  font-size: ${({ theme }) => theme.font_size.MD}px;
-`;
