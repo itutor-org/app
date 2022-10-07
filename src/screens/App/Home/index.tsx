@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { StatusBar, Text } from 'react-native';
+import { StatusBar } from 'react-native';
 import { useAuth } from '../../../contexts/useAuth';
 import { AppStackParamList } from '../../../routes/app.routes';
 import {
@@ -10,29 +10,17 @@ import {
   SearchInput,
   SearchWrapper,
   GroupsWrapper,
-  GroupCard,
   GroupList,
-  GroupCardSection,
-  GroupNameText,
-  GroupButton,
-  GroupButtonText,
-  GroupCardRightSection,
-  GroupSectionWrapper,
   TopBar,
   TeacherInfo,
   TeacherName,
-  TeacherEmail,
-  CMText,
-  CMConfirmButton,
-  CMDenyButton,
-  CMButtonsWrapper,
-  CMButtonText
+  TeacherEmail
 } from './styles';
 import { theme } from '../../../styles/theme';
-import { FontAwesome5, MaterialIcons, Feather } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
 import { useEffect, useState } from 'react';
-import ModalComponent from '../../../components/Modal';
 import { deleteGroup, getGroups, Group } from '../../../services/groupService';
+import { HomeCard } from '../../../components/HomeCard';
 
 type Props = NativeStackScreenProps<AppStackParamList, 'Home'>;
 
@@ -42,7 +30,7 @@ export function Home({ navigation, route }: Props) {
   const [filteredGroups, setFilteredGroups] = useState<Group[]>([]);
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
 
-  async function handleDeleteGroup(groupId: string) {
+  async function handleDeleteGroup(groupId: string): Promise<void> {
     await deleteGroup(groupId).then(() => {
       setShowConfirmationModal(!showConfirmationModal);
     });
@@ -122,80 +110,14 @@ export function Home({ navigation, route }: Props) {
             data={filteredGroups}
             keyExtractor={({ id }: Group) => id}
             renderItem={({ item }) => (
-              <GroupCard>
-                <GroupCardSection>
-                  <GroupNameText>{item.name}</GroupNameText>
-                  <GroupButton>
-                    <GroupButtonText>ACESSAR GRUPO</GroupButtonText>
-                  </GroupButton>
-                </GroupCardSection>
-                <GroupCardRightSection>
-                  <GroupSectionWrapper>
-                    <FontAwesome5 name="users" size={20} color="#4e4e4e" />
-                    <Text
-                      style={{
-                        fontWeight: '900',
-                        marginLeft: 10,
-                        marginRight: 5
-                      }}>
-                      {item.participants_number}
-                    </Text>
-                  </GroupSectionWrapper>
-
-                  <GroupSectionWrapper>
-                    <Feather
-                      name="edit"
-                      size={25}
-                      color={theme.colors.gray_200}
-                      onPress={() => {
-                        navigation.navigate('EditGroup', {
-                          groupId: item.id,
-                          name: item.name,
-                          participantsNumber: item.participants_number,
-                          className: item.class_name
-                        });
-                      }}
-                    />
-
-                    <MaterialIcons
-                      name="delete"
-                      size={25}
-                      color={theme.colors.gray_200}
-                      style={{
-                        marginLeft: 15
-                      }}
-                      onPress={() =>
-                        setShowConfirmationModal(!showConfirmationModal)
-                      }
-                    />
-
-                    <ModalComponent
-                      title=""
-                      showModal={setShowConfirmationModal}
-                      visible={showConfirmationModal}
-                      children={
-                        <>
-                          <CMText>
-                            Tem certeza que deseja excluir o grupo?
-                          </CMText>
-                          <CMButtonsWrapper>
-                            <CMConfirmButton
-                              onPress={() => handleDeleteGroup(item.id)}>
-                              <CMButtonText>SIM</CMButtonText>
-                            </CMConfirmButton>
-                            <CMDenyButton
-                              onPress={() =>
-                                setShowConfirmationModal(!showConfirmationModal)
-                              }>
-                              <CMButtonText>NÃO</CMButtonText>
-                            </CMDenyButton>
-                          </CMButtonsWrapper>
-                        </>
-                      }
-                    />
-                  </GroupSectionWrapper>
-                </GroupCardRightSection>
-              </GroupCard>
+              <HomeCard
+                id={item.id}
+                name={item.name}
+                participantsNumber={item.participants_number}
+                className={item.class_name}
+                deleteAction={() => handleDeleteGroup(item.id)}
+                navigation={navigation}
+              />
             )}
           />
         </GroupsWrapper>
