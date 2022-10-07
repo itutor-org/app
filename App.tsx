@@ -25,7 +25,7 @@ export default function App() {
       ) : (
         <Loading isTransparent={false} size="large" />
       )}
-      <StatusBar />
+      <StatusBar style="light" />
     </GlobalContext>
   );
 }
