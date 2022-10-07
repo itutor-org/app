@@ -56,10 +56,7 @@ export function EditGroup({ navigation, route }: Props) {
 
   async function handleDeleteStudent(studentID: string) {
     await deleteStudent(studentID).then(() => {
-      const newStudents = students.filter(
-        (student) => student.id !== studentID
-      );
-      setStudents(newStudents);
+      setStudents(students.filter((student) => student.id !== studentID));
     });
   }
 
