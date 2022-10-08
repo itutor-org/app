@@ -14,42 +14,69 @@ import {
   TopBar,
   TeacherInfo,
   TeacherName,
-  TeacherEmail
+  TeacherEmail,
+  InputWrapper,
+  Input,
+  SubmitButton,
+  ButtonText
 } from './styles';
 import { theme } from '../../../styles/theme';
 import { MaterialIcons } from '@expo/vector-icons';
-import { useEffect, useState } from 'react';
+import React from 'react';
 import {
   deleteDiscussion,
   Discussion,
-  getDiscussions
+  getDiscussions,
+  createDiscussion
 } from '../../../services/discussionService';
 import DiscussionCard from '../../../components/DiscussionCard';
+import ModalComponent from '../../../components/Modal';
 
 type Props = NativeStackScreenProps<AppStackParamList, 'DiscussionsList'>;
 
 export function DiscussionsList({ navigation, route }: Props) {
   const { logoff, user } = useAuth();
-  const [discussions, setDiscussions] = useState<Discussion[]>([]);
-  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+  const [discussions, setDiscussions] = React.useState<Discussion[]>([]);
+  const [showCreateDiscussionModal, setShowCreateDiscussionModal] =
+    React.useState(false);
+
+  const [discussion, setDiscussion] = React.useState<Discussion>(
+    {} as Discussion
+  );
 
   async function handleDeleteDiscussion(discussionId: string) {
-    await deleteDiscussion(discussionId).then(() => {
-      setShowConfirmationModal(!showConfirmationModal);
-    });
+    await deleteDiscussion(discussionId)
+      .then(() => {
+        console.log('Deletado com sucesso');
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
-  // async function handleSearch(text: string) {
-  //   if (text) {
-  //     const newData = filteredGroups.filter((item) => {
-  //       return item ? item.name.includes(text) : '';
-  //     });
-
-  //     setFilteredGroups(newData);
-  //   } else {
-  //     setFilteredGroups(groups);
-  //   }
-  // }
+  async function handleCreateDiscussion(groupId: string) {
+    await createDiscussion(
+      groupId,
+      discussion.general_subject,
+      discussion.specific_subject,
+      route.params.participantsNumber,
+      discussion.duration
+    )
+      .then((data) => {
+        if (data) {
+          navigation.navigate('Discussion', {
+            discussion_id: data.id,
+            duration: data.duration,
+            general_subject: data.general_subject,
+            specific_subject: data.specific_subject,
+            participants_number: data.participants_number
+          });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
 
   async function loadDiscussions() {
     await getDiscussions(route.params.groupId)
@@ -61,7 +88,7 @@ export function DiscussionsList({ navigation, route }: Props) {
       });
   }
 
-  useEffect(() => {
+  React.useEffect(() => {
     loadDiscussions();
   }, [discussions]);
 
@@ -97,7 +124,9 @@ export function DiscussionsList({ navigation, route }: Props) {
             name="add-circle-outline"
             size={30}
             color={theme.colors.white}
-            onPress={() => navigation.navigate('AddGroup')}
+            onPress={() =>
+              setShowCreateDiscussionModal(!showCreateDiscussionModal)
+            }
           />
         </SearchWrapper>
 
@@ -119,6 +148,65 @@ export function DiscussionsList({ navigation, route }: Props) {
           />
         </GroupsWrapper>
       </GroupContainer>
+
+      <ModalComponent
+        title="Criar discussão"
+        showCloseButton={true}
+        visible={showCreateDiscussionModal}
+        showModal={setShowCreateDiscussionModal}
+        children={
+          <>
+            <InputWrapper>
+              <MaterialIcons
+                name="topic"
+                size={19}
+                color={'#8D8D99'}
+                style={{ marginRight: 7 }}
+              />
+              <Input
+                placeholder="Tópico geral"
+                onChangeText={(value: string) =>
+                  setDiscussion({ ...discussion, general_subject: value })
+                }
+              />
+            </InputWrapper>
+            <InputWrapper>
+              <MaterialIcons
+                name="subject"
+                size={19}
+                color={'#8D8D99'}
+                style={{ marginRight: 7 }}
+              />
+              <Input
+                placeholder="Sub-tópico"
+                onChangeText={(value: string) =>
+                  setDiscussion({ ...discussion, specific_subject: value })
+                }
+              />
+            </InputWrapper>
+            <InputWrapper>
+              <MaterialIcons
+                name="access-time"
+                size={19}
+                color={'#8D8D99'}
+                style={{ marginRight: 7 }}
+              />
+              <Input
+                placeholder="Duração em minutos"
+                keyboardType="numeric"
+                maxLength={3}
+                onChangeText={(value: number) =>
+                  setDiscussion({ ...discussion, duration: value })
+                }
+              />
+            </InputWrapper>
+            <SubmitButton
+              onPress={() => handleCreateDiscussion(route.params.groupId)}>
+              <ButtonText>Iniciar Discussão</ButtonText>
+            </SubmitButton>
+          </>
+        }
+      />
     </HomeContainer>
   );
 }
