@@ -1,3 +1,4 @@
+import React from 'react';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { StatusBar } from 'react-native';
 import { useAuth } from '../../../contexts/useAuth';
@@ -18,7 +19,6 @@ import {
 } from './styles';
 import { theme } from '../../../styles/theme';
 import { MaterialIcons } from '@expo/vector-icons';
-import { useEffect, useState } from 'react';
 import { deleteGroup, getGroups, Group } from '../../../services/groupService';
 import { HomeCard } from '../../../components/HomeCard';
 
@@ -26,9 +26,10 @@ type Props = NativeStackScreenProps<AppStackParamList, 'Home'>;
 
 export function Home({ navigation, route }: Props) {
   const { logoff, user } = useAuth();
-  const [groups, setGroups] = useState<Group[]>([]);
-  const [filteredGroups, setFilteredGroups] = useState<Group[]>([]);
-  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+  const [groups, setGroups] = React.useState<Group[]>([]);
+  const [filteredGroups, setFilteredGroups] = React.useState<Group[]>([]);
+  const [showConfirmationModal, setShowConfirmationModal] =
+    React.useState(false);
 
   async function handleDeleteGroup(groupId: string): Promise<void> {
     await deleteGroup(groupId).then(() => {
@@ -59,7 +60,7 @@ export function Home({ navigation, route }: Props) {
       });
   }
 
-  useEffect(() => {
+  React.useEffect(() => {
     loadGroups();
   }, [groups]);
 
