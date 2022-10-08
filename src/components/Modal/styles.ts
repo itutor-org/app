@@ -9,17 +9,20 @@ export const ModalContainer = styled.View`
 `;
 
 export const ModalContent = styled.View`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   background-color: #fff;
   border-radius: 5px;
   padding: ${({ theme }) => theme.font_size.MD}px;
-  align-items: center;
   width: 80%;
   padding-top: ${({ theme }) => theme.font_size.LG}px;
 `;
 
 export const ModalTitle = styled.Text`
   font-size: ${({ theme }) => theme.font_size.LG}px;
-  font-family: ${({ theme }) => theme.font_family.bold};
+  font-weight: ${({ theme }) => theme.font_weight.bold};
   color: ${({ theme }) => theme.colors.black};
-  margin: ${({ theme }) => theme.margins.MD}px;
+  margin: 0 0 ${({ theme }) => theme.font_size.MD}px 0;
 `;
