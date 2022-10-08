@@ -45,7 +45,8 @@ export function HomeCard({
           <Button
             onPress={() =>
               navigation.navigate('DiscussionsList', {
-                groupId: id
+                groupId: id,
+                participantsNumber
               })
             }>
             <ButtonText>ACESSAR GRUPO</ButtonText>
