@@ -21,7 +21,6 @@ import { MaterialIcons, Feather, Octicons } from '@expo/vector-icons';
 import { theme } from '../../../styles/theme';
 import { StatusBar } from 'react-native';
 import ModalComponent from '../../../components/Modal';
-import { useAuth } from '../../../contexts/useAuth';
 import { updateGroup } from '../../../services/groupService';
 import {
   createStudent,
@@ -33,8 +32,6 @@ import { Student } from '../AddGroup';
 type Props = NativeStackScreenProps<AppStackParamList, 'EditGroup'>;
 
 export function EditGroup({ navigation, route }: Props) {
-  const { user } = useAuth();
-
   const [registerModalVisible, setRegisterModalVisible] = React.useState(false);
   const [editModalVisible, setEditModalVisible] = React.useState(false);
   const [infoModalVisible, setInfoModalVisible] = React.useState(false);
@@ -78,8 +75,9 @@ export function EditGroup({ navigation, route }: Props) {
   }
 
   async function getStudentsFromGroup() {
-    const students = await getStudentsByGroup(route.params.groupId);
-    setStudents(students);
+    await getStudentsByGroup(route.params.groupId).then(() =>
+      setStudents(students)
+    );
   }
 
   React.useEffect(() => {
