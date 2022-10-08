@@ -1,30 +1,24 @@
-import { ActivityIndicator, ActivityIndicatorProps } from 'react-native';
+import { ActivityIndicator } from 'react-native';
 
-import { SpinnerLoading, SplashScreen } from './styles';
+import { ModalComponent } from '../Modal';
 
-import splashImg from '../../../assets/splash.png';
 import { theme } from '../../styles/theme';
 
-interface LoadingProps extends ActivityIndicatorProps {
-  isTransparent?: boolean;
-  color?: string;
-  size?: 'small' | 'large';
+interface LoadingProps {
+  visible: boolean;
+  showModal: (value: boolean) => void;
 }
 
-export function Loading({
-  isTransparent = true,
-  size = 'small',
-  color = theme.colors.white,
-  ...rest
-}: LoadingProps) {
+export function Loading({ visible, showModal }: LoadingProps) {
   return (
-    <SplashScreen
-      transparent={isTransparent}
-      source={splashImg}
-      defaultSource={splashImg}>
-      <SpinnerLoading transparent={isTransparent}>
-        <ActivityIndicator {...rest} size={size} color={color} />
-      </SpinnerLoading>
-    </SplashScreen>
+    <ModalComponent
+      title="Carregando..."
+      visible={visible}
+      showModal={showModal}
+      children={
+        <ActivityIndicator size="large" color={theme.colors.dark_blue} />
+      }
+      showCloseButton={false}
+    />
   );
 }
