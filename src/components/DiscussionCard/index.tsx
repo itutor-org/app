@@ -80,7 +80,7 @@ export function DiscussionCard({
             />
 
             <ConfirmationModal
-              message="Deseja mesmo excluir esse grupo?"
+              message="Deseja mesmo excluir essa discussão?"
               showModal={setShowConfirmationModal}
               visible={showConfirmationModal}
               handleAction={deleteAction}
