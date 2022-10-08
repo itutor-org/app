@@ -4,7 +4,9 @@ import {
   Home,
   AddGroup,
   EditGroup,
-  DiscussionsList
+  DiscussionsList,
+  Discussion,
+  Results
 } from '../screens/App/index';
 
 export type AppStackParamList = {
@@ -18,6 +20,17 @@ export type AppStackParamList = {
   };
   DiscussionsList: {
     groupId: string;
+    participantsNumber: number;
+  };
+  Discussion: {
+    discussion_id: string;
+    general_subject: string;
+    specific_subject: string;
+    participants_number: number;
+    duration: number;
+  };
+  Results: {
+    discussion_id: string;
   };
 };
 
@@ -30,6 +43,8 @@ export function AppRoutes() {
       <Screen name="AddGroup" component={AddGroup} />
       <Screen name="EditGroup" component={EditGroup} />
       <Screen name="DiscussionsList" component={DiscussionsList} />
+      <Screen name="Discussion" component={Discussion} />
+      <Screen name="Results" component={Results} />
     </Navigator>
   );
 }
