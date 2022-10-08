@@ -29,7 +29,7 @@ export const CardRightSection = styled(CardSection)`
 
 export const CardTitle = styled.Text`
   font-size: ${({ theme }) => theme.font_size.SM}px;
-  font-family: ${({ theme }) => theme.font_family.bold};
+  font-weight: ${({ theme }) => theme.font_weight.bold};
   color: ${({ theme }) => theme.colors.black};
   text-align: center;
   width: 100%;
@@ -48,7 +48,7 @@ export const Button = styled.TouchableOpacity`
 
 export const ButtonText = styled.Text`
   font-size: 11px;
-  font-family: ${({ theme }) => theme.font_family.bold};
+  font-weight: ${({ theme }) => theme.font_weight.bold};
   color: ${({ theme }) => theme.colors.white};
   text-transform: uppercase;
 `;
@@ -62,6 +62,6 @@ export const SectionWrapper = styled.View`
 
 export const CountText = styled.Text`
   font-size: ${({ theme }) => theme.font_size.MD}px;
-  font-family: ${({ theme }) => theme.font_family.regular};
+  font-weight: ${({ theme }) => theme.font_weight.regular};
   color: ${({ theme }) => theme.colors.white};
 `;

@@ -15,14 +15,14 @@ export const Container = styled.View`
 
 export const LogoText = styled.Text`
   font-size: ${({ theme }) => theme.font_size.XL}px;
-  font-family: ${({ theme }) => theme.font_family.bold};
+  font-weight: ${({ theme }) => theme.font_weight.bold};
   color: ${({ theme }) => theme.colors.dark_yellow};
   margin-bottom: ${({ theme }) => theme.margins.XL}px;
 `;
 
 export const ActionText = styled.Text`
   font-size: ${({ theme }) => theme.font_size.MD}px;
-  font-family: ${({ theme }) => theme.font_family.bold};
+  font-weight: ${({ theme }) => theme.font_weight.bold};
   color: ${({ theme }) => theme.colors.white};
   margin-bottom: ${({ theme }) => theme.margins.MD}px;
 `;
@@ -63,7 +63,7 @@ export const SubmitButton = styled.TouchableOpacity`
 export const SubmitButtonText = styled.Text`
   color: ${({ theme }) => theme.colors.white};
   font-size: ${({ theme }) => theme.font_size.SM}px;
-  font-family: ${({ theme }) => theme.font_family.bold};
+  font-weight: ${({ theme }) => theme.font_weight.bold};
   text-transform: uppercase;
 `;
 
@@ -78,7 +78,7 @@ export const Hints = styled.View`
 
 export const HintText = styled.Text<HintTextProps>`
   font-size: ${({ theme }) => theme.font_size.SM}px;
-  font-family: ${({ theme }) => theme.font_family.regular};
+  font-weight: ${({ theme }) => theme.font_weight.regular};
   color: ${(props) =>
     props.isPresent
       ? props.theme.colors.medium_green

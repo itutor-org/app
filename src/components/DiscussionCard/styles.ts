@@ -29,7 +29,7 @@ export const CardRightSection = styled(CardSection)`
 
 export const CardTitle = styled.Text`
   font-size: ${({ theme }) => theme.font_size.SM}px;
-  font-family: ${({ theme }) => theme.font_family.bold};
+  font-weight: ${({ theme }) => theme.font_weight.bold};
   color: ${({ theme }) => theme.colors.black};
   text-align: center;
   width: 100%;
@@ -48,7 +48,7 @@ export const Button = styled.TouchableOpacity`
 
 export const ButtonText = styled.Text`
   font-size: 11px;
-  font-family: ${({ theme }) => theme.font_family.bold};
+  font-weight: ${({ theme }) => theme.font_weight.bold};
   color: ${({ theme }) => theme.colors.white};
   text-transform: uppercase;
 `;
@@ -64,7 +64,7 @@ export const GraphImage = styled.Image``;
 
 export const MiddleText = styled.Text`
   font-size: ${({ theme }) => theme.font_size.MD}px;
-  font-family: ${({ theme }) => theme.font_family.bold};
+  font-weight: ${({ theme }) => theme.font_weight.bold};
   color: ${({ theme }) => theme.colors.black};
   text-align: center;
   margin: ${({ theme }) => theme.margins.MD}px 0;
@@ -89,7 +89,7 @@ export const ClassificationTextWrapper = styled.View`
 
 export const ClassificationText = styled.Text`
   font-size: ${({ theme }) => theme.font_size.SM}px;
-  font-family: ${({ theme }) => theme.font_family.regular};
+  font-weight: ${({ theme }) => theme.font_weight.regular};
   color: ${({ theme }) => theme.colors.black};
   text-align: left;
 `;
@@ -107,7 +107,7 @@ export const RandomnessIndexWrapper = styled.View`
 
 export const RandomnessIndexText = styled.Text`
   font-size: ${({ theme }) => theme.font_size.MD}px;
-  font-family: ${({ theme }) => theme.font_family.bold};
+  font-weight: ${({ theme }) => theme.font_weight.bold};
   color: ${({ theme }) => theme.colors.black};
   text-align: center;
 `;

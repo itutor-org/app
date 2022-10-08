@@ -10,7 +10,7 @@ export const Container = styled.View`
 
 export const Title = styled.Text`
   font-size: ${({ theme }) => theme.font_size.LG}px;
-  font-family: ${({ theme }) => theme.font_family.bold};
+  font-weight: ${({ theme }) => theme.font_weight.bold};
   color: ${({ theme }) => theme.colors.white};
   margin-bottom: ${({ theme }) => theme.margins.MD}px;
 `;
@@ -51,7 +51,7 @@ export const SubmitButton = styled.TouchableOpacity`
 export const ButtonText = styled.Text`
   color: ${({ theme }) => theme.colors.white};
   font-size: ${({ theme }) => theme.font_size.SM}px;
-  font-family: ${({ theme }) => theme.font_family.bold};
+  font-weight: ${({ theme }) => theme.font_weight.bold};
   text-transform: uppercase;
 `;
 
@@ -86,7 +86,7 @@ export const StudentCard = styled.View`
 
 export const StudentName = styled.Text`
   font-size: ${({ theme }) => theme.font_size.MD}px;
-  font-family: ${({ theme }) => theme.font_family.bold};
+  font-weight: ${({ theme }) => theme.font_weight.bold};
   color: ${({ theme }) => theme.colors.black};
 `;
 
@@ -103,7 +103,7 @@ export const StudentsList = styled.FlatList`
 
 export const InfoModalText = styled.Text`
   font-size: ${({ theme }) => theme.font_size.MD}px;
-  font-family: ${({ theme }) => theme.font_family.bold};
+  font-weight: ${({ theme }) => theme.font_weight.bold};
   color: ${({ theme }) => theme.colors.black};
   margin: ${({ theme }) => theme.margins.MD}px 0;
 `;

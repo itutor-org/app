@@ -21,7 +21,7 @@ export const GroupContainer = styled.View`
 
 export const Title = styled.Text`
   font-size: ${({ theme }) => theme.font_size.LG}px;
-  font-family: ${({ theme }) => theme.font_family.bold};
+  font-weight: ${({ theme }) => theme.font_weight.bold};
   color: ${({ theme }) => theme.colors.white};
   margin-bottom: ${({ theme }) => theme.margins.MD}px;
 `;
@@ -101,7 +101,7 @@ export const GroupCardRightSection = styled(GroupCardSection)`
 
 export const GroupNameText = styled.Text`
   font-size: ${({ theme }) => theme.font_size.SM}px;
-  font-family: ${({ theme }) => theme.font_family.bold};
+  font-weight: ${({ theme }) => theme.font_weight.bold};
   color: ${({ theme }) => theme.colors.black};
   text-align: center;
   width: 100%;
@@ -120,7 +120,7 @@ export const GroupButton = styled.TouchableOpacity`
 
 export const GroupButtonText = styled.Text`
   font-size: 11px;
-  font-family: ${({ theme }) => theme.font_family.bold};
+  font-weight: ${({ theme }) => theme.font_weight.bold};
   color: ${({ theme }) => theme.colors.white};
   text-transform: uppercase;
 `;
@@ -150,18 +150,18 @@ export const TeacherInfo = styled.View`
 
 export const TeacherName = styled.Text`
   font-size: ${({ theme }) => theme.font_size.MD}px;
-  font-family: ${({ theme }) => theme.font_family.bold};
+  font-weight: ${({ theme }) => theme.font_weight.bold};
   color: ${({ theme }) => theme.colors.white};
 `;
 
 export const TeacherEmail = styled.Text`
   font-size: ${({ theme }) => theme.font_size.SM}px;
-  font-family: ${({ theme }) => theme.font_family.regular};
+  font-weight: ${({ theme }) => theme.font_weight.regular};
   color: ${({ theme }) => theme.colors.gray_200};
 `;
 
 export const GroupCountText = styled.Text`
   font-size: ${({ theme }) => theme.font_size.MD}px;
-  font-family: ${({ theme }) => theme.font_family.regular};
+  font-weight: ${({ theme }) => theme.font_weight.regular};
   color: ${({ theme }) => theme.colors.white};
 `;

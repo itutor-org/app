@@ -10,14 +10,14 @@ export const SignInContainer = styled.View`
 
 export const LogoText = styled.Text`
   font-size: ${({ theme }) => theme.font_size.XL}px;
-  font-family: ${({ theme }) => theme.font_family.bold};
+  font-weight: ${({ theme }) => theme.font_weight.bold};
   color: ${({ theme }) => theme.colors.dark_yellow};
   margin-bottom: ${({ theme }) => theme.margins.XL}px;
 `;
 
 export const WelcomeText = styled.Text`
   font-size: ${({ theme }) => theme.font_size.MD}px;
-  font-family: ${({ theme }) => theme.font_family.bold};
+  font-weight: ${({ theme }) => theme.font_weight.bold};
   color: ${({ theme }) => theme.colors.white};
   margin-bottom: ${({ theme }) => theme.margins.MD}px;
 `;
@@ -62,7 +62,7 @@ export const SignInButton = styled.TouchableOpacity`
 export const SignInButtonText = styled.Text`
   color: ${({ theme }) => theme.colors.white};
   font-size: ${({ theme }) => theme.font_size.MD}px;
-  font-family: ${({ theme }) => theme.font_family.bold};
+  font-weight: ${({ theme }) => theme.font_weight.bold};
   text-transform: uppercase;
 `;
 
@@ -78,7 +78,7 @@ export const RecoverPasswordButton = styled.TouchableOpacity`
 export const RecoverPasswordButtonText = styled.Text`
   color: ${({ theme }) => theme.colors.light_red};
   font-size: ${({ theme }) => theme.font_size.SM}px;
-  font-family: ${({ theme }) => theme.font_family.bold};
+  font-weight: ${({ theme }) => theme.font_weight.bold};
   margin-left: ${({ theme }) => theme.margins.SM}px;
 `;
 
@@ -94,7 +94,7 @@ export const SignUpWrapper = styled.View`
 export const SignUpText = styled.Text`
   color: ${({ theme }) => theme.colors.white};
   font-size: ${({ theme }) => theme.font_size.SM}px;
-  font-family: ${({ theme }) => theme.font_family.regular};
+  font-weight: ${({ theme }) => theme.font_weight.regular};
 `;
 
 export const SignUpLink = styled.TouchableOpacity`
@@ -104,5 +104,5 @@ export const SignUpLink = styled.TouchableOpacity`
 export const SignUpLinkText = styled.Text`
   color: ${({ theme }) => theme.colors.light_orange};
   font-size: ${({ theme }) => theme.font_size.SM}px;
-  font-family: ${({ theme }) => theme.font_family.bold};
+  font-weight: ${({ theme }) => theme.font_weight.bold};
 `;

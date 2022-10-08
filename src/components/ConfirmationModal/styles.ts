@@ -19,7 +19,7 @@ export const ModalContent = styled.View`
 
 export const Message = styled.Text`
   font-size: ${({ theme }) => theme.font_size.MD}px;
-  font-family: ${({ theme }) => theme.font_family.bold};
+  font-weight: ${({ theme }) => theme.font_weight.bold};
   color: ${({ theme }) => theme.colors.dark_blue};
   text-align: center;
   margin-bottom: ${({ theme }) => theme.margins.LG}px;
@@ -49,7 +49,7 @@ export const DenyButton = styled(ConfirmButton)`
 `;
 
 export const ButtonText = styled.Text`
-  font-family: ${({ theme }) => theme.font_family.bold};
+  font-weight: ${({ theme }) => theme.font_weight.bold};
   color: ${({ theme }) => theme.colors.white};
   text-transform: uppercase;
   font-size: ${({ theme }) => theme.font_size.MD}px;
