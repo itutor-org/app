@@ -13,13 +13,16 @@ export const theme = {
     dark_yellow: '#FFB703',
     light_orange: '#FBA94C',
     light_red: '#F75A68',
-    medium_green: '#29CC97'
+    medium_green: '#29CC97',
+    dark_green: '#00875F',
+    purple: '#A500B3',
+    orange: '#FF5714'
   },
 
-  font_family: {
-    regular: 'Montserrat_400Regular',
-    medium: 'Montserrat_500Medium',
-    bold: 'Montserrat_700Bold'
+  font_weight: {
+    regular: 'lighter',
+    medium: 'normal',
+    bold: 'bold'
   },
 
   font_size: {
