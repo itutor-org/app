@@ -21,7 +21,7 @@ export const GroupContainer = styled.View`
 
 export const Title = styled.Text`
   font-size: ${({ theme }) => theme.font_size.LG}px;
-  font-family: ${({ theme }) => theme.font_family.bold};
+  font-weight: ${({ theme }) => theme.font_weight.bold};
   color: ${({ theme }) => theme.colors.white};
   margin-bottom: ${({ theme }) => theme.margins.MD}px;
 `;
@@ -101,7 +101,7 @@ export const GroupCardRightSection = styled(GroupCardSection)`
 
 export const GroupNameText = styled.Text`
   font-size: ${({ theme }) => theme.font_size.SM}px;
-  font-family: ${({ theme }) => theme.font_family.bold};
+  font-weight: ${({ theme }) => theme.font_weight.bold};
   color: ${({ theme }) => theme.colors.black};
   text-align: center;
   width: 100%;
@@ -120,7 +120,7 @@ export const GroupButton = styled.TouchableOpacity`
 
 export const GroupButtonText = styled.Text`
   font-size: 11px;
-  font-family: ${({ theme }) => theme.font_family.bold};
+  font-weight: ${({ theme }) => theme.font_weight.bold};
   color: ${({ theme }) => theme.colors.white};
   text-transform: uppercase;
 `;
@@ -150,44 +150,52 @@ export const TeacherInfo = styled.View`
 
 export const TeacherName = styled.Text`
   font-size: ${({ theme }) => theme.font_size.MD}px;
-  font-family: ${({ theme }) => theme.font_family.bold};
+  font-weight: ${({ theme }) => theme.font_weight.bold};
   color: ${({ theme }) => theme.colors.white};
 `;
 
 export const TeacherEmail = styled.Text`
   font-size: ${({ theme }) => theme.font_size.SM}px;
-  font-family: ${({ theme }) => theme.font_family.regular};
+  font-weight: ${({ theme }) => theme.font_weight.regular};
   color: ${({ theme }) => theme.colors.gray_200};
 `;
 
-export const GroupCountText = styled.Text`
-  font-size: ${({ theme }) => theme.font_size.MD}px;
-  font-family: ${({ theme }) => theme.font_family.regular};
-  color: ${({ theme }) => theme.colors.white};
-`;
-
-export const CMText = styled.Text`
-  font-size: ${({ theme }) => theme.font_size.MD}px;
-  font-family: ${({ theme }) => theme.font_family.bold};
-  color: ${({ theme }) => theme.colors.dark_blue};
-  text-align: center;
-  margin: ${({ theme }) => theme.margins.LG}px 0;
-`;
-
-export const CMButtonsWrapper = styled.View`
+export const InputWrapper = styled.View`
+  width: 90%;
+  height: 50px;
+  padding: ${({ theme }) => theme.margins.SM}px;
+  background-color: ${({ theme }) => theme.colors.white};
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: space-between;
-  width: 100%;
+  justify-content: flex-start;
+  margin-bottom: ${({ theme }) => theme.margins.SM}px;
+  border: 2px solid ${({ theme }) => theme.colors.gray_300};
+  border-radius: 6px;
 `;
 
-export const CMConfirmButton = styled(GroupButton)``;
-
-export const CMDenyButton = styled(GroupButton)`
-  background-color: ${({ theme }) => theme.colors.light_red};
+export const Input = styled.TextInput`
+  width: 87.5%;
+  height: 100%;
+  background-color: ${({ theme }) => theme.colors.white};
+  border: none;
 `;
 
-export const CMButtonText = styled(GroupButtonText)`
-  font-size: ${({ theme }) => theme.font_size.MD}px;
+export const SubmitButton = styled.TouchableOpacity`
+  width: 90%;
+  height: 50px;
+  padding: ${({ theme }) => theme.margins.SM}px;
+  background-color: ${({ theme }) => theme.colors.light_orange};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: ${({ theme }) => theme.margins.SM}px 0;
+  border-radius: 6px;
+`;
+
+export const ButtonText = styled.Text`
+  color: ${({ theme }) => theme.colors.white};
+  font-size: ${({ theme }) => theme.font_size.SM}px;
+  font-weight: ${({ theme }) => theme.font_weight.bold};
+  text-transform: uppercase;
 `;
