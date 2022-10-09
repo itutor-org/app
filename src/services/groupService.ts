@@ -91,13 +91,13 @@ export const createGroup = async (
 };
 
 export const updateGroup = async (
-  groupId: string,
+  group_id: string,
   name: string,
   class_name: string,
   participants_number: number
 ) => {
   await groupsCollection
-    .doc(groupId)
+    .doc(group_id)
     .update({
       name: name,
       class_name: class_name,
@@ -111,15 +111,15 @@ export const updateGroup = async (
     });
 };
 
-export const deleteGroup = async (groupId: string) => {
-  await getStudentsByGroup(groupId).then(async (students) => {
+export const deleteGroup = async (group_id: string) => {
+  await getStudentsByGroup(group_id).then(async (students) => {
     students.forEach(async (student) => {
       await deleteStudent(student.id);
     });
   });
 
   await groupsCollection
-    .doc(groupId)
+    .doc(group_id)
     .delete()
     .then(() => {
       console.log('Group deleted');

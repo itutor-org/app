@@ -19,8 +19,8 @@ import { AppStackParamList } from '../../routes/app.routes';
 interface HomeCardProps {
   id: string;
   name: string;
-  participantsNumber: number;
-  className: string;
+  participants_number: number;
+  class_name: string;
   deleteAction: () => Promise<void>;
   navigation: NativeStackNavigationProp<AppStackParamList, 'Home'>;
 }
@@ -28,9 +28,8 @@ interface HomeCardProps {
 export function HomeCard({
   id,
   name,
-
-  participantsNumber,
-  className,
+  participants_number,
+  class_name,
   deleteAction,
   navigation
 }: HomeCardProps) {
@@ -45,8 +44,8 @@ export function HomeCard({
           <Button
             onPress={() =>
               navigation.navigate('DiscussionsList', {
-                groupId: id,
-                participantsNumber
+                group_id: id,
+                participants_number
               })
             }>
             <ButtonText>ACESSAR GRUPO</ButtonText>
@@ -61,7 +60,7 @@ export function HomeCard({
                 marginLeft: 10,
                 marginRight: 5
               }}>
-              {participantsNumber}
+              {participants_number}
             </Text>
           </SectionWrapper>
 
@@ -72,10 +71,10 @@ export function HomeCard({
               color={theme.colors.gray_200}
               onPress={() => {
                 navigation.navigate('EditGroup', {
-                  groupId: id,
+                  group_id: id,
                   name,
-                  participantsNumber,
-                  className
+                  participants_number,
+                  class_name
                 });
               }}
             />

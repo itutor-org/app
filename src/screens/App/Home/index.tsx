@@ -31,8 +31,8 @@ export function Home({ navigation, route }: Props) {
   const [showConfirmationModal, setShowConfirmationModal] =
     React.useState(false);
 
-  async function handleDeleteGroup(groupId: string): Promise<void> {
-    await deleteGroup(groupId).then(() => {
+  async function handleDeleteGroup(group_id: string): Promise<void> {
+    await deleteGroup(group_id).then(() => {
       setShowConfirmationModal(!showConfirmationModal);
     });
   }
@@ -114,8 +114,8 @@ export function Home({ navigation, route }: Props) {
               <HomeCard
                 id={item.id}
                 name={item.name}
-                participantsNumber={item.participants_number}
-                className={item.class_name}
+                participants_number={item.participants_number}
+                class_name={item.class_name}
                 deleteAction={() => handleDeleteGroup(item.id)}
                 navigation={navigation}
               />

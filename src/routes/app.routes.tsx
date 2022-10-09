@@ -13,16 +13,17 @@ export type AppStackParamList = {
   Home: undefined;
   AddGroup: undefined;
   EditGroup: {
-    groupId: string;
+    group_id: string;
     name: string;
-    participantsNumber: number;
-    className: string;
+    participants_number: number;
+    class_name: string;
   };
   DiscussionsList: {
-    groupId: string;
-    participantsNumber: number;
+    group_id: string;
+    participants_number?: number;
   };
   Discussion: {
+    group_id: string;
     discussion_id: string;
     general_subject: string;
     specific_subject: string;
@@ -31,6 +32,8 @@ export type AppStackParamList = {
   };
   Results: {
     discussion_id: string;
+    group_id: string;
+    participants_number: number;
   };
 };
 

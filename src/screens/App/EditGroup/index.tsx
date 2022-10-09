@@ -37,14 +37,14 @@ export function EditGroup({ navigation, route }: Props) {
   const [infoModalVisible, setInfoModalVisible] = React.useState(false);
   const [groupName, setGroupName] = React.useState(route.params.name);
   const [participantsNumber, setParticipantsNumber] = React.useState(
-    route.params.participantsNumber
+    route.params.participants_number
   );
-  const [className, setClassName] = React.useState(route.params.className);
+  const [className, setClassName] = React.useState(route.params.class_name);
   const [students, setStudents] = React.useState<Student[]>([]);
   const [student, setStudent] = React.useState<Student>();
 
-  async function handleUpdateGroup(groupID: string) {
-    await updateGroup(groupID, groupName, className, participantsNumber).then(
+  async function handleUpdateGroup(group_id: string) {
+    await updateGroup(group_id, groupName, className, participantsNumber).then(
       () => {
         setInfoModalVisible(!infoModalVisible);
       }
@@ -63,7 +63,7 @@ export function EditGroup({ navigation, route }: Props) {
         student.name,
         student.email,
         student.registration,
-        route.params.groupId
+        route.params.group_id
       );
 
       setStudents((prevState) => [...prevState, student]),
@@ -75,9 +75,8 @@ export function EditGroup({ navigation, route }: Props) {
   }
 
   async function getStudentsFromGroup() {
-    await getStudentsByGroup(route.params.groupId).then(() =>
-      setStudents(students)
-    );
+    const data = await getStudentsByGroup(route.params.group_id);
+    setStudents(data);
   }
 
   React.useEffect(() => {
@@ -145,34 +144,33 @@ export function EditGroup({ navigation, route }: Props) {
           onPress={() => setRegisterModalVisible(!registerModalVisible)}>
           <ButtonText>Adicionar aluno</ButtonText>
         </AddStudentButton>
-        <ActionsButtonsWrapper>
-          <StudentsList
-            data={students}
-            keyExtractor={({ registration }: Student) => registration}
-            renderItem={({ item }) => (
-              <StudentCard key={item.id}>
-                <StudentName>{item.name}</StudentName>
-                <ActionsButtonsWrapper>
-                  <Feather
-                    name="edit"
-                    size={25}
-                    color={theme.colors.gray_200}
-                    onPress={() => setEditModalVisible(!editModalVisible)}
-                  />
-                  <MaterialIcons
-                    name="delete"
-                    size={25}
-                    color={theme.colors.gray_200}
-                    style={{
-                      marginLeft: 15
-                    }}
-                    onPress={() => handleDeleteStudent(item.id)}
-                  />
-                </ActionsButtonsWrapper>
-              </StudentCard>
-            )}
-          />
-        </ActionsButtonsWrapper>
+        <StudentsList
+          showsVerticalScrollIndicator={false}
+          data={students}
+          keyExtractor={({ registration }: Student) => registration}
+          renderItem={({ item }) => (
+            <StudentCard key={item.id}>
+              <StudentName>{item.name}</StudentName>
+              <ActionsButtonsWrapper>
+                <Feather
+                  name="edit"
+                  size={25}
+                  color={theme.colors.gray_200}
+                  onPress={() => setEditModalVisible(!editModalVisible)}
+                />
+                <MaterialIcons
+                  name="delete"
+                  size={25}
+                  color={theme.colors.gray_200}
+                  style={{
+                    marginLeft: 15
+                  }}
+                  onPress={() => handleDeleteStudent(item.id)}
+                />
+              </ActionsButtonsWrapper>
+            </StudentCard>
+          )}
+        />
       </AddStudentArea>
 
       <ModalComponent
@@ -247,7 +245,7 @@ export function EditGroup({ navigation, route }: Props) {
         }
       />
 
-      <SubmitButton onPress={() => handleUpdateGroup(route.params.groupId)}>
+      <SubmitButton onPress={() => handleUpdateGroup(route.params.group_id)}>
         <ButtonText>Confirmar</ButtonText>
       </SubmitButton>
     </Container>

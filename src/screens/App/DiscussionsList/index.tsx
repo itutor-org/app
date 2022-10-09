@@ -44,8 +44,8 @@ export function DiscussionsList({ navigation, route }: Props) {
     {} as Discussion
   );
 
-  async function handleDeleteDiscussion(discussionId: string) {
-    await deleteDiscussion(discussionId)
+  async function handleDeleteDiscussion(discussion_id: string) {
+    await deleteDiscussion(discussion_id)
       .then(() => {
         console.log('Deletado com sucesso');
       })
@@ -54,17 +54,18 @@ export function DiscussionsList({ navigation, route }: Props) {
       });
   }
 
-  async function handleCreateDiscussion(groupId: string) {
+  async function handleCreateDiscussion(group_id: string) {
     await createDiscussion(
-      groupId,
+      group_id,
       discussion.general_subject,
       discussion.specific_subject,
-      route.params.participantsNumber,
+      route.params.participants_number,
       discussion.duration
     )
       .then((data) => {
         if (data) {
           navigation.navigate('Discussion', {
+            group_id: group_id,
             discussion_id: data.id,
             duration: data.duration,
             general_subject: data.general_subject,
@@ -79,7 +80,7 @@ export function DiscussionsList({ navigation, route }: Props) {
   }
 
   async function loadDiscussions() {
-    await getDiscussions(route.params.groupId)
+    await getDiscussions(route.params.group_id)
       .then((data) => {
         setDiscussions(data);
       })
@@ -201,7 +202,7 @@ export function DiscussionsList({ navigation, route }: Props) {
               />
             </InputWrapper>
             <SubmitButton
-              onPress={() => handleCreateDiscussion(route.params.groupId)}>
+              onPress={() => handleCreateDiscussion(route.params.group_id)}>
               <ButtonText>Iniciar Discussão</ButtonText>
             </SubmitButton>
           </>
