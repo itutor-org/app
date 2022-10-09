@@ -29,7 +29,8 @@ export const theme = {
     SM: 14,
     MD: 16,
     LG: 24,
-    XL: 36
+    XL: 36,
+    XXL: 48
   },
 
   margins: {
