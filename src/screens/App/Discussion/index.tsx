@@ -25,11 +25,12 @@ import { theme } from '../../../styles/theme';
 import { StatusBar } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { ConfirmationModal } from '../../../components/ConfirmationModal';
+import { deleteDiscussion } from '../../../services/discussionService';
 
 type Props = NativeStackScreenProps<AppStackParamList, 'Discussion'>;
 
 export function Discussion({ navigation, route }: Props) {
-  const [students, setStudents] = React.useState([
+  const [students, setStudents] = React.useState<any>([
     {
       name: 'Rodger',
       isSelected: false
@@ -79,11 +80,6 @@ export function Discussion({ navigation, route }: Props) {
       isSelected: false
     }
   ]);
-  const [topStudents, setTopStudents] = React.useState(students.slice(0, 8));
-  const [bottomStudents, setBottomStudents] = React.useState(
-    students.slice(8, students.length)
-  );
-
   const [interactions, setInteractions] = React.useState<any>([
     {
       name: 'Concordou',
@@ -110,37 +106,17 @@ export function Discussion({ navigation, route }: Props) {
       isSelected: false
     }
   ]);
-
-  const [interaction, setInteraction] = React.useState<any>({
-    starter: null,
-    type: null,
-    finisher: null
-  });
+  const [topStudents, setTopStudents] = React.useState(students.slice(0, 8));
+  const [bottomStudents, setBottomStudents] = React.useState(
+    students.slice(8, students.length)
+  );
 
   const [countdown, setCountdown] = React.useState(route.params.duration);
   const [showConfirmationModal, setShowConfirmationModal] =
     React.useState(false);
-
-  /*
-    {
-      starter: 'Rodger',
-      type: 'Concordou',
-      finisher: 'Hale',
-    }
-
-  */
-
-  // async function handleStoreInteraction() {
-  //   setInteractions((oldArray) => [
-  //     ...oldArray,
-  //     {
-  //       discussion_id: route.params.discussion_id,
-  //       starter_id: starter.id,
-  //       finisher_id: finisher.id,
-  //       interaction_type: interactionType
-  //     }
-  //   ]);
-  // }
+  const [showUnsavedChangesModal, setShowUnsavedChangesModal] =
+    React.useState(false);
+  const [wantsToGoBack, setWantsToGoBack] = React.useState(false);
 
   function handleSelected(student: any, array: any, setArray: any) {
     const newStudents = array.map((item: any) => {
@@ -154,33 +130,51 @@ export function Discussion({ navigation, route }: Props) {
     setArray(newStudents);
   }
 
-  // function handleStoreInteraction() {
-  //   const selectedStudents = students.filter((student) => student.isSelected);
-  //   const selectedInteractions = interactions.filter(
-  //     (interaction) => interaction.isSelected
-  //   );
-  //   const interaction = {
-  //     discussion_id: route.params.discussion_id,
-  //     starter_id: selectedStudents[0].id,
-  //     finisher_id: selectedStudents[1].id,
-  //     interaction_type: selectedInteractions[0].tag
-  //   };
-  //   console.log(interaction);
-  // }
-
-  // function loadStudents() {
-  //   setTopStudents(students.slice(0, 8));
-  //   setBottomStudents(students.slice(8, students.length));
-  // }
+  function handleResetInteraction() {
+    setInteractions(
+      interactions.map((item) => {
+        if (item.isSelected) {
+          item.isSelected = false;
+        }
+        return item;
+      })
+    );
+    setStudents(
+      students.map((item) => {
+        if (item.isSelected) {
+          item.isSelected = false;
+        }
+        return item;
+      })
+    );
+  }
 
   function handleFinalize() {
-    navigation.navigate('Results', {
-      discussion_id: route.params.discussion_id
+    navigation.replace('Results', {
+      discussion_id: route.params.discussion_id,
+      group_id: route.params.group_id,
+      participants_number: route.params.participants_number
     });
   }
 
-  // React.useEffect(() => {
-  // }, []);
+  async function handleUnsavedChanges() {
+    await deleteDiscussion(route.params.discussion_id).then(() => {
+      navigation.replace('DiscussionsList', {
+        group_id: route.params.group_id
+      });
+      setShowUnsavedChangesModal(!showUnsavedChangesModal);
+    });
+  }
+
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      setCountdown(countdown - 1);
+    }, 60000);
+    setTimeout(() => {
+      clearInterval(interval);
+      setShowConfirmationModal(true);
+    }, countdown * 60000);
+  }, []);
 
   return (
     <Container>
@@ -192,7 +186,7 @@ export function Discussion({ navigation, route }: Props) {
             color={theme.colors.white}
           />
           <TimeText>Tempo</TimeText>
-          <Subtitle>{route.params.duration} min</Subtitle>
+          <Subtitle>{countdown} min</Subtitle>
         </Wrapper>
         <Wrapper
           style={{
@@ -201,7 +195,12 @@ export function Discussion({ navigation, route }: Props) {
           <Title>{route.params.general_subject}</Title>
           <Subtitle>{route.params.specific_subject}</Subtitle>
         </Wrapper>
-        <AntDesign name="closecircleo" size={30} color={theme.colors.white} />
+        <AntDesign
+          name="closecircleo"
+          size={30}
+          color={theme.colors.white}
+          onPress={() => setShowUnsavedChangesModal(!showUnsavedChangesModal)}
+        />
       </TopBar>
       <Middle>
         <CardsWrapper>
@@ -243,7 +242,7 @@ export function Discussion({ navigation, route }: Props) {
         </CardsWrapper>
       </Middle>
       <ButtonsWrapper>
-        <Button isSubmit={true}>
+        <Button isSubmit={true} onPress={handleResetInteraction}>
           <ButtonText>GUARDAR INTERAÇÃO</ButtonText>
         </Button>
         <Button
@@ -254,10 +253,19 @@ export function Discussion({ navigation, route }: Props) {
       </ButtonsWrapper>
 
       <ConfirmationModal
-        message="Deseja mesmo finalizar essa discussão?"
+        message={'Deseja mesmo finalizar essa discussão?'}
         showModal={setShowConfirmationModal}
         visible={showConfirmationModal}
         handleAction={handleFinalize}
+      />
+
+      <ConfirmationModal
+        message={
+          'Deseja finalizar esta discussão? Você perderá todos os dados gerados nessa sessão'
+        }
+        showModal={setShowUnsavedChangesModal}
+        visible={showUnsavedChangesModal}
+        handleAction={handleUnsavedChanges}
       />
     </Container>
   );
