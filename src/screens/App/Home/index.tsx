@@ -39,11 +39,11 @@ export function Home({ navigation, route }: Props) {
 
   async function handleSearch(text: string) {
     if (text) {
-      const newData = filteredGroups.filter((item) => {
-        return item ? item.name.includes(text) : '';
+      const filtered = groups.filter((group) => {
+        return group.name.toLowerCase().includes(text.toLowerCase());
       });
 
-      setFilteredGroups(newData);
+      setFilteredGroups(filtered);
     } else {
       setFilteredGroups(groups);
     }
@@ -61,8 +61,11 @@ export function Home({ navigation, route }: Props) {
   }
 
   React.useEffect(() => {
-    loadGroups();
-  }, [groups]);
+    navigation.addListener('beforeRemove', (e) => {
+      e.preventDefault();
+    }),
+      loadGroups();
+  }, [navigation]);
 
   return (
     <HomeContainer>
@@ -85,8 +88,11 @@ export function Home({ navigation, route }: Props) {
           <SearchInputWrapper>
             <SearchInput
               placeholder="Pesquisar"
-              onChangeText={(value: string) => {
-                handleSearch(value);
+              onChangeText={(value) => handleSearch(value)}
+              onKeyPress={(e) => {
+                if (e.key === 'Backspace') {
+                  handleSearch('');
+                }
               }}
             />
             <MaterialIcons
