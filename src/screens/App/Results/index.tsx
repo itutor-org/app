@@ -1,6 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React from 'react';
-import ModalComponent from '../../../components/Modal';
 import { AppStackParamList } from '../../../routes/app.routes';
 
 import {
@@ -16,15 +15,9 @@ import {
   ButtonText
 } from './styles';
 
-type Props = NativeStackScreenProps<AppStackParamList, 'Discussion'>;
+type Props = NativeStackScreenProps<AppStackParamList, 'Results'>;
 
 export function Results({ navigation, route }: Props) {
-  const [infoModalVisible, setInfoModalVisible] = React.useState(false);
-
-  function handleSubmit() {
-    navigation.popToTop();
-  }
-
   return (
     <Container>
       <Title>Resultado</Title>
@@ -39,7 +32,13 @@ export function Results({ navigation, route }: Props) {
         <ClassificationText>0,6 a 1,0: Demasiado</ClassificationText>
       </ClassificationTextWrapper>
 
-      <Button onPress={handleSubmit}>
+      <Button
+        onPress={() =>
+          navigation.replace('DiscussionsList', {
+            group_id: route.params.group_id,
+            participants_number: route.params.participants_number
+          })
+        }>
         <ButtonText>Finalizar</ButtonText>
       </Button>
     </Container>
