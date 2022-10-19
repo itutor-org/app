@@ -37,6 +37,9 @@ type Props = NativeStackScreenProps<AppStackParamList, 'DiscussionsList'>;
 export function DiscussionsList({ navigation, route }: Props) {
   const { logoff, user } = useAuth();
   const [discussions, setDiscussions] = React.useState<Discussion[]>([]);
+  const [filteredDiscussions, setFilteredDiscussions] = React.useState<
+    Discussion[]
+  >([]);
   const [showCreateDiscussionModal, setShowCreateDiscussionModal] =
     React.useState(false);
 
@@ -83,19 +86,40 @@ export function DiscussionsList({ navigation, route }: Props) {
     await getDiscussions(route.params.group_id)
       .then((data) => {
         setDiscussions(data);
+        setFilteredDiscussions(data);
       })
       .catch((error) => {
         console.log(error);
       });
   }
 
+  async function handleSearch(text: string) {
+    if (text) {
+      const filtered = discussions.filter((discussion) => {
+        return discussion.specific_subject
+          .toLowerCase()
+          .includes(text.toLowerCase());
+      });
+
+      setFilteredDiscussions(filtered);
+    } else {
+      setFilteredDiscussions(discussions);
+    }
+  }
+
   React.useEffect(() => {
     loadDiscussions();
-  }, [discussions]);
+  }, []);
 
   return (
     <HomeContainer>
       <TopBar marginTop={StatusBar.currentHeight + 15}>
+        <MaterialIcons
+          name="arrow-back"
+          size={30}
+          color={theme.colors.dark_yellow}
+          onPress={() => navigation.popToTop()}
+        />
         <TeacherInfo>
           <TeacherName>Prof. {user.name}</TeacherName>
           <TeacherEmail>{user.email}</TeacherEmail>
@@ -112,7 +136,15 @@ export function DiscussionsList({ navigation, route }: Props) {
 
         <SearchWrapper>
           <SearchInputWrapper>
-            <SearchInput placeholder="Pesquisar" />
+            <SearchInput
+              placeholder="Pesquisar"
+              onChangeText={(value) => handleSearch(value)}
+              onKeyPress={(e) => {
+                if (e.key === 'Backspace') {
+                  handleSearch('');
+                }
+              }}
+            />
             <MaterialIcons
               name="search"
               size={30}
@@ -134,7 +166,7 @@ export function DiscussionsList({ navigation, route }: Props) {
         <GroupsWrapper>
           <GroupList
             showsVerticalScrollIndicator={false}
-            data={discussions}
+            data={filteredDiscussions}
             keyExtractor={({ id }: Discussion) => id}
             renderItem={({ item }) => (
               <DiscussionCard
