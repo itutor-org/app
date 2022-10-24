@@ -1,6 +1,4 @@
 import firestore from '@react-native-firebase/firestore';
-import { Student } from '../screens/App/AddGroup';
-import { deleteGroup } from './groupService';
 
 const studentsCollection = firestore().collection('students');
 
@@ -11,11 +9,18 @@ export interface User {
   registration: string;
 }
 
+interface Student {
+  id: string;
+  name: string;
+  registration: string;
+  email: string;
+}
+
 export const createStudent = async (
-  name,
-  email,
-  registration,
-  group_id
+  name: string,
+  email: string,
+  registration: string,
+  group_id: string
 ): Promise<Student> => {
   const res = await studentsCollection.add({
     name,
@@ -30,7 +35,7 @@ export const createStudent = async (
 };
 
 export const getStudent = async (id: string): Promise<Student> => {
-  const data = await studentsCollection
+  return await studentsCollection
     .where(firestore.FieldPath.documentId(), '==', id)
     .get()
     .then((querySnapshot) => {
@@ -40,13 +45,14 @@ export const getStudent = async (id: string): Promise<Student> => {
         id: querySnapshot.docs[0].data().id,
         registration: querySnapshot.docs[0].data().registration
       } as Student;
+    })
+    .catch((error) => {
+      throw error.code;
     });
-
-  return data;
 };
 
 export const getStudentsByGroup = async (id: string): Promise<Student[]> => {
-  const data = await studentsCollection
+  return await studentsCollection
     .where('group_id', '==', id)
     .get()
     .then((querySnapshot) => {
@@ -58,10 +64,8 @@ export const getStudentsByGroup = async (id: string): Promise<Student[]> => {
       })) as Student[];
     })
     .catch((error) => {
-      throw console.log(error.code);
+      throw error.code;
     });
-
-  return data;
 };
 
 export const deleteStudent = async (id: string): Promise<void> => {

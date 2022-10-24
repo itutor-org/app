@@ -8,7 +8,6 @@ import {
 } from '@expo-google-fonts/montserrat';
 
 import { Routes } from './src/routes';
-import { Loading } from './src/components/Loading';
 import { GlobalContext } from './src/contexts/GlobalContext';
 
 export default function App() {
@@ -20,11 +19,7 @@ export default function App() {
 
   return (
     <GlobalContext>
-      {fontsLoaded ? (
-        <Routes />
-      ) : (
-        <Loading isTransparent={false} size="large" />
-      )}
+      {fontsLoaded ? <Routes /> : null}
       <StatusBar style="light" />
     </GlobalContext>
   );

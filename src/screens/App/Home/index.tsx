@@ -32,9 +32,13 @@ export function Home({ navigation, route }: Props) {
     React.useState(false);
 
   async function handleDeleteGroup(group_id: string): Promise<void> {
-    await deleteGroup(group_id).then(() => {
-      setShowConfirmationModal(!showConfirmationModal);
-    });
+    await deleteGroup(group_id)
+      .then(() => {
+        setShowConfirmationModal(!showConfirmationModal);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   async function handleSearch(text: string) {
@@ -65,7 +69,7 @@ export function Home({ navigation, route }: Props) {
       e.preventDefault();
     }),
       loadGroups();
-  }, [navigation]);
+  }, [navigation, groups]);
 
   return (
     <HomeContainer>

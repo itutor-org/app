@@ -1,5 +1,4 @@
 import firestore from '@react-native-firebase/firestore';
-import { Discussion } from '../screens/App';
 
 const discussionsCollection = firestore().collection('discussions');
 
@@ -19,7 +18,7 @@ export interface Discussion {
 export const getDiscussions = async (
   group_id: string
 ): Promise<Discussion[]> => {
-  const data = await discussionsCollection
+  return await discussionsCollection
     .where('group_id', '==', group_id)
     .get()
     .then((querySnapshot) => {
@@ -40,10 +39,8 @@ export const getDiscussions = async (
       ) as Discussion[];
     })
     .catch((error) => {
-      throw console.log(error.code);
+      throw error.code;
     });
-
-  return data;
 };
 
 export const deleteDiscussion = async (discussion_id: string) => {
@@ -54,7 +51,7 @@ export const deleteDiscussion = async (discussion_id: string) => {
       console.log('Discussion deleted');
     })
     .catch((error) => {
-      console.log(error.code);
+      throw error.code;
     });
 };
 
@@ -64,7 +61,7 @@ export const createDiscussion = async (
   specific_subject: string,
   participants_number: number,
   duration: number
-): Promise<Discussion | void> => {
+): Promise<Discussion> => {
   return await discussionsCollection
     .add({
       group_id,
@@ -93,6 +90,6 @@ export const createDiscussion = async (
           )
     )
     .catch((error) => {
-      console.log(error.code);
+      throw error.code;
     });
 };

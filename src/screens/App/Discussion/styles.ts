@@ -10,6 +10,12 @@ interface CardProps {
   isSelected: boolean;
 }
 
+interface StudentCardProps {
+  theme: DefaultTheme;
+  color: string;
+  isSelected: boolean;
+}
+
 interface InteractionCardProps extends CardProps {
   color: string;
 }
@@ -78,7 +84,7 @@ export const CardsWrapper = styled.View`
   flex-wrap: wrap;
 `;
 
-export const StudentCardTop = styled.TouchableOpacity<CardProps>`
+export const StudentCard = styled.TouchableOpacity<StudentCardProps>`
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -89,23 +95,7 @@ export const StudentCardTop = styled.TouchableOpacity<CardProps>`
   margin-bottom: ${({ theme }) => theme.margins.SM}px;
   background-color: ${({ theme }) => theme.colors.white};
   border: 5px solid
-    ${(props) =>
-      props.isSelected ? props.theme.colors.orange : props.theme.colors.white};
-`;
-
-export const StudentCardBottom = styled.TouchableOpacity<CardProps>`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  width: 80px;
-  height: 80px;
-  border-radius: 10px;
-  margin-bottom: ${({ theme }) => theme.margins.SM}px;
-  background-color: ${({ theme }) => theme.colors.white};
-  border: 5px solid
-    ${(props) =>
-      props.isSelected ? props.theme.colors.purple : props.theme.colors.white};
+    ${(props) => (props.isSelected ? props.color : props.theme.colors.white)};
 `;
 
 export const StudentCardText = styled.Text`
@@ -137,6 +127,7 @@ export const InteractionCard = styled.TouchableOpacity<InteractionCardProps>`
   border: 10px solid
     ${(props) => (props.isSelected ? props.theme.colors.white : props.color)};
 `;
+
 export const InteractionCardText = styled.Text`
   font-size: ${({ theme }) => theme.font_size.XL}px;
   color: ${({ theme }) => theme.colors.white};
@@ -149,6 +140,11 @@ export const ButtonsWrapper = styled.View`
   align-items: center;
   justify-content: space-between;
   width: 100%;
+`;
+
+export const InteractionButtonsWrapper = styled(ButtonsWrapper)`
+  flex-direction: row;
+  width: 90%;
 `;
 
 export const Button = styled.TouchableOpacity<ButtonProps>`
@@ -166,9 +162,21 @@ export const Button = styled.TouchableOpacity<ButtonProps>`
   border-radius: 6px;
 `;
 
+export const InteractionButton = styled(Button)`
+  width: 48%;
+  background-color: ${(props) =>
+    props.isSubmit
+      ? props.theme.colors.medium_green
+      : props.theme.colors.light_red};
+`;
+
 export const ButtonText = styled.Text`
   color: ${({ theme }) => theme.colors.white};
   font-size: ${({ theme }) => theme.font_size.MD}px;
   font-weight: ${({ theme }) => theme.font_weight.bold};
   text-transform: uppercase;
+`;
+
+export const InteractionButtonText = styled(ButtonText)`
+  font-size: ${({ theme }) => theme.font_size.SM}px;
 `;

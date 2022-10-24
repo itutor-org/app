@@ -39,7 +39,6 @@ export function AddGroup({ navigation, route }: Props) {
   const [modalVisible, setModalVisible] = React.useState(false);
   const [infoModalVisible, setInfoModalVisible] = React.useState(false);
   const [groupName, setGroupName] = React.useState('');
-  const [participantsNumber, setParticipantsNumber] = React.useState(0);
   const [className, setClassName] = React.useState('');
   const [students, setStudents] = React.useState<Student[]>([]);
   const [student, setStudent] = React.useState<Student>();
@@ -48,7 +47,7 @@ export function AddGroup({ navigation, route }: Props) {
     await createGroup(
       user.id,
       groupName,
-      participantsNumber,
+      students.length,
       className,
       students
     ).then(() => {
@@ -83,20 +82,6 @@ export function AddGroup({ navigation, route }: Props) {
           onChangeText={(value: string) => setGroupName(value)}
         />
       </InputWrapper>
-      <InputWrapper>
-        <MaterialIcons
-          name="people"
-          size={19}
-          color={'#8D8D99'}
-          style={{ marginRight: 7 }}
-        />
-        <Input
-          keyboardType="numeric"
-          maxLength={2}
-          placeholder="Número de participantes"
-          onChangeText={(value: number) => setParticipantsNumber(value)}
-        />
-      </InputWrapper>
 
       <InputWrapper>
         <MaterialIcons
@@ -124,11 +109,6 @@ export function AddGroup({ navigation, route }: Props) {
               <StudentCard key={item.id}>
                 <StudentName>{item.name}</StudentName>
                 <ActionsButtonsWrapper>
-                  <Feather
-                    name="edit"
-                    size={25}
-                    color={theme.colors.gray_200}
-                  />
                   <MaterialIcons
                     name="delete"
                     size={25}

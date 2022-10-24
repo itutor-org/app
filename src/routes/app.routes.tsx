@@ -15,7 +15,6 @@ export type AppStackParamList = {
   EditGroup: {
     group_id: string;
     name: string;
-    participants_number: number;
     class_name: string;
   };
   DiscussionsList: {

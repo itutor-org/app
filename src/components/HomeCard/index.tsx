@@ -73,7 +73,6 @@ export function HomeCard({
                 navigation.navigate('EditGroup', {
                   group_id: id,
                   name,
-                  participants_number,
                   class_name
                 });
               }}

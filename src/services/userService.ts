@@ -19,22 +19,19 @@ export const createUser = async ({ name, email, id, registration }: User) => {
 };
 
 export const getUser = async (id: string): Promise<User> => {
-  const data = await usersCollection
+  return await usersCollection
     .where('id', '==', id)
     .limit(1)
     .get()
-    .then((querySnapshot) => {
-      const user: User = {
-        name: querySnapshot.docs[0].data().name,
-        email: querySnapshot.docs[0].data().email,
-        id: querySnapshot.docs[0].data().id,
-        registration: querySnapshot.docs[0].data().registration
-      };
-
-      return user;
-    });
-
-  return data;
+    .then(
+      (querySnapshot) =>
+        ({
+          name: querySnapshot.docs[0].data().name,
+          email: querySnapshot.docs[0].data().email,
+          id: querySnapshot.docs[0].data().id,
+          registration: querySnapshot.docs[0].data().registration
+        } as User)
+    );
 };
 
 export const addGroupToUser = async (id: string, group_id: string) => {

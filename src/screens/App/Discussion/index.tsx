@@ -10,15 +10,17 @@ import {
   Subtitle,
   Middle,
   CardsWrapper,
-  StudentCardTop,
-  StudentCardBottom,
+  StudentCard,
   StudentCardText,
   InteractionsWrapper,
   InteractionCard,
   InteractionCardText,
   ButtonsWrapper,
   Button,
-  ButtonText
+  ButtonText,
+  InteractionButtonsWrapper,
+  InteractionButton,
+  InteractionButtonText
 } from './styles';
 import { AntDesign } from '@expo/vector-icons';
 import { theme } from '../../../styles/theme';
@@ -26,61 +28,102 @@ import { StatusBar } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { ConfirmationModal } from '../../../components/ConfirmationModal';
 import { deleteDiscussion } from '../../../services/discussionService';
+import { Student } from '../AddGroup';
+
+interface IStudent extends Student {
+  isSelected: boolean;
+}
+
+interface Interaction {
+  discussion_id: string;
+  starter: Student;
+  type: string;
+  finisher: Student;
+}
+
+interface Action {
+  name: string;
+  tag: string;
+  color: string;
+  isSelected: boolean;
+}
 
 type Props = NativeStackScreenProps<AppStackParamList, 'Discussion'>;
 
 export function Discussion({ navigation, route }: Props) {
-  const [students, setStudents] = React.useState<any>([
+  const [students, setStudents] = React.useState<IStudent[]>([
     {
-      name: 'Rodger',
+      id: 'a02a40cd-29af-454e-8522-235bc4a86f30',
+      name: 'Wildon',
+      registration: '68441159',
+      email: 'wcraddock0@google.nl',
       isSelected: false
     },
     {
-      name: 'Hale',
+      id: '2b3f53ff-0bfe-41c7-9309-6009e886dba6',
+      name: 'Clem',
+      registration: '34375750',
+      email: 'ccorre1@dailymail.co.uk',
       isSelected: false
     },
     {
-      name: 'Barr',
+      id: 'b62e4d63-7b29-4e60-8c55-1a6bbf9286f0',
+      name: 'Kakalina',
+      registration: '54144494',
+      email: 'kshier2@geocities.com',
       isSelected: false
     },
     {
-      name: 'Freeman',
+      id: 'c4aadb34-f9fc-4a37-9741-b229729be9d0',
+      name: 'Morissa',
+      registration: '65113852',
+      email: 'mcottier3@pinterest.com',
       isSelected: false
     },
     {
-      name: 'Bern',
+      id: '391a98fd-3722-439b-8b4b-231c92b3f702',
+      name: 'Dory',
+      registration: '66466710',
+      email: 'dbrunon4@washington.edu',
       isSelected: false
     },
     {
-      name: 'Gery',
+      id: '9d093e6d-eea2-4d2d-a92b-3e69ddfb6f21',
+      name: 'Lynnea',
+      registration: '18259499',
+      email: 'lwarlow5@plala.or.jp',
       isSelected: false
     },
     {
-      name: 'Neill',
+      id: '34a4a924-7ba4-4120-8bab-a9a8c5926323',
+      name: 'Charlotta',
+      registration: '61084498',
+      email: 'cskyppe6@csmonitor.com',
       isSelected: false
     },
     {
-      name: 'Cammie',
+      id: '40f983fa-11ae-49f4-8aa9-056d8dac063e',
+      name: 'Vania',
+      registration: '33897937',
+      email: 'vcorbould7@nbcnews.com',
       isSelected: false
     },
     {
-      name: 'Lucas',
+      id: 'ba26fbf6-8d83-4e3c-a89c-df139c743dc1',
+      name: 'Mannie',
+      registration: '54925047',
+      email: 'mherety8@ca.gov',
       isSelected: false
     },
     {
-      name: 'Pedro',
-      isSelected: false
-    },
-    {
-      name: 'Elielson',
-      isSelected: false
-    },
-    {
-      name: 'Márcio',
+      id: 'ceab0551-4f22-4f6e-99cd-662cfc57d585',
+      name: 'Diana',
+      registration: '35223664',
+      email: 'dwase9@desdev.cn',
       isSelected: false
     }
   ]);
-  const [interactions, setInteractions] = React.useState<any>([
+  const [actions, setActions] = React.useState<Action[]>([
     {
       name: 'Concordou',
       tag: 'C',
@@ -106,33 +149,75 @@ export function Discussion({ navigation, route }: Props) {
       isSelected: false
     }
   ]);
-  const [topStudents, setTopStudents] = React.useState(students.slice(0, 8));
-  const [bottomStudents, setBottomStudents] = React.useState(
-    students.slice(8, students.length)
-  );
+
+  const [interaction, setInteraction] = React.useState<Interaction>({
+    discussion_id: route.params.discussion_id,
+    starter: null,
+    type: null,
+    finisher: null
+  });
 
   const [countdown, setCountdown] = React.useState(route.params.duration);
   const [showConfirmationModal, setShowConfirmationModal] =
     React.useState(false);
   const [showUnsavedChangesModal, setShowUnsavedChangesModal] =
     React.useState(false);
-  const [wantsToGoBack, setWantsToGoBack] = React.useState(false);
 
-  function handleSelected(student: any, array: any, setArray: any) {
-    const newStudents = array.map((item: any) => {
-      if (item.name === student.name) {
-        item.isSelected = !item.isSelected;
-      } else {
-        item.isSelected = false;
+  function handleSelectStudent(
+    student: IStudent,
+    array: IStudent[],
+    setArray: (value: IStudent[]) => void
+  ) {
+    const selectedStudents = array.filter((student) => student.isSelected);
+
+    if (selectedStudents.length === 2) {
+      const newArray = array.map((item) => {
+        if (item.id === student.id) {
+          item.isSelected = false;
+        }
+        return item;
+      });
+
+      if (interaction.starter.id === student.id) {
+        setInteraction({
+          ...interaction,
+          starter: null
+        });
+      } else if (interaction.finisher.id === student.id) {
+        setInteraction({
+          ...interaction,
+          finisher: null
+        });
       }
-      return item;
-    });
-    setArray(newStudents);
+
+      setArray(newArray);
+    } else {
+      const newArray = array.map((item) => {
+        if (item.id === student.id) {
+          item.isSelected = !item.isSelected;
+        }
+        return item;
+      });
+
+      if (interaction.starter) {
+        setInteraction({
+          ...interaction,
+          finisher: student
+        });
+      } else {
+        setInteraction({
+          ...interaction,
+          starter: student
+        });
+      }
+
+      setArray(newArray);
+    }
   }
 
   function handleResetInteraction() {
-    setInteractions(
-      interactions.map((item) => {
+    setActions(
+      actions.map((item) => {
         if (item.isSelected) {
           item.isSelected = false;
         }
@@ -147,6 +232,35 @@ export function Discussion({ navigation, route }: Props) {
         return item;
       })
     );
+    setInteraction({
+      discussion_id: route.params.discussion_id,
+      starter: null,
+      type: null,
+      finisher: null
+    });
+  }
+
+  function handleStoreAction(name: string) {
+    setActions(
+      actions.map((item) => {
+        if (item.name === name) {
+          item.isSelected = !item.isSelected;
+          setInteraction({
+            ...interaction,
+            type: item.name
+          });
+        } else {
+          item.isSelected = false;
+        }
+        return item;
+      })
+    );
+  }
+
+  function handleStoreInteraction() {
+    console.log(interaction);
+
+    handleResetInteraction();
   }
 
   function handleFinalize() {
@@ -158,22 +272,38 @@ export function Discussion({ navigation, route }: Props) {
   }
 
   async function handleUnsavedChanges() {
-    await deleteDiscussion(route.params.discussion_id).then(() => {
-      navigation.replace('DiscussionsList', {
-        group_id: route.params.group_id
+    await deleteDiscussion(route.params.discussion_id)
+      .then(() => {
+        navigation.replace('DiscussionsList', {
+          group_id: route.params.group_id
+        });
+        setShowUnsavedChangesModal(!showUnsavedChangesModal);
+      })
+      .catch((err) => {
+        console.log(err);
       });
-      setShowUnsavedChangesModal(!showUnsavedChangesModal);
-    });
+  }
+
+  function handleColor(student_id: string): string {
+    if (interaction.starter || interaction.finisher) {
+      if (interaction.starter?.id === student_id) {
+        return theme.colors.orange;
+      } else if (interaction.finisher?.id === student_id) {
+        return theme.colors.purple;
+      }
+    } else {
+      return theme.colors.white;
+    }
   }
 
   React.useEffect(() => {
-    const interval = setInterval(() => {
-      setCountdown(countdown - 1);
-    }, 60000);
-    setTimeout(() => {
-      clearInterval(interval);
-      setShowConfirmationModal(true);
-    }, countdown * 60000);
+    // const interval = setInterval(() => {
+    //   setCountdown(countdown - 1);
+    // }, 60000);
+    // setTimeout(() => {
+    //   clearInterval(interval);
+    //   setShowConfirmationModal(true);
+    // }, countdown * 60000); // 1 minuto = 60000ms
   }, []);
 
   return (
@@ -204,47 +334,42 @@ export function Discussion({ navigation, route }: Props) {
       </TopBar>
       <Middle>
         <CardsWrapper>
-          {topStudents.map((student) => (
-            <StudentCardTop
+          {students.map((student) => (
+            <StudentCard
               key={student.name}
               isSelected={student.isSelected}
+              color={() => handleColor(student.id)}
               onPress={() =>
-                handleSelected(student, topStudents, setTopStudents)
+                handleSelectStudent(student, students, setStudents)
               }>
               <StudentCardText>{student.name}</StudentCardText>
-            </StudentCardTop>
+            </StudentCard>
           ))}
         </CardsWrapper>
         <InteractionsWrapper>
-          {interactions.map((interaction) => (
+          {actions.map((interaction) => (
             <InteractionCard
               key={interaction.name}
               color={interaction.color}
               isSelected={interaction.isSelected}
-              onPress={() =>
-                handleSelected(interaction, interactions, setInteractions)
-              }>
+              onPress={() => {
+                handleStoreAction(interaction.name);
+              }}>
               <InteractionCardText>{interaction.tag}</InteractionCardText>
             </InteractionCard>
           ))}
         </InteractionsWrapper>
-        <CardsWrapper>
-          {bottomStudents.map((student) => (
-            <StudentCardBottom
-              key={student.name}
-              isSelected={student.isSelected}
-              onPress={() =>
-                handleSelected(student, bottomStudents, setBottomStudents)
-              }>
-              <StudentCardText>{student.name}</StudentCardText>
-            </StudentCardBottom>
-          ))}
-        </CardsWrapper>
       </Middle>
       <ButtonsWrapper>
-        <Button isSubmit={true} onPress={handleResetInteraction}>
-          <ButtonText>GUARDAR INTERAÇÃO</ButtonText>
-        </Button>
+        <InteractionButtonsWrapper>
+          <InteractionButton isSubmit={true} onPress={handleStoreInteraction}>
+            <InteractionButtonText>GUARDAR INTERAÇÃO</InteractionButtonText>
+          </InteractionButton>
+          <InteractionButton isSubmit={false} onPress={handleResetInteraction}>
+            <InteractionButtonText>DESCARTAR</InteractionButtonText>
+          </InteractionButton>
+        </InteractionButtonsWrapper>
+
         <Button
           isSubmit={false}
           onPress={() => setShowConfirmationModal(!showConfirmationModal)}>

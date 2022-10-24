@@ -33,18 +33,14 @@ type Props = NativeStackScreenProps<AppStackParamList, 'EditGroup'>;
 
 export function EditGroup({ navigation, route }: Props) {
   const [registerModalVisible, setRegisterModalVisible] = React.useState(false);
-  const [editModalVisible, setEditModalVisible] = React.useState(false);
   const [infoModalVisible, setInfoModalVisible] = React.useState(false);
   const [groupName, setGroupName] = React.useState(route.params.name);
-  const [participantsNumber, setParticipantsNumber] = React.useState(
-    route.params.participants_number
-  );
   const [className, setClassName] = React.useState(route.params.class_name);
   const [students, setStudents] = React.useState<Student[]>([]);
   const [student, setStudent] = React.useState<Student>();
 
   async function handleUpdateGroup(group_id: string) {
-    await updateGroup(group_id, groupName, className, participantsNumber).then(
+    await updateGroup(group_id, groupName, className, students.length).then(
       () => {
         setInfoModalVisible(!infoModalVisible);
       }
@@ -110,20 +106,6 @@ export function EditGroup({ navigation, route }: Props) {
           onChangeText={(value: string) => setGroupName(value)}
         />
       </InputWrapper>
-      <InputWrapper>
-        <MaterialIcons
-          name="people"
-          size={19}
-          color={'#8D8D99'}
-          style={{ marginRight: 7 }}
-        />
-        <Input
-          keyboardType="numeric"
-          value={participantsNumber}
-          placeholder="Número de participantes"
-          onChangeText={(value: number) => setParticipantsNumber(value)}
-        />
-      </InputWrapper>
 
       <InputWrapper>
         <MaterialIcons
@@ -152,12 +134,6 @@ export function EditGroup({ navigation, route }: Props) {
             <StudentCard key={item.id}>
               <StudentName>{item.name}</StudentName>
               <ActionsButtonsWrapper>
-                <Feather
-                  name="edit"
-                  size={25}
-                  color={theme.colors.gray_200}
-                  onPress={() => setEditModalVisible(!editModalVisible)}
-                />
                 <MaterialIcons
                   name="delete"
                   size={25}

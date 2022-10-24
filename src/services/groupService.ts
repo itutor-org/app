@@ -1,5 +1,4 @@
 import firestore from '@react-native-firebase/firestore';
-import { Student } from '../screens/App/AddGroup';
 import {
   createStudent,
   deleteStudent,
@@ -16,8 +15,15 @@ export interface Group {
   class_name: string;
 }
 
+interface Student {
+  id: string;
+  name: string;
+  registration: string;
+  email: string;
+}
+
 export const getGroups = async (id: string): Promise<Group[]> => {
-  const data = await groupsCollection
+  return await groupsCollection
     .where('user_id', '==', id)
     .get()
     .then((querySnapshot) => {
@@ -36,17 +42,15 @@ export const getGroups = async (id: string): Promise<Group[]> => {
       return groups;
     })
     .catch((error) => {
-      throw console.log(error.code);
+      throw error.code;
     });
-
-  return data;
 };
 
 export const getGroupByName = async (
   user_id: string,
   name: string
 ): Promise<Group[]> => {
-  const data = await groupsCollection
+  return await groupsCollection
     .where('user_id', '==', user_id)
     .where('name', '==', name)
     .get()
@@ -60,10 +64,8 @@ export const getGroupByName = async (
       })) as Group[];
     })
     .catch((error) => {
-      throw console.log(error.code);
+      throw error.code;
     });
-
-  return data;
 };
 
 export const createGroup = async (
@@ -86,7 +88,7 @@ export const createGroup = async (
       });
     })
     .catch((error) => {
-      console.log(error.code);
+      throw error.code;
     });
 };
 
@@ -107,7 +109,7 @@ export const updateGroup = async (
       console.log('Group updated!');
     })
     .catch((error) => {
-      console.log(error.code);
+      throw error.code;
     });
 };
 
@@ -125,6 +127,6 @@ export const deleteGroup = async (group_id: string) => {
       console.log('Group deleted');
     })
     .catch((error) => {
-      console.log(error.code);
+      throw error.code;
     });
 };
