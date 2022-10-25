@@ -29,7 +29,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { ConfirmationModal } from '../../../components/ConfirmationModal';
 import { deleteDiscussion } from '../../../services/discussionService';
 import { createInteraction } from '../../../services/interactionService';
-import { ScreenStudent, Student } from '../../../entities/student.entity';
+import { ScreenStudent } from '../../../entities/student.entity';
 import { Action, Interaction } from '../../../entities/interaction.entity';
 
 type Props = NativeStackScreenProps<AppStackParamList, 'Discussion'>;
@@ -146,9 +146,9 @@ export function Discussion({ navigation, route }: Props) {
 
   const [interaction, setInteraction] = React.useState<Interaction>({
     discussion_id: route.params.discussion_id,
-    starter: {} as Student,
-    type: '',
-    finisher: {} as Student
+    starter: null,
+    type: null,
+    finisher: null
   });
 
   const [countdown, setCountdown] = React.useState(route.params.duration);
@@ -175,12 +175,12 @@ export function Discussion({ navigation, route }: Props) {
       if (interaction.starter.id === student.id) {
         setInteraction({
           ...interaction,
-          starter: {} as Student
+          starter: null
         });
       } else if (interaction.finisher.id === student.id) {
         setInteraction({
           ...interaction,
-          finisher: {} as Student
+          finisher: null
         });
       }
 
@@ -240,9 +240,9 @@ export function Discussion({ navigation, route }: Props) {
     );
     setInteraction({
       discussion_id: route.params.discussion_id,
-      starter: {} as Student,
-      type: '',
-      finisher: {} as Student
+      starter: null,
+      type: null,
+      finisher: null
     });
   }
 
