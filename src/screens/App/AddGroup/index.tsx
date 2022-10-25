@@ -17,21 +17,15 @@ import {
   StudentsList,
   InfoModalText
 } from './styles';
-import { MaterialIcons, Feather, Octicons } from '@expo/vector-icons';
+import { MaterialIcons, Octicons } from '@expo/vector-icons';
 import { theme } from '../../../styles/theme';
 import { StatusBar } from 'react-native';
 import ModalComponent from '../../../components/Modal';
 import { useAuth } from '../../../contexts/useAuth';
 import { createGroup } from '../../../services/groupService';
+import { StudentDTO } from '../../../entities/student.entity';
 
 type Props = NativeStackScreenProps<AppStackParamList, 'AddGroup'>;
-
-export interface Student {
-  id: string;
-  name: string;
-  registration: string;
-  email: string;
-}
 
 export function AddGroup({ navigation, route }: Props) {
   const { user } = useAuth();
@@ -40,8 +34,8 @@ export function AddGroup({ navigation, route }: Props) {
   const [infoModalVisible, setInfoModalVisible] = React.useState(false);
   const [groupName, setGroupName] = React.useState('');
   const [className, setClassName] = React.useState('');
-  const [students, setStudents] = React.useState<Student[]>([]);
-  const [student, setStudent] = React.useState<Student>();
+  const [students, setStudents] = React.useState<StudentDTO[]>([]);
+  const [student, setStudent] = React.useState<StudentDTO>();
 
   async function handleCreateGroup() {
     await createGroup(
@@ -104,7 +98,7 @@ export function AddGroup({ navigation, route }: Props) {
         <ActionsButtonsWrapper>
           <StudentsList
             data={students}
-            keyExtractor={({ registration }: Student) => registration}
+            keyExtractor={({ registration }: StudentDTO) => registration}
             renderItem={({ item }) => (
               <StudentCard key={item.id}>
                 <StudentName>{item.name}</StudentName>
@@ -117,7 +111,11 @@ export function AddGroup({ navigation, route }: Props) {
                       marginLeft: 15
                     }}
                     onPress={() => {
-                      setStudents(students.filter((s) => s.id !== item.id));
+                      setStudents(
+                        students.filter(
+                          (s) => s.registration !== item.registration
+                        )
+                      );
                     }}
                   />
                 </ActionsButtonsWrapper>

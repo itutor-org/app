@@ -17,7 +17,7 @@ import {
   StudentsList,
   InfoModalText
 } from './styles';
-import { MaterialIcons, Feather, Octicons } from '@expo/vector-icons';
+import { MaterialIcons, Octicons } from '@expo/vector-icons';
 import { theme } from '../../../styles/theme';
 import { StatusBar } from 'react-native';
 import ModalComponent from '../../../components/Modal';
@@ -27,7 +27,7 @@ import {
   deleteStudent,
   getStudentsByGroup
 } from '../../../services/studentService';
-import { Student } from '../AddGroup';
+import { Student } from '../../../entities/student.entity';
 
 type Props = NativeStackScreenProps<AppStackParamList, 'EditGroup'>;
 

@@ -1,4 +1,6 @@
 import firestore from '@react-native-firebase/firestore';
+import { Group } from '../entities/group.entity';
+import { StudentDTO } from '../entities/student.entity';
 import {
   createStudent,
   deleteStudent,
@@ -6,21 +8,6 @@ import {
 } from './studentService';
 
 const groupsCollection = firestore().collection('groups');
-
-export interface Group {
-  id: string;
-  user_id: string;
-  name: string;
-  participants_number: number;
-  class_name: string;
-}
-
-interface Student {
-  id: string;
-  name: string;
-  registration: string;
-  email: string;
-}
 
 export const getGroups = async (id: string): Promise<Group[]> => {
   return await groupsCollection
@@ -46,28 +33,6 @@ export const getGroups = async (id: string): Promise<Group[]> => {
     });
 };
 
-export const getGroupByName = async (
-  user_id: string,
-  name: string
-): Promise<Group[]> => {
-  return await groupsCollection
-    .where('user_id', '==', user_id)
-    .where('name', '==', name)
-    .get()
-    .then((querySnapshot) => {
-      return querySnapshot.docs.map((document) => ({
-        id: document.id,
-        user_id: document.data().user_id,
-        name: document.data().name,
-        participants_number: document.data().participants_number,
-        class_name: document.data().class_name
-      })) as Group[];
-    })
-    .catch((error) => {
-      throw error.code;
-    });
-};
-
 export const createGroup = async (
   user_id: string,
   name: string,
@@ -83,7 +48,7 @@ export const createGroup = async (
       class_name
     })
     .then(async (group) => {
-      students.forEach(async (item: Student) => {
+      students.forEach(async (item: StudentDTO) => {
         await createStudent(item.name, item.email, item.registration, group.id);
       });
     })

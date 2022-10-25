@@ -1,20 +1,7 @@
 import firestore from '@react-native-firebase/firestore';
+import { Student } from '../entities/student.entity';
 
 const studentsCollection = firestore().collection('students');
-
-export interface User {
-  name: string;
-  email: string;
-  id: string;
-  registration: string;
-}
-
-interface Student {
-  id: string;
-  name: string;
-  registration: string;
-  email: string;
-}
 
 export const createStudent = async (
   name: string,
@@ -43,7 +30,8 @@ export const getStudent = async (id: string): Promise<Student> => {
         name: querySnapshot.docs[0].data().name,
         email: querySnapshot.docs[0].data().email,
         id: querySnapshot.docs[0].data().id,
-        registration: querySnapshot.docs[0].data().registration
+        registration: querySnapshot.docs[0].data().registration,
+        group_id: querySnapshot.docs[0].data().group_id
       } as Student;
     })
     .catch((error) => {
@@ -60,7 +48,8 @@ export const getStudentsByGroup = async (id: string): Promise<Student[]> => {
         id: document.id,
         name: document.data().name,
         email: document.data().email,
-        registration: document.data().registration
+        registration: document.data().registration,
+        group_id: document.data().group_id
       })) as Student[];
     })
     .catch((error) => {

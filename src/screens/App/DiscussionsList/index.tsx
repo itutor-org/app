@@ -25,12 +25,12 @@ import { MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
 import {
   deleteDiscussion,
-  Discussion,
   getDiscussions,
   createDiscussion
 } from '../../../services/discussionService';
 import DiscussionCard from '../../../components/DiscussionCard';
 import ModalComponent from '../../../components/Modal';
+import { Discussion } from '../../../entities/discussion.entity';
 
 type Props = NativeStackScreenProps<AppStackParamList, 'DiscussionsList'>;
 
@@ -51,6 +51,12 @@ export function DiscussionsList({ navigation, route }: Props) {
     await deleteDiscussion(discussion_id)
       .then(() => {
         console.log('Deletado com sucesso');
+        discussions.splice(
+          discussions.findIndex(
+            (discussion) => discussion.id === discussion_id
+          ),
+          1
+        );
       })
       .catch((err) => {
         console.log(err);

@@ -1,15 +1,9 @@
 import firestore from '@react-native-firebase/firestore';
+import { User } from '../entities/user.entity';
 
 const usersCollection = firestore().collection('users');
 
-export interface User {
-  name: string;
-  email: string;
-  id: string;
-  registration: string;
-}
-
-export const createUser = async ({ name, email, id, registration }: User) => {
+export const createUser = async ({ name, email, id, registration }) => {
   await usersCollection.add({
     name,
     email,

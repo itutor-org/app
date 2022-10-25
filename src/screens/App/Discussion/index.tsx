@@ -28,99 +28,93 @@ import { StatusBar } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { ConfirmationModal } from '../../../components/ConfirmationModal';
 import { deleteDiscussion } from '../../../services/discussionService';
-import { Student } from '../AddGroup';
-
-interface IStudent extends Student {
-  isSelected: boolean;
-}
-
-interface Interaction {
-  discussion_id: string;
-  starter: Student;
-  type: string;
-  finisher: Student;
-}
-
-interface Action {
-  name: string;
-  tag: string;
-  color: string;
-  isSelected: boolean;
-}
+import { createInteraction } from '../../../services/interactionService';
+import { ScreenStudent, Student } from '../../../entities/student.entity';
+import { Action, Interaction } from '../../../entities/interaction.entity';
 
 type Props = NativeStackScreenProps<AppStackParamList, 'Discussion'>;
 
 export function Discussion({ navigation, route }: Props) {
-  const [students, setStudents] = React.useState<IStudent[]>([
+  const [students, setStudents] = React.useState<ScreenStudent[]>([
     {
       id: 'a02a40cd-29af-454e-8522-235bc4a86f30',
       name: 'Wildon',
       registration: '68441159',
       email: 'wcraddock0@google.nl',
-      isSelected: false
+      isSelected: false,
+      group_id: route.params.group_id
     },
     {
       id: '2b3f53ff-0bfe-41c7-9309-6009e886dba6',
       name: 'Clem',
       registration: '34375750',
       email: 'ccorre1@dailymail.co.uk',
-      isSelected: false
+      isSelected: false,
+      group_id: route.params.group_id
     },
     {
       id: 'b62e4d63-7b29-4e60-8c55-1a6bbf9286f0',
       name: 'Kakalina',
       registration: '54144494',
       email: 'kshier2@geocities.com',
-      isSelected: false
+      isSelected: false,
+      group_id: route.params.group_id
     },
     {
       id: 'c4aadb34-f9fc-4a37-9741-b229729be9d0',
       name: 'Morissa',
       registration: '65113852',
       email: 'mcottier3@pinterest.com',
-      isSelected: false
+      isSelected: false,
+      group_id: route.params.group_id
     },
     {
       id: '391a98fd-3722-439b-8b4b-231c92b3f702',
       name: 'Dory',
       registration: '66466710',
       email: 'dbrunon4@washington.edu',
-      isSelected: false
+      isSelected: false,
+      group_id: route.params.group_id
     },
     {
       id: '9d093e6d-eea2-4d2d-a92b-3e69ddfb6f21',
       name: 'Lynnea',
       registration: '18259499',
       email: 'lwarlow5@plala.or.jp',
-      isSelected: false
+      isSelected: false,
+      group_id: route.params.group_id
     },
     {
       id: '34a4a924-7ba4-4120-8bab-a9a8c5926323',
       name: 'Charlotta',
       registration: '61084498',
       email: 'cskyppe6@csmonitor.com',
-      isSelected: false
+      isSelected: false,
+      group_id: route.params.group_id
     },
     {
       id: '40f983fa-11ae-49f4-8aa9-056d8dac063e',
       name: 'Vania',
       registration: '33897937',
       email: 'vcorbould7@nbcnews.com',
-      isSelected: false
+      isSelected: false,
+      group_id: route.params.group_id
     },
     {
       id: 'ba26fbf6-8d83-4e3c-a89c-df139c743dc1',
       name: 'Mannie',
       registration: '54925047',
       email: 'mherety8@ca.gov',
-      isSelected: false
+      isSelected: false,
+      group_id: route.params.group_id
     },
     {
       id: 'ceab0551-4f22-4f6e-99cd-662cfc57d585',
       name: 'Diana',
       registration: '35223664',
       email: 'dwase9@desdev.cn',
-      isSelected: false
+      isSelected: false,
+      group_id: route.params.group_id
     }
   ]);
   const [actions, setActions] = React.useState<Action[]>([
@@ -152,9 +146,9 @@ export function Discussion({ navigation, route }: Props) {
 
   const [interaction, setInteraction] = React.useState<Interaction>({
     discussion_id: route.params.discussion_id,
-    starter: null,
-    type: null,
-    finisher: null
+    starter: {} as Student,
+    type: '',
+    finisher: {} as Student
   });
 
   const [countdown, setCountdown] = React.useState(route.params.duration);
@@ -164,9 +158,9 @@ export function Discussion({ navigation, route }: Props) {
     React.useState(false);
 
   function handleSelectStudent(
-    student: IStudent,
-    array: IStudent[],
-    setArray: (value: IStudent[]) => void
+    student: ScreenStudent,
+    array: ScreenStudent[],
+    setArray: (value: ScreenStudent[]) => void
   ) {
     const selectedStudents = array.filter((student) => student.isSelected);
 
@@ -181,12 +175,12 @@ export function Discussion({ navigation, route }: Props) {
       if (interaction.starter.id === student.id) {
         setInteraction({
           ...interaction,
-          starter: null
+          starter: {} as Student
         });
       } else if (interaction.finisher.id === student.id) {
         setInteraction({
           ...interaction,
-          finisher: null
+          finisher: {} as Student
         });
       }
 
@@ -202,12 +196,24 @@ export function Discussion({ navigation, route }: Props) {
       if (interaction.starter) {
         setInteraction({
           ...interaction,
-          finisher: student
+          finisher: {
+            id: student.id,
+            name: student.name,
+            registration: student.registration,
+            email: student.email,
+            group_id: student.group_id
+          }
         });
       } else {
         setInteraction({
           ...interaction,
-          starter: student
+          starter: {
+            id: student.id,
+            name: student.name,
+            registration: student.registration,
+            email: student.email,
+            group_id: student.group_id
+          }
         });
       }
 
@@ -234,9 +240,9 @@ export function Discussion({ navigation, route }: Props) {
     );
     setInteraction({
       discussion_id: route.params.discussion_id,
-      starter: null,
-      type: null,
-      finisher: null
+      starter: {} as Student,
+      type: '',
+      finisher: {} as Student
     });
   }
 
@@ -257,10 +263,15 @@ export function Discussion({ navigation, route }: Props) {
     );
   }
 
-  function handleStoreInteraction() {
-    console.log(interaction);
-
-    handleResetInteraction();
+  async function handleStoreInteraction() {
+    await createInteraction(
+      interaction.discussion_id,
+      interaction.starter,
+      interaction.type,
+      interaction.finisher
+    ).then(() => {
+      handleResetInteraction();
+    });
   }
 
   function handleFinalize() {
@@ -274,9 +285,7 @@ export function Discussion({ navigation, route }: Props) {
   async function handleUnsavedChanges() {
     await deleteDiscussion(route.params.discussion_id)
       .then(() => {
-        navigation.replace('DiscussionsList', {
-          group_id: route.params.group_id
-        });
+        navigation.popToTop();
         setShowUnsavedChangesModal(!showUnsavedChangesModal);
       })
       .catch((err) => {

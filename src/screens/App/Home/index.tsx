@@ -19,8 +19,9 @@ import {
 } from './styles';
 import { theme } from '../../../styles/theme';
 import { MaterialIcons } from '@expo/vector-icons';
-import { deleteGroup, getGroups, Group } from '../../../services/groupService';
+import { deleteGroup, getGroups } from '../../../services/groupService';
 import { HomeCard } from '../../../components/HomeCard';
+import { Group } from '../../../entities/group.entity';
 
 type Props = NativeStackScreenProps<AppStackParamList, 'Home'>;
 
@@ -35,6 +36,10 @@ export function Home({ navigation, route }: Props) {
     await deleteGroup(group_id)
       .then(() => {
         setShowConfirmationModal(!showConfirmationModal);
+        groups.splice(
+          groups.findIndex((group) => group.id === group_id),
+          1
+        );
       })
       .catch((err) => {
         console.log(err);
@@ -69,7 +74,7 @@ export function Home({ navigation, route }: Props) {
       e.preventDefault();
     }),
       loadGroups();
-  }, [navigation, groups]);
+  }, []);
 
   return (
     <HomeContainer>

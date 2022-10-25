@@ -1,19 +1,7 @@
 import firestore from '@react-native-firebase/firestore';
+import { Discussion } from '../entities/discussion.entity';
 
 const discussionsCollection = firestore().collection('discussions');
-
-export interface Discussion {
-  group_id: string;
-  general_subject: string;
-  specific_subject: string;
-  participants_number: number;
-  duration: number;
-  id?: string;
-  graph?: string;
-  randomness_index?: number;
-  classification?: string;
-  interactionsId?: string;
-}
 
 export const getDiscussions = async (
   group_id: string
@@ -51,7 +39,7 @@ export const deleteDiscussion = async (discussion_id: string) => {
       console.log('Discussion deleted');
     })
     .catch((error) => {
-      throw error.code;
+      console.log(error.code);
     });
 };
 
@@ -68,7 +56,10 @@ export const createDiscussion = async (
       general_subject,
       specific_subject,
       participants_number,
-      duration
+      duration,
+      graph: '',
+      randomness_index: 0,
+      classification: ''
     })
     .then(
       async (data) =>
@@ -85,7 +76,10 @@ export const createDiscussion = async (
                 specific_subject: querySnapshot.docs[0].data().specific_subject,
                 participants_number:
                   querySnapshot.docs[0].data().participants_number,
-                duration: querySnapshot.docs[0].data().duration
+                duration: querySnapshot.docs[0].data().duration,
+                classification: querySnapshot.docs[0].data().classification,
+                graph: querySnapshot.docs[0].data().graph,
+                randomness_index: querySnapshot.docs[0].data().randomness_index
               } as Discussion)
           )
     )

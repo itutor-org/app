@@ -6,8 +6,9 @@ import {
   useState
 } from 'react';
 import * as SecureStore from 'expo-secure-store';
-import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
-import { createUser, getUser, User } from '../services/userService';
+import auth from '@react-native-firebase/auth';
+import { createUser, getUser } from '../services/userService';
+import { User } from '../entities/user.entity';
 
 interface UserProviderProps {
   children: ReactNode;
