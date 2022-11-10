@@ -1,4 +1,5 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { DiscussionResult } from '../entities/discussion.entity';
 
 import {
   Home,
@@ -33,6 +34,7 @@ export type AppStackParamList = {
     discussion_id: string;
     group_id: string;
     participants_number: number;
+    discussion_result: DiscussionResult;
   };
 };
 

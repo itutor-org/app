@@ -8,6 +8,8 @@ export interface Student {
 
 export type StudentDTO = Omit<Student, 'id'>;
 
+export type StudentForInteraction = Omit<Student, 'id' | 'email'>;
+
 export interface ScreenStudent extends Student {
   isSelected: boolean;
 }

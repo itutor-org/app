@@ -11,3 +11,9 @@ export interface Discussion {
 }
 
 export type DiscussionDTO = Omit<Discussion, 'id'>;
+
+export interface DiscussionResult {
+  graph_image: string;
+  id: string;
+  randomness: string;
+}

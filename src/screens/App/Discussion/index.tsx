@@ -28,9 +28,14 @@ import { StatusBar } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { ConfirmationModal } from '../../../components/ConfirmationModal';
 import { deleteDiscussion } from '../../../services/discussionService';
-import { createInteraction } from '../../../services/interactionService';
+import {
+  createInteraction,
+  getInteractionByDiscussion
+} from '../../../services/interactionService';
 import { ScreenStudent } from '../../../entities/student.entity';
 import { Action, Interaction } from '../../../entities/interaction.entity';
+import { createDiscussionResult } from '../../../services/graphService';
+import { DiscussionResult } from '../../../entities/discussion.entity';
 
 type Props = NativeStackScreenProps<AppStackParamList, 'Discussion'>;
 
@@ -274,11 +279,16 @@ export function Discussion({ navigation, route }: Props) {
     });
   }
 
-  function handleFinalize() {
+  function handleFinalize({ id, graph_image, randomness }: DiscussionResult) {
     navigation.replace('Results', {
       discussion_id: route.params.discussion_id,
       group_id: route.params.group_id,
-      participants_number: route.params.participants_number
+      participants_number: route.params.participants_number,
+      discussion_result: {
+        id,
+        graph_image,
+        randomness
+      }
     });
   }
 
@@ -303,6 +313,24 @@ export function Discussion({ navigation, route }: Props) {
     } else {
       return theme.colors.white;
     }
+  }
+
+  async function handleCreateDiscussionResult() {
+    getInteractionByDiscussion(route.params.discussion_id)
+      .then((response: Interaction[]) => {
+        console.log(response);
+        createDiscussionResult(response)
+          .then((response: DiscussionResult) => {
+            console.log(response, 'aqui');
+            handleFinalize(response);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   React.useEffect(() => {
@@ -390,7 +418,7 @@ export function Discussion({ navigation, route }: Props) {
         message={'Deseja mesmo finalizar essa discussão?'}
         showModal={setShowConfirmationModal}
         visible={showConfirmationModal}
-        handleAction={handleFinalize}
+        handleAction={handleCreateDiscussionResult}
       />
 
       <ConfirmationModal

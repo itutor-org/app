@@ -1,5 +1,5 @@
 import firestore from '@react-native-firebase/firestore';
-import { Student } from './studentService';
+import { Student } from '../entities/student.entity';
 
 const interactionsCollection = firestore().collection('interactions');
 
