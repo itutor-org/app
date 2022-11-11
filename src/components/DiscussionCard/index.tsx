@@ -26,6 +26,7 @@ import ModalComponent from '../Modal';
 
 interface DiscussionCardProps {
   id: string;
+  general_subject: string;
   specific_subject: string;
   graph: string;
   participantsNumber: number;
@@ -36,6 +37,7 @@ interface DiscussionCardProps {
 
 export function DiscussionCard({
   id,
+  general_subject,
   specific_subject,
   participantsNumber,
   randomness_index,
@@ -89,17 +91,18 @@ export function DiscussionCard({
             />
 
             <ModalComponent
-              title={specific_subject}
+              title={general_subject}
               showCloseButton={true}
               visible={showInfoModal}
               showModal={setShowInfoModal}
               height={500}
               children={
                 <>
+                  <CardTitle>{specific_subject}</CardTitle>
                   <GraphImage
                     resizeMode="cover"
                     source={{
-                      uri: 'http://itutor-service-zeifba777q-uc.a.run.app/graph/segy3jf9ad'
+                      uri: graph
                     }}
                   />
                   <MiddleText>Índice de Aleatoriedade</MiddleText>

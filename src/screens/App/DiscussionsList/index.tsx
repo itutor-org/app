@@ -185,6 +185,7 @@ export function DiscussionsList({ navigation, route }: Props) {
             renderItem={({ item }) => (
               <DiscussionCard
                 id={item.id}
+                general_subject={item.general_subject}
                 randomness_index={item.randomness_index}
                 specific_subject={item.specific_subject}
                 participantsNumber={item.participants_number}

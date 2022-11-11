@@ -17,7 +17,7 @@ export const ModalContent = styled.View`
   align-items: center;
   justify-content: space-evenly;
   width: 80%;
-  height: 20%;
+  height: 25%;
 `;
 
 export const Title = styled.Text`

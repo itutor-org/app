@@ -62,7 +62,7 @@ export const SectionWrapper = styled.View`
 
 export const GraphImage = styled.Image`
   width: 100%;
-  height: 300px;
+  height: 45%;
 `;
 
 export const MiddleText = styled.Text`
@@ -102,8 +102,8 @@ export const RandomnessIndexWrapper = styled.View`
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  width: 90px;
-  height: 90px;
+  width: 75px;
+  height: 75px;
   border-radius: 50px;
   background-color: ${({ theme }) => theme.colors.light_blue};
 `;

@@ -416,6 +416,7 @@ export function Discussion({ navigation, route }: Props) {
         showModal={setShowFinishModal}
         handleAction={handleCreateDiscussionResult}
         visible={showFinishModal}
+        title={'Tempo esgotado!'}
       />
     </Container>
   );

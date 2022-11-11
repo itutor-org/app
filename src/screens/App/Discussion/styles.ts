@@ -61,9 +61,9 @@ export const TimeText = styled(Title)`
 `;
 
 export const Subtitle = styled.Text`
-  font-size: ${({ theme }) => theme.font_size.MD}px;
+  font-size: ${({ theme }) => theme.font_size.SM}px;
   color: ${({ theme }) => theme.colors.gray_200};
-  font-weight: ${({ theme }) => theme.font_weight.bold};
+  font-weight: 500;
 `;
 
 export const Middle = styled.View`
