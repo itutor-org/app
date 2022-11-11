@@ -2,9 +2,13 @@ import { Student } from './student.entity';
 
 export interface Interaction {
   discussion_id: string;
-  starter: Student;
   type: string;
   finisher: Student;
+  starter: Student;
+}
+
+export interface InteractionResponse extends Interaction {
+  id: string;
 }
 
 export interface Action {

@@ -60,14 +60,17 @@ export const SectionWrapper = styled.View`
   justify-content: flex-end;
 `;
 
-export const GraphImage = styled.Image``;
+export const GraphImage = styled.Image`
+  width: 100%;
+  height: 300px;
+`;
 
 export const MiddleText = styled.Text`
   font-size: ${({ theme }) => theme.font_size.MD}px;
   font-weight: ${({ theme }) => theme.font_weight.bold};
   color: ${({ theme }) => theme.colors.black};
   text-align: center;
-  margin: ${({ theme }) => theme.margins.MD}px 0;
+  margin: ${({ theme }) => theme.margins.SM}px 0;
   width: 100%;
 `;
 
@@ -99,8 +102,8 @@ export const RandomnessIndexWrapper = styled.View`
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  width: 70px;
-  height: 70px;
+  width: 90px;
+  height: 90px;
   border-radius: 50px;
   background-color: ${({ theme }) => theme.colors.light_blue};
 `;

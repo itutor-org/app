@@ -13,7 +13,9 @@ export const ModalContent = styled.View`
   border-radius: 5px;
   padding: ${({ theme }) => theme.font_size.MD}px;
   align-items: center;
+  justify-content: center;
   width: 80%;
+  min-height: 150px;
   padding-top: ${({ theme }) => theme.font_size.LG}px;
 `;
 

@@ -70,11 +70,14 @@ export function Home({ navigation, route }: Props) {
   }
 
   React.useEffect(() => {
+    loadGroups();
+  }, [groups]);
+
+  React.useEffect(() => {
     navigation.addListener('beforeRemove', (e) => {
       e.preventDefault();
-    }),
-      loadGroups();
-  }, []);
+    });
+  }, [navigation]);
 
   return (
     <HomeContainer>
@@ -97,12 +100,12 @@ export function Home({ navigation, route }: Props) {
           <SearchInputWrapper>
             <SearchInput
               placeholder="Pesquisar"
-              onChangeText={(value) => handleSearch(value)}
-              onKeyPress={(e) => {
-                if (e.key === 'Backspace') {
-                  handleSearch('');
-                }
-              }}
+              // onChangeText={(value) => handleSearch(value)}
+              // onKeyPress={(e) => {
+              //   if (e.key === 'Backspace') {
+              //     handleSearch('');
+              //   }
+              // }}
             />
             <MaterialIcons
               name="search"

@@ -130,6 +130,7 @@ export function AddGroup({ navigation, route }: Props) {
         showModal={setModalVisible}
         visible={modalVisible}
         showCloseButton={true}
+        height={350}
         children={
           <>
             <InputWrapper>
@@ -196,6 +197,7 @@ export function AddGroup({ navigation, route }: Props) {
         title="Sucesso"
         showModal={setInfoModalVisible}
         visible={infoModalVisible}
+        height={200}
         children={
           <>
             <InfoModalText>Grupo criado com sucesso</InfoModalText>

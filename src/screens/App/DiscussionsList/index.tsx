@@ -31,11 +31,14 @@ import {
 import DiscussionCard from '../../../components/DiscussionCard';
 import ModalComponent from '../../../components/Modal';
 import { Discussion } from '../../../entities/discussion.entity';
+import { DeleteDiscussionResult } from '../../../services/graphService';
+import { useLoading } from '../../../contexts/loading';
 
 type Props = NativeStackScreenProps<AppStackParamList, 'DiscussionsList'>;
 
 export function DiscussionsList({ navigation, route }: Props) {
   const { logoff, user } = useAuth();
+  const { setLoading } = useLoading();
   const [discussions, setDiscussions] = React.useState<Discussion[]>([]);
   const [filteredDiscussions, setFilteredDiscussions] = React.useState<
     Discussion[]
@@ -48,9 +51,13 @@ export function DiscussionsList({ navigation, route }: Props) {
   );
 
   async function handleDeleteDiscussion(discussion_id: string) {
-    await deleteDiscussion(discussion_id)
+    setLoading(true);
+    await deleteDiscussion(discussion_id).catch((err) => {
+      console.log(err);
+    });
+
+    await DeleteDiscussionResult(discussion_id)
       .then(() => {
-        console.log('Deletado com sucesso');
         discussions.splice(
           discussions.findIndex(
             (discussion) => discussion.id === discussion_id
@@ -60,7 +67,8 @@ export function DiscussionsList({ navigation, route }: Props) {
       })
       .catch((err) => {
         console.log(err);
-      });
+      })
+      .finally(() => setLoading(false));
   }
 
   async function handleCreateDiscussion(group_id: string) {
@@ -115,7 +123,7 @@ export function DiscussionsList({ navigation, route }: Props) {
 
   React.useEffect(() => {
     loadDiscussions();
-  }, []);
+  }, [discussions]);
 
   return (
     <HomeContainer>
@@ -182,6 +190,7 @@ export function DiscussionsList({ navigation, route }: Props) {
                 participantsNumber={item.participants_number}
                 deleteAction={() => handleDeleteDiscussion(item.id)}
                 navigation={navigation}
+                graph={item.graph}
               />
             )}
           />
@@ -193,6 +202,7 @@ export function DiscussionsList({ navigation, route }: Props) {
         showCloseButton={true}
         visible={showCreateDiscussionModal}
         showModal={setShowCreateDiscussionModal}
+        height={350}
         children={
           <>
             <InputWrapper>

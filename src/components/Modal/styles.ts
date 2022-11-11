@@ -1,4 +1,9 @@
-import styled from 'styled-components/native';
+import styled, { DefaultTheme } from 'styled-components/native';
+
+interface ModalContentProps {
+  height: number;
+  theme: DefaultTheme;
+}
 
 export const ModalContainer = styled.View`
   flex: 1;
@@ -8,21 +13,22 @@ export const ModalContainer = styled.View`
   background-color: #0000007f;
 `;
 
-export const ModalContent = styled.View`
+export const ModalContent = styled.View<ModalContentProps>`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: space-evenly;
   background-color: #fff;
   border-radius: 5px;
   padding: ${({ theme }) => theme.font_size.MD}px;
   width: 80%;
-  padding-top: ${({ theme }) => theme.font_size.LG}px;
+  height: ${(props) => props.height}px;
+  padding-top: ${({ theme }) => theme.font_size.SM}px;
 `;
 
 export const ModalTitle = styled.Text`
   font-size: ${({ theme }) => theme.font_size.LG}px;
   font-weight: ${({ theme }) => theme.font_weight.bold};
   color: ${({ theme }) => theme.colors.black};
-  margin: 0 0 ${({ theme }) => theme.font_size.MD}px 0;
+  margin: ${({ theme }) => theme.margins.MD}px;
 `;

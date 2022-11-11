@@ -127,7 +127,7 @@ export function EditGroup({ navigation, route }: Props) {
           <ButtonText>Adicionar aluno</ButtonText>
         </AddStudentButton>
         <StudentsList
-          showsVerticalScrollIndicator={false}
+          showsVerticalScrollIndicator={true}
           data={students}
           keyExtractor={({ registration }: Student) => registration}
           renderItem={({ item }) => (
@@ -154,6 +154,7 @@ export function EditGroup({ navigation, route }: Props) {
         showModal={setRegisterModalVisible}
         visible={registerModalVisible}
         showCloseButton={true}
+        height={350}
         children={
           <>
             <InputWrapper>
@@ -211,6 +212,7 @@ export function EditGroup({ navigation, route }: Props) {
         title="Sucesso"
         showModal={setInfoModalVisible}
         visible={infoModalVisible}
+        height={200}
         children={
           <>
             <InfoModalText>Grupo editado com sucesso</InfoModalText>

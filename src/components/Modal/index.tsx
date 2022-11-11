@@ -10,6 +10,7 @@ interface ModalComponentProps {
   showModal: (value: boolean) => void;
   children: React.ReactNode;
   showCloseButton?: boolean;
+  height: number;
 }
 
 export function ModalComponent({
@@ -17,7 +18,8 @@ export function ModalComponent({
   visible,
   showModal,
   children,
-  showCloseButton
+  showCloseButton,
+  height
 }: ModalComponentProps) {
   return (
     <Modal
@@ -31,7 +33,7 @@ export function ModalComponent({
         showModal(!visible);
       }}>
       <ModalContainer>
-        <ModalContent>
+        <ModalContent height={height}>
           {showCloseButton && (
             <MaterialIcons
               name="close"

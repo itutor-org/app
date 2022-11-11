@@ -27,6 +27,7 @@ import ModalComponent from '../Modal';
 interface DiscussionCardProps {
   id: string;
   specific_subject: string;
+  graph: string;
   participantsNumber: number;
   randomness_index: number;
   deleteAction: () => Promise<void>;
@@ -39,6 +40,7 @@ export function DiscussionCard({
   participantsNumber,
   randomness_index,
   deleteAction,
+  graph,
   navigation
 }: DiscussionCardProps) {
   const [showConfirmationModal, setShowConfirmationModal] =
@@ -91,9 +93,15 @@ export function DiscussionCard({
               showCloseButton={true}
               visible={showInfoModal}
               showModal={setShowInfoModal}
+              height={500}
               children={
                 <>
-                  <GraphImage source={require('../../../assets/graph.png')} />
+                  <GraphImage
+                    resizeMode="cover"
+                    source={{
+                      uri: 'http://itutor-service-zeifba777q-uc.a.run.app/graph/segy3jf9ad'
+                    }}
+                  />
                   <MiddleText>Índice de Aleatoriedade</MiddleText>
                   <ClassificationWrapper>
                     <ClassificationTextWrapper>
@@ -106,7 +114,7 @@ export function DiscussionCard({
                     </ClassificationTextWrapper>
                     <RandomnessIndexWrapper>
                       <RandomnessIndexText>
-                        {randomness_index}%
+                        {randomness_index}
                       </RandomnessIndexText>
                     </RandomnessIndexWrapper>
                   </ClassificationWrapper>

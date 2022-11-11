@@ -6,14 +6,14 @@ export interface Discussion {
   participants_number: number;
   duration: number;
   graph: string;
-  randomness_index: number;
+  randomness_index: string;
   classification: string;
 }
 
 export type DiscussionDTO = Omit<Discussion, 'id'>;
 
 export interface DiscussionResult {
-  graph_image: string;
+  graph: string;
   id: string;
-  randomness: string;
+  random_percent: string;
 }

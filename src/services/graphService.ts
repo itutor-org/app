@@ -1,14 +1,12 @@
 import { DiscussionResult } from '../entities/discussion.entity';
-import { Interaction } from '../entities/interaction.entity';
+import { InteractionResponse } from '../entities/interaction.entity';
 import { api } from './axios';
 
 export const createDiscussionResult = async (
-  interactions: Interaction[]
+  interactions: InteractionResponse[]
 ): Promise<DiscussionResult> => {
   return await api
-    .post('/graph', {
-      interactions
-    })
+    .post('/graph', interactions)
     .then((response) => {
       return response.data;
     })

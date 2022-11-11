@@ -35,9 +35,6 @@ export const deleteDiscussion = async (discussion_id: string) => {
   await discussionsCollection
     .doc(discussion_id)
     .delete()
-    .then(() => {
-      console.log('Discussion deleted');
-    })
     .catch((error) => {
       console.log(error.code);
     });
@@ -83,6 +80,24 @@ export const createDiscussion = async (
               } as Discussion)
           )
     )
+    .catch((error) => {
+      throw error.code;
+    });
+};
+
+export const updateDiscussion = async (
+  discussion_id: string,
+  classification: string,
+  graph: string,
+  randomness_index: string
+) => {
+  await discussionsCollection
+    .doc(discussion_id)
+    .update({
+      classification,
+      graph,
+      randomness_index
+    })
     .catch((error) => {
       throw error.code;
     });

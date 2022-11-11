@@ -70,9 +70,6 @@ export const updateGroup = async (
       class_name: class_name,
       participants_number: participants_number
     })
-    .then(() => {
-      console.log('Group updated!');
-    })
     .catch((error) => {
       throw error.code;
     });
@@ -88,9 +85,6 @@ export const deleteGroup = async (group_id: string) => {
   await groupsCollection
     .doc(group_id)
     .delete()
-    .then(() => {
-      console.log('Group deleted');
-    })
     .catch((error) => {
       throw error.code;
     });

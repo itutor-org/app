@@ -1,14 +1,8 @@
 import firestore from '@react-native-firebase/firestore';
+import { InteractionResponse } from '../entities/interaction.entity';
 import { Student } from '../entities/student.entity';
 
 const interactionsCollection = firestore().collection('interactions');
-
-interface Interaction {
-  discussion_id: string;
-  starter: Student;
-  type: string;
-  finisher: Student;
-}
 
 export const createInteraction = async (
   discussion_id: string,
@@ -19,9 +13,9 @@ export const createInteraction = async (
   return await interactionsCollection
     .add({
       discussion_id,
-      starter,
       type,
-      finisher
+      finisher,
+      starter
     })
     .then(() => {
       return;
@@ -30,19 +24,19 @@ export const createInteraction = async (
 
 export const getInteractionByDiscussion = async (
   id: string
-): Promise<Interaction[]> => {
+): Promise<InteractionResponse[]> => {
   return await interactionsCollection
     .where('discussion_id', '==', id)
     .get()
-    .then((querySnapshot) => {
-      return querySnapshot.docs.map((document) => ({
-        id: document.id,
+    .then((querySnapshot) =>
+      querySnapshot.docs.map((document) => ({
         discussion_id: document.data().discussion_id,
-        starter: document.data().starter,
+        id: document.id,
         type: document.data().type,
-        finisher: document.data().finisher
-      }));
-    })
+        finisher: document.data().finisher,
+        starter: document.data().starter
+      }))
+    )
     .catch((error) => {
       throw error.code;
     });

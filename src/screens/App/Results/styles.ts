@@ -9,8 +9,8 @@ export const Container = styled.View`
 `;
 
 export const Image = styled.Image`
-  width: 90%;
-  height: 30%;
+  width: 100%;
+  height: 50%;
 `;
 
 export const Title = styled.Text`
@@ -29,8 +29,7 @@ export const Subtitle = styled.Text`
 
 export const RandomnessTitle = styled(Title)`
   font-size: ${({ theme }) => theme.font_size.LG}px;
-  margin: ${({ theme }) => theme.margins.XL}px 0
-    ${({ theme }) => theme.margins.MD}px;
+  margin: ${({ theme }) => theme.margins.MD}px 0;
 `;
 
 export const RandomnessPercentage = styled(Title)`
@@ -41,22 +40,6 @@ export const RandomnessPercentage = styled(Title)`
   padding: ${({ theme }) => theme.margins.SM}px 0;
 `;
 
-export const ClassificationTextWrapper = styled.View`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 90%;
-  margin: ${({ theme }) => theme.margins.LG}px 0;
-`;
-
-export const ClassificationText = styled.Text`
-  font-size: ${({ theme }) => theme.font_size.MD}px;
-  font-weight: ${({ theme }) => theme.font_weight.regular};
-  color: ${({ theme }) => theme.colors.white};
-  text-align: left;
-`;
-
 export const Button = styled.TouchableOpacity`
   width: 90%;
   height: 55px;
@@ -65,7 +48,7 @@ export const Button = styled.TouchableOpacity`
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: ${({ theme }) => theme.margins.SM}px 0;
+  margin: ${({ theme }) => theme.margins.MD}px 0;
   border-radius: 6px;
 `;
 
