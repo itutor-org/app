@@ -28,6 +28,7 @@ import {
   getStudentsByGroup
 } from '../../../services/studentService';
 import { Student } from '../../../entities/student.entity';
+import InformationModal from '../../../components/InformationModal';
 
 type Props = NativeStackScreenProps<AppStackParamList, 'EditGroup'>;
 
@@ -208,19 +209,12 @@ export function EditGroup({ navigation, route }: Props) {
         }
       />
 
-      <ModalComponent
+      <InformationModal
         title="Sucesso"
         showModal={setInfoModalVisible}
         visible={infoModalVisible}
-        height={200}
-        children={
-          <>
-            <InfoModalText>Grupo editado com sucesso</InfoModalText>
-            <SubmitButton onPress={() => navigation.navigate('Home')}>
-              <ButtonText>Ok</ButtonText>
-            </SubmitButton>
-          </>
-        }
+        message="Grupo editado com sucesso"
+        handleAction={() => navigation.navigate('Home')}
       />
 
       <SubmitButton onPress={() => handleUpdateGroup(route.params.group_id)}>

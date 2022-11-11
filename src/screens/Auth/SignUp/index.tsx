@@ -18,6 +18,8 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { theme } from '../../../styles/theme';
 import { useState } from 'react';
 import { useAuth } from '../../../contexts/useAuth';
+import React from 'react';
+import InformationModal from '../../../components/InformationModal';
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'SignUp'>;
 
@@ -31,6 +33,12 @@ export function SignUp({ navigation, route }: Props) {
   const [hasUpperAndLowercaseChar, setHasUpperAndLowercaseChar] =
     useState(false);
 
+  const [modalTexts, setModalTexts] = React.useState({
+    title: '',
+    message: ''
+  });
+  const [showInformationModal, setShowInformationModal] = React.useState(false);
+
   const { registerUser } = useAuth();
 
   async function handleSignUp(
@@ -39,26 +47,41 @@ export function SignUp({ navigation, route }: Props) {
     registration: string
   ) {
     if (!hasMoreThanEightChar || !hasSpecialChar || !hasUpperAndLowercaseChar) {
-      Alert.alert('Erro', 'As senha não atende aos requisitos mínimos');
+      setModalTexts({
+        title: 'Senha inválida',
+        message: 'As senha não atende aos requisitos mínimos'
+      });
+      setShowInformationModal(true);
       return;
     } else if (!email.includes('@aluno.cesupa.br')) {
-      Alert.alert('Erro', 'Você precisa usar um email institucional');
+      setModalTexts({
+        title: 'Email inválido',
+        message: 'Você precisa usar um email institucional'
+      });
+      setShowInformationModal(true);
       return;
     } else {
       await registerUser(name, email, registration, password)
         .then(() => {
-          Alert.alert('Sucesso', 'Usuário cadastrado com sucesso', [
-            {
-              text: 'Ok',
-              onPress: () => navigation.navigate('SignIn')
-            }
-          ]);
+          setModalTexts({
+            title: 'Cadastro realizado',
+            message: 'Seu cadastro foi realizado com sucesso'
+          });
+          setShowInformationModal(true);
         })
         .catch((error) => {
           if (error === 'auth/email-already-in-use') {
-            Alert.alert('Erro', 'Email já cadastrado');
+            setModalTexts({
+              title: 'Erro no cadastro',
+              message: 'Esse email já está cadastrado'
+            });
+            setShowInformationModal(true);
           } else if (error === 'auth/invalid-email') {
-            Alert.alert('Erro', 'Email inválido');
+            setModalTexts({
+              title: 'Erro no cadastro',
+              message: 'Esse email é inválido'
+            });
+            setShowInformationModal(true);
           }
         });
     }
@@ -164,6 +187,20 @@ export function SignUp({ navigation, route }: Props) {
       <SubmitButton onPress={() => handleSignUp(email, password, registration)}>
         <SubmitButtonText>Cadastrar</SubmitButtonText>
       </SubmitButton>
+
+      <InformationModal
+        message={modalTexts.message}
+        showModal={setShowInformationModal}
+        handleAction={() => {
+          if (modalTexts.message !== 'Usuário cadastrado com sucesso') {
+            setShowInformationModal(false);
+          } else {
+            navigation.navigate('SignIn');
+          }
+        }}
+        title={modalTexts.title}
+        visible={showInformationModal}
+      />
     </Container>
   );
 }

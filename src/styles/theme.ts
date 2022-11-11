@@ -28,6 +28,7 @@ export const theme = {
   font_size: {
     SM: 14,
     MD: 16,
+    MD_LG: 20,
     LG: 24,
     XL: 36,
     XXL: 48

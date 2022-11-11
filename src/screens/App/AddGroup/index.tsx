@@ -24,6 +24,7 @@ import ModalComponent from '../../../components/Modal';
 import { useAuth } from '../../../contexts/useAuth';
 import { createGroup } from '../../../services/groupService';
 import { StudentDTO } from '../../../entities/student.entity';
+import InformationModal from '../../../components/InformationModal';
 
 type Props = NativeStackScreenProps<AppStackParamList, 'AddGroup'>;
 
@@ -193,19 +194,12 @@ export function AddGroup({ navigation, route }: Props) {
         }
       />
 
-      <ModalComponent
+      <InformationModal
         title="Sucesso"
         showModal={setInfoModalVisible}
         visible={infoModalVisible}
-        height={200}
-        children={
-          <>
-            <InfoModalText>Grupo criado com sucesso</InfoModalText>
-            <SubmitButton onPress={() => navigation.navigate('Home')}>
-              <ButtonText>Ok</ButtonText>
-            </SubmitButton>
-          </>
-        }
+        message="Grupo criado com sucesso"
+        handleAction={() => navigation.navigate('Home')}
       />
 
       <SubmitButton onPress={handleCreateGroup}>

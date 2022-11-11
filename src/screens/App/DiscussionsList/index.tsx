@@ -81,7 +81,7 @@ export function DiscussionsList({ navigation, route }: Props) {
     )
       .then((data) => {
         if (data) {
-          navigation.navigate('Discussion', {
+          navigation.push('Discussion', {
             group_id: group_id,
             discussion_id: data.id,
             duration: data.duration,
@@ -132,7 +132,7 @@ export function DiscussionsList({ navigation, route }: Props) {
           name="arrow-back"
           size={30}
           color={theme.colors.dark_yellow}
-          onPress={() => navigation.popToTop()}
+          onPress={() => navigation.replace('Home')}
         />
         <TeacherInfo>
           <TeacherName>Prof. {user.name}</TeacherName>
@@ -245,7 +245,7 @@ export function DiscussionsList({ navigation, route }: Props) {
                 keyboardType="numeric"
                 maxLength={3}
                 onChangeText={(value: number) =>
-                  setDiscussion({ ...discussion, duration: value })
+                  setDiscussion({ ...discussion, duration: Number(value) })
                 }
               />
             </InputWrapper>

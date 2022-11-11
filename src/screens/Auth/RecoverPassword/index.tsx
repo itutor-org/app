@@ -13,39 +13,48 @@ import {
 
 import { MaterialIcons } from '@expo/vector-icons';
 import { theme } from '../../../styles/theme';
-import { Alert, StatusBar } from 'react-native';
-import { useState } from 'react';
+import { StatusBar } from 'react-native';
 import { useAuth } from '../../../contexts/useAuth';
+import React from 'react';
+import InformationModal from '../../../components/InformationModal';
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'RecoverPassword'>;
 
 export function RecoverPassword({ navigation, route }: Props) {
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = React.useState('');
   const { recoverPassword } = useAuth();
+
+  const [modalTexts, setModalTexts] = React.useState({
+    title: '',
+    message: ''
+  });
+  const [showInformationModal, setShowInformationModal] = React.useState(false);
 
   async function handleRecoverPassword(email: string) {
     if (!email.includes('@aluno.cesupa.br')) {
-      Alert.alert('Erro', 'Você precisa usar um email institucional');
+      setModalTexts({
+        title: 'Email inválido',
+        message: 'Você precisa usar um email institucional'
+      });
+      setShowInformationModal(true);
       return;
     } else {
       await recoverPassword(email)
         .then(() => {
-          Alert.alert(
-            'Sucesso',
-            'Email enviado com sucesso, cheque seu email para recuperar a senha',
-            [
-              {
-                text: 'Ok',
-                onPress: () => navigation.navigate('SignIn')
-              }
-            ]
-          );
+          setModalTexts({
+            title: 'Email enviado',
+            message:
+              'Um email foi enviado para você com as instruções para recuperar sua senha'
+          });
+          setShowInformationModal(true);
         })
         .catch((error) => {
-          if (error === 'auth/email-already-in-use') {
-            Alert.alert('Erro', 'Email já cadastrado');
-          } else if (error === 'auth/user-not-found') {
-            Alert.alert('Erro', 'Usuário não encontrado');
+          if (error === 'auth/user-not-found') {
+            setModalTexts({
+              title: 'Email não encontrado',
+              message: 'Não existe nenhum usuário com esse email'
+            });
+            setShowInformationModal(true);
           }
         });
     }
@@ -82,6 +91,23 @@ export function RecoverPassword({ navigation, route }: Props) {
       <SubmitButton onPress={() => handleRecoverPassword(email)}>
         <SubmitButtonText>Mandar Instruções</SubmitButtonText>
       </SubmitButton>
+
+      <InformationModal
+        message={modalTexts.message}
+        showModal={setShowInformationModal}
+        handleAction={() => {
+          if (
+            modalTexts.message !==
+            'Email enviado com sucesso, cheque seu email para recuperar a senha'
+          ) {
+            setShowInformationModal(false);
+          } else {
+            navigation.navigate('SignIn');
+          }
+        }}
+        title={modalTexts.title}
+        visible={showInformationModal}
+      />
     </Container>
   );
 }

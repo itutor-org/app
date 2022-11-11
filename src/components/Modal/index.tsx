@@ -5,7 +5,7 @@ import { Modal } from 'react-native';
 import { ModalContainer, ModalContent, ModalTitle } from './styles';
 
 interface ModalComponentProps {
-  title: string;
+  title?: string;
   visible: boolean;
   showModal: (value: boolean) => void;
   children: React.ReactNode;

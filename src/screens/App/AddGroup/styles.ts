@@ -38,7 +38,7 @@ export const Input = styled.TextInput`
 
 export const SubmitButton = styled.TouchableOpacity`
   width: 90%;
-  height: 50px;
+  height: 40px;
   padding: ${({ theme }) => theme.margins.SM}px;
   background-color: ${({ theme }) => theme.colors.light_orange};
   display: flex;

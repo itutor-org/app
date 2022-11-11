@@ -42,6 +42,8 @@ import { createDiscussionResult } from '../../../services/graphService';
 import { DiscussionResult } from '../../../entities/discussion.entity';
 import { useLoading } from '../../../contexts/loading';
 import { getStudentsByGroup } from '../../../services/studentService';
+import { useStopwatch, useTimer } from 'react-timer-hook';
+import InformationModal from '../../../components/InformationModal';
 
 type Props = NativeStackScreenProps<AppStackParamList, 'Discussion'>;
 
@@ -83,11 +85,30 @@ export function Discussion({ navigation, route }: Props) {
 
   const { setLoading } = useLoading();
 
-  const [countdown, setCountdown] = React.useState(route.params.duration);
   const [showConfirmationModal, setShowConfirmationModal] =
     React.useState(false);
   const [showUnsavedChangesModal, setShowUnsavedChangesModal] =
     React.useState(false);
+  const [showFinishModal, setShowFinishModal] = React.useState(false);
+
+  const time = new Date();
+  time.setMinutes(time.getMinutes() + route.params.duration + 1);
+
+  const {
+    seconds,
+    minutes,
+    hours,
+    days,
+    isRunning,
+    start,
+    pause,
+    resume,
+    restart
+  } = useTimer({
+    autoStart: false,
+    expiryTimestamp: time,
+    onExpire: () => setShowFinishModal(true)
+  });
 
   function handleSelectStudent(
     student: ScreenStudent,
@@ -196,14 +217,31 @@ export function Discussion({ navigation, route }: Props) {
   }
 
   async function handleStoreInteraction() {
-    await createInteraction(
-      interaction.discussion_id,
-      interaction.starter,
-      interaction.type,
-      interaction.finisher
-    ).then(() => {
-      handleResetInteraction();
-    });
+    if (interaction.starter && interaction.finisher && interaction.type) {
+      await createInteraction(
+        interaction.discussion_id,
+        interaction.starter,
+        interaction.type,
+        interaction.finisher
+      ).then(() => {
+        handleResetInteraction();
+      });
+    } else if (
+      interaction.starter &&
+      !interaction.finisher &&
+      interaction.type
+    ) {
+      await createInteraction(
+        interaction.discussion_id,
+        interaction.starter,
+        interaction.type,
+        null
+      ).then(() => {
+        handleResetInteraction();
+      });
+    } else {
+      return;
+    }
   }
 
   function handleFinalize(discussion_result: DiscussionResult) {
@@ -274,18 +312,14 @@ export function Discussion({ navigation, route }: Props) {
       .catch((err) => {
         console.log(err);
       })
-      .finally(() => setLoading(false));
+      .finally(() => {
+        setLoading(false);
+        start();
+      });
   }
 
   React.useEffect(() => {
     handleLoadStudents();
-    const interval = setInterval(() => {
-      setCountdown(countdown - 1);
-    }, 60000);
-    setTimeout(() => {
-      clearInterval(interval);
-      setShowConfirmationModal(true);
-    }, countdown * 60000); // 1 minuto = 60000ms
   }, []);
 
   return (
@@ -298,7 +332,7 @@ export function Discussion({ navigation, route }: Props) {
             color={theme.colors.white}
           />
           <TimeText>Tempo</TimeText>
-          <Subtitle>{countdown} min</Subtitle>
+          <Subtitle>{minutes} min</Subtitle>
         </Wrapper>
         <Wrapper
           style={{
@@ -375,6 +409,13 @@ export function Discussion({ navigation, route }: Props) {
         showModal={setShowUnsavedChangesModal}
         visible={showUnsavedChangesModal}
         handleAction={handleUnsavedChanges}
+      />
+
+      <InformationModal
+        message={'Sua discussão foi finalizada porquê o tempo acabou!'}
+        showModal={setShowFinishModal}
+        handleAction={handleCreateDiscussionResult}
+        visible={showFinishModal}
       />
     </Container>
   );

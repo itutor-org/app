@@ -15,17 +15,23 @@ export const ModalContent = styled.View`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-around;
+  justify-content: space-evenly;
   width: 80%;
   height: 20%;
 `;
 
+export const Title = styled.Text`
+  font-size: ${({ theme }) => theme.font_size.LG}px;
+  font-weight: ${({ theme }) => theme.font_weight.bold};
+  color: ${({ theme }) => theme.colors.black};
+`;
+
 export const Message = styled.Text`
   font-size: ${({ theme }) => theme.font_size.MD}px;
-  font-weight: ${({ theme }) => theme.font_weight.bold};
+  font-weight: ${({ theme }) => theme.font_weight.regular};
   color: ${({ theme }) => theme.colors.dark_blue};
   text-align: center;
-  margin-bottom: ${({ theme }) => theme.margins.LG}px;
+  margin-bottom: ${({ theme }) => theme.margins.SM}px;
 `;
 
 export const ButtonsWrapper = styled.View`
@@ -37,7 +43,7 @@ export const ButtonsWrapper = styled.View`
 `;
 
 export const ConfirmButton = styled.TouchableOpacity`
-  width: 130px;
+  width: 100%;
   height: 40px;
   background-color: ${({ theme }) => theme.colors.dark_yellow};
   border-radius: 6px;
@@ -45,10 +51,6 @@ export const ConfirmButton = styled.TouchableOpacity`
   flex-direction: row;
   align-items: center;
   justify-content: center;
-`;
-
-export const DenyButton = styled(ConfirmButton)`
-  background-color: ${({ theme }) => theme.colors.light_red};
 `;
 
 export const ButtonText = styled.Text`

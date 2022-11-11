@@ -57,7 +57,7 @@ export const ButtonText = styled.Text`
 
 export const AddStudentArea = styled.View`
   width: 90%;
-  height: 35%;
+  height: 25%;
   display: flex;
   flex-direction: column;
   align-items: center;
