@@ -42,7 +42,6 @@ import { createDiscussionResult } from '../../../services/graphService';
 import { DiscussionResult } from '../../../entities/discussion.entity';
 import { useLoading } from '../../../contexts/loading';
 import { getStudentsByGroup } from '../../../services/studentService';
-import { useStopwatch, useTimer } from 'react-timer-hook';
 import InformationModal from '../../../components/InformationModal';
 
 type Props = NativeStackScreenProps<AppStackParamList, 'Discussion'>;
@@ -90,25 +89,28 @@ export function Discussion({ navigation, route }: Props) {
   const [showUnsavedChangesModal, setShowUnsavedChangesModal] =
     React.useState(false);
   const [showFinishModal, setShowFinishModal] = React.useState(false);
+  const [countdown, setCountdown] = React.useState('');
 
-  const time = new Date();
-  time.setMinutes(time.getMinutes() + route.params.duration + 1);
+  function timer(duration: number) {
+    let timer = duration,
+      minutes: string | number,
+      seconds: string | number;
+    const interval = setInterval(function () {
+      minutes = parseInt(String(timer / 60), 10);
+      seconds = parseInt(String(timer % 60), 10);
 
-  const {
-    seconds,
-    minutes,
-    hours,
-    days,
-    isRunning,
-    start,
-    pause,
-    resume,
-    restart
-  } = useTimer({
-    autoStart: false,
-    expiryTimestamp: time,
-    onExpire: () => setShowFinishModal(true)
-  });
+      minutes = minutes < 10 ? '0' + minutes : minutes;
+      seconds = seconds < 10 ? '0' + seconds : seconds;
+
+      setCountdown(`${minutes}:${seconds}`);
+
+      if (--timer < 0) {
+        timer = 0;
+        clearInterval(interval);
+        setShowFinishModal(true);
+      }
+    }, 1000);
+  }
 
   function handleSelectStudent(
     student: ScreenStudent,
@@ -314,7 +316,7 @@ export function Discussion({ navigation, route }: Props) {
       })
       .finally(() => {
         setLoading(false);
-        start();
+        timer(60 * route.params.duration);
       });
   }
 
@@ -332,7 +334,7 @@ export function Discussion({ navigation, route }: Props) {
             color={theme.colors.white}
           />
           <TimeText>Tempo</TimeText>
-          <Subtitle>{minutes} min</Subtitle>
+          <Subtitle>{countdown} min</Subtitle>
         </Wrapper>
         <Wrapper
           style={{
