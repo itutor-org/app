@@ -109,20 +109,6 @@ export function DiscussionsList({ navigation, route }: Props) {
       });
   }
 
-  async function handleSearch(text: string) {
-    if (text) {
-      const filtered = discussions.filter((discussion) => {
-        return discussion.specific_subject
-          .toLowerCase()
-          .includes(text.toLowerCase());
-      });
-
-      setFilteredDiscussions(filtered);
-    } else {
-      setFilteredDiscussions(discussions);
-    }
-  }
-
   React.useEffect(() => {
     loadDiscussions();
   }, [discussions]);

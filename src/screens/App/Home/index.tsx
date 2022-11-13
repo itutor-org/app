@@ -47,18 +47,6 @@ export function Home({ navigation, route }: Props) {
       });
   }
 
-  async function handleSearch(text: string) {
-    if (text) {
-      const filtered = groups.filter((group) => {
-        return group.name.toLowerCase().includes(text.toLowerCase());
-      });
-
-      setFilteredGroups(filtered);
-    } else {
-      setFilteredGroups(groups);
-    }
-  }
-
   async function loadGroups() {
     await getGroups(user.id)
       .then((data) => {
