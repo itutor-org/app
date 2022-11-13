@@ -31,6 +31,7 @@ export function Home({ navigation, route }: Props) {
   const [filteredGroups, setFilteredGroups] = React.useState<Group[]>([]);
   const [showConfirmationModal, setShowConfirmationModal] =
     React.useState(false);
+  const [searchText, setSearchText] = React.useState('');
 
   async function handleDeleteGroup(group_id: string): Promise<void> {
     await deleteGroup(group_id)
@@ -100,12 +101,7 @@ export function Home({ navigation, route }: Props) {
           <SearchInputWrapper>
             <SearchInput
               placeholder="Pesquisar"
-              // onChangeText={(value) => handleSearch(value)}
-              // onKeyPress={(e) => {
-              //   if (e.key === 'Backspace') {
-              //     handleSearch('');
-              //   }
-              // }}
+              onChangeText={(value) => setSearchText(value)}
             />
             <MaterialIcons
               name="search"
@@ -126,9 +122,17 @@ export function Home({ navigation, route }: Props) {
         <GroupsWrapper>
           <GroupList
             showsVerticalScrollIndicator={false}
-            data={filteredGroups}
+            data={filteredGroups.filter((group) => {
+              if (searchText === '') {
+                return group;
+              } else if (
+                group.name.toLowerCase().includes(searchText.toLowerCase())
+              ) {
+                return group;
+              }
+            })}
             keyExtractor={({ id }: Group) => id}
-            renderItem={({ item }) => (
+            renderItem={({ item }: any) => (
               <HomeCard
                 id={item.id}
                 name={item.name}

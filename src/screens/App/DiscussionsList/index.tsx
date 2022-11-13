@@ -50,6 +50,8 @@ export function DiscussionsList({ navigation, route }: Props) {
     {} as Discussion
   );
 
+  const [searchText, setSearchText] = React.useState('');
+
   async function handleDeleteDiscussion(discussion_id: string) {
     setLoading(true);
     await deleteDiscussion(discussion_id).catch((err) => {
@@ -152,12 +154,7 @@ export function DiscussionsList({ navigation, route }: Props) {
           <SearchInputWrapper>
             <SearchInput
               placeholder="Pesquisar"
-              onChangeText={(value) => handleSearch(value)}
-              onKeyPress={(e) => {
-                if (e.key === 'Backspace') {
-                  handleSearch('');
-                }
-              }}
+              onChangeText={(value) => setSearchText(value)}
             />
             <MaterialIcons
               name="search"
@@ -180,9 +177,19 @@ export function DiscussionsList({ navigation, route }: Props) {
         <GroupsWrapper>
           <GroupList
             showsVerticalScrollIndicator={false}
-            data={filteredDiscussions}
+            data={filteredDiscussions.filter((discussion) => {
+              if (searchText === '') {
+                return discussion;
+              } else if (
+                discussion.specific_subject
+                  .toLowerCase()
+                  .includes(searchText.toLowerCase())
+              ) {
+                return discussion;
+              }
+            })}
             keyExtractor={({ id }: Discussion) => id}
-            renderItem={({ item }) => (
+            renderItem={({ item }: any) => (
               <DiscussionCard
                 id={item.id}
                 general_subject={item.general_subject}
@@ -245,7 +252,7 @@ export function DiscussionsList({ navigation, route }: Props) {
                 placeholder="Duração em minutos"
                 keyboardType="numeric"
                 maxLength={3}
-                onChangeText={(value: number) =>
+                onChangeText={(value) =>
                   setDiscussion({ ...discussion, duration: Number(value) })
                 }
               />
