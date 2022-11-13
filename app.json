@@ -1,10 +1,14 @@
 {
   "expo": {
-    "name": "itutor-app",
-    "slug": "itutor-app",
+    "name": "itutor",
+    "description": "description",
+    "slug": "itutor",
     "version": "1.0.0",
     "assetBundlePatterns": [
       "**/*"
-    ]
+    ],
+    "android": {
+      "package": "itutor.test"
+    }
   }
 }
