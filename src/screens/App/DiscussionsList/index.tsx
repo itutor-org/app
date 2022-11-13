@@ -40,9 +40,6 @@ export function DiscussionsList({ navigation, route }: Props) {
   const { logoff, user } = useAuth();
   const { setLoading } = useLoading();
   const [discussions, setDiscussions] = React.useState<Discussion[]>([]);
-  const [filteredDiscussions, setFilteredDiscussions] = React.useState<
-    Discussion[]
-  >([]);
   const [showCreateDiscussionModal, setShowCreateDiscussionModal] =
     React.useState(false);
 
@@ -102,7 +99,6 @@ export function DiscussionsList({ navigation, route }: Props) {
     await getDiscussions(route.params.group_id)
       .then((data) => {
         setDiscussions(data);
-        setFilteredDiscussions(data);
       })
       .catch((error) => {
         console.log(error);
@@ -163,7 +159,7 @@ export function DiscussionsList({ navigation, route }: Props) {
         <GroupsWrapper>
           <GroupList
             showsVerticalScrollIndicator={false}
-            data={filteredDiscussions.filter((discussion) => {
+            data={discussions.filter((discussion) => {
               if (searchText === '') {
                 return discussion;
               } else if (

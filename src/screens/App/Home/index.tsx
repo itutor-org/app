@@ -28,7 +28,6 @@ type Props = NativeStackScreenProps<AppStackParamList, 'Home'>;
 export function Home({ navigation, route }: Props) {
   const { logoff, user } = useAuth();
   const [groups, setGroups] = React.useState<Group[]>([]);
-  const [filteredGroups, setFilteredGroups] = React.useState<Group[]>([]);
   const [showConfirmationModal, setShowConfirmationModal] =
     React.useState(false);
   const [searchText, setSearchText] = React.useState('');
@@ -51,7 +50,6 @@ export function Home({ navigation, route }: Props) {
     await getGroups(user.id)
       .then((data) => {
         setGroups(data);
-        setFilteredGroups(data);
       })
       .catch((error) => {
         console.log(error);
@@ -110,7 +108,7 @@ export function Home({ navigation, route }: Props) {
         <GroupsWrapper>
           <GroupList
             showsVerticalScrollIndicator={false}
-            data={filteredGroups.filter((group) => {
+            data={groups.filter((group) => {
               if (searchText === '') {
                 return group;
               } else if (
