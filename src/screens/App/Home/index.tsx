@@ -22,17 +22,20 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { deleteGroup, getGroups } from '../../../services/groupService';
 import { HomeCard } from '../../../components/HomeCard';
 import { Group } from '../../../entities/group.entity';
+import { useLoading } from '../../../contexts/loading';
 
 type Props = NativeStackScreenProps<AppStackParamList, 'Home'>;
 
 export function Home({ navigation, route }: Props) {
   const { logoff, user } = useAuth();
+  const { setLoading } = useLoading();
   const [groups, setGroups] = React.useState<Group[]>([]);
   const [showConfirmationModal, setShowConfirmationModal] =
     React.useState(false);
   const [searchText, setSearchText] = React.useState('');
 
   async function handleDeleteGroup(group_id: string): Promise<void> {
+    setLoading(true);
     await deleteGroup(group_id)
       .then(() => {
         setShowConfirmationModal(!showConfirmationModal);
@@ -43,7 +46,8 @@ export function Home({ navigation, route }: Props) {
       })
       .catch((err) => {
         console.log(err);
-      });
+      })
+      .finally(() => setLoading(false));
   }
 
   async function loadGroups() {
