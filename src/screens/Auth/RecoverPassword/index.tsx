@@ -84,6 +84,7 @@ export function RecoverPassword({ navigation, route }: Props) {
         />
         <Input
           placeholder="Digite seu e-mail"
+          keyboardType="email-address"
           onChangeText={(value) => setEmail(value)}
         />
       </InputWrapper>
@@ -102,6 +103,7 @@ export function RecoverPassword({ navigation, route }: Props) {
           ) {
             setShowInformationModal(false);
           } else {
+            setShowInformationModal(false);
             navigation.navigate('SignIn');
           }
         }}

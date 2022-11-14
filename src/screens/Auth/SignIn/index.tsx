@@ -55,6 +55,7 @@ export function SignIn({ navigation, route }: Props) {
         <Input
           placeholder="E-mail"
           value={email}
+          keyboardType="email-address"
           onChangeText={(value) => setEmail(value)}
         />
       </InputWrapper>
