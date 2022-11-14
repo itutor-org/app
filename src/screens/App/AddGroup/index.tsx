@@ -179,7 +179,7 @@ export function AddGroup({ navigation, route }: Props) {
             </InputWrapper>
             <SubmitButton
               onPress={() => {
-                if (student.email.includes('.cesupa.br')) {
+                if (student.email.includes('aluno.cesupa.br')) {
                   setStudents((prevState) => [...prevState, student]),
                     setModalVisible(!modalVisible);
                 } else {

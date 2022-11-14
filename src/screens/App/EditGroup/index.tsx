@@ -34,6 +34,7 @@ type Props = NativeStackScreenProps<AppStackParamList, 'EditGroup'>;
 export function EditGroup({ navigation, route }: Props) {
   const [registerModalVisible, setRegisterModalVisible] = React.useState(false);
   const [infoModalVisible, setInfoModalVisible] = React.useState(false);
+  const [errorModalVisible, setErrorModalVisible] = React.useState(false);
   const [groupName, setGroupName] = React.useState(route.params.name);
   const [className, setClassName] = React.useState(route.params.class_name);
   const [students, setStudents] = React.useState<Student[]>([]);
@@ -54,7 +55,7 @@ export function EditGroup({ navigation, route }: Props) {
   }
 
   async function handleAddStudent() {
-    if (student.email.includes('.cesupa.br')) {
+    if (student.email.includes('aluno.cesupa.br')) {
       createStudent(
         student.name,
         student.email,
@@ -66,7 +67,7 @@ export function EditGroup({ navigation, route }: Props) {
         setStudent({} as Student),
         setRegisterModalVisible(!registerModalVisible);
     } else {
-      console.log('Email inválido');
+      setErrorModalVisible(!errorModalVisible);
     }
   }
 
@@ -214,6 +215,13 @@ export function EditGroup({ navigation, route }: Props) {
         visible={infoModalVisible}
         message="Grupo editado com sucesso"
         handleAction={() => navigation.navigate('Home')}
+      />
+      <InformationModal
+        title="Erro"
+        showModal={setErrorModalVisible}
+        visible={errorModalVisible}
+        message="Email inválido, o aluno deve possuir um e-mail institucional"
+        handleAction={() => setErrorModalVisible(!errorModalVisible)}
       />
 
       <SubmitButton onPress={() => handleUpdateGroup(route.params.group_id)}>
