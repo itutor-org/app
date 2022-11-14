@@ -30,6 +30,7 @@ import { ConfirmationModal } from '../../../components/ConfirmationModal';
 import { deleteDiscussion } from '../../../services/discussionService';
 import {
   createInteraction,
+  deleteInteractionsByDiscussion,
   getInteractionByDiscussion
 } from '../../../services/interactionService';
 import { ScreenStudent } from '../../../entities/student.entity';
@@ -256,10 +257,16 @@ export function Discussion({ navigation, route }: Props) {
   }
 
   async function handleUnsavedChanges() {
-    await deleteDiscussion(route.params.discussion_id)
-      .then(() => {
-        navigation.popToTop();
-        setShowUnsavedChangesModal(!showUnsavedChangesModal);
+    await deleteInteractionsByDiscussion(route.params.discussion_id)
+      .then(async () => {
+        await deleteDiscussion(route.params.discussion_id)
+          .then(() => {
+            navigation.popToTop();
+            setShowUnsavedChangesModal(!showUnsavedChangesModal);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       })
       .catch((err) => {
         console.log(err);
