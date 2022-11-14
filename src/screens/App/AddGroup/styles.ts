@@ -57,6 +57,7 @@ export const ButtonText = styled.Text`
 
 export const AddStudentArea = styled.View`
   width: 90%;
+  height: 35%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -81,7 +82,7 @@ export const StudentCard = styled.View`
   width: 100%;
   padding: ${({ theme }) => theme.margins.MD}px;
   border-radius: 10px;
-  margin-bottom: ${({ theme }) => theme.margins.SM}px;
+  margin: 5px 0;
 `;
 
 export const StudentName = styled.Text`
