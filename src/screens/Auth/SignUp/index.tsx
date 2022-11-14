@@ -53,7 +53,7 @@ export function SignUp({ navigation, route }: Props) {
       });
       setShowInformationModal(true);
       return;
-    } else if (!email.includes('.cesupa.br')) {
+    } else if (!email.includes('prof.cesupa.br')) {
       setModalTexts({
         title: 'Email inválido',
         message: 'Você precisa usar um email institucional'
@@ -111,7 +111,6 @@ export function SignUp({ navigation, route }: Props) {
         }}
         onPress={() => navigation.navigate('SignIn')}
       />
-      <LogoText>ITutor</LogoText>
       <ActionText>Cadastro</ActionText>
       <InputWrapper>
         <MaterialIcons
@@ -166,6 +165,7 @@ export function SignUp({ navigation, route }: Props) {
         <Input
           placeholder="19070002"
           keyboardType="numeric"
+          maxLength={8}
           onChangeText={(value) => {
             setRegistration(value);
           }}
@@ -192,10 +192,10 @@ export function SignUp({ navigation, route }: Props) {
         message={modalTexts.message}
         showModal={setShowInformationModal}
         handleAction={() => {
-          if (modalTexts.message !== 'Usuário cadastrado com sucesso') {
-            setShowInformationModal(false);
-          } else {
+          if (modalTexts.message === 'Seu cadastro foi realizado com sucesso') {
             navigation.navigate('SignIn');
+          } else {
+            setShowInformationModal(false);
           }
         }}
         title={modalTexts.title}
