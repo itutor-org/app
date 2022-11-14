@@ -1,4 +1,4 @@
-package com.itutorapp.newarchitecture.components;
+package com.itutor.newarchitecture.components;
 
 import com.facebook.jni.HybridData;
 import com.facebook.proguard.annotations.DoNotStrip;

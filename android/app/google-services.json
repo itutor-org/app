@@ -7,17 +7,17 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1020977752098:android:1cf9291b3c4b7efa79c27b",
+        "mobilesdk_app_id": "1:1020977752098:android:f74e25658a8829a379c27b",
         "android_client_info": {
-          "package_name": "com.itutorapp"
+          "package_name": "com.itutor"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1020977752098-l8o8rv077hi7rdppgt3ko5s7jo98l169.apps.googleusercontent.com",
+          "client_id": "1020977752098-5b02vi33phkd3g3qugcspuu6v75ohgtv.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.itutorapp",
+            "package_name": "com.itutor",
             "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
           }
         },

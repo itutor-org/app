@@ -1,4 +1,4 @@
-package com.itutorapp;
+package com.itutor;
 
 import android.os.Build;
 import android.os.Bundle;
