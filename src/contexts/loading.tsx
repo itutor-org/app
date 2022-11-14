@@ -1,26 +1,20 @@
-import {
-  createContext,
-  ReactNode,
-  useContext,
-  useEffect,
-  useState
-} from 'react';
+import React from 'react';
 import { Loading } from '../components/Loading';
 
 interface LoadingProviderProps {
-  children: ReactNode;
+  children: React.ReactNode;
 }
 
 interface LoadingContextData {
   setLoading: (value: boolean) => void;
 }
 
-const LoadingContext = createContext<LoadingContextData>(
+const LoadingContext = React.createContext<LoadingContextData>(
   {} as LoadingContextData
 );
 
 export function LoadingProvider({ children }: LoadingProviderProps) {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = React.useState(false);
   return (
     <LoadingContext.Provider
       value={{
@@ -33,7 +27,7 @@ export function LoadingProvider({ children }: LoadingProviderProps) {
 }
 
 export function useLoading() {
-  const context = useContext(LoadingContext);
+  const context = React.useContext(LoadingContext);
 
   return context;
 }
