@@ -15,7 +15,6 @@ import {
 
 import { MaterialIcons } from '@expo/vector-icons';
 import { theme } from '../../../styles/theme';
-import { useState } from 'react';
 import { useAuth } from '../../../contexts/useAuth';
 import React from 'react';
 import InformationModal from '../../../components/InformationModal';
@@ -23,14 +22,14 @@ import InformationModal from '../../../components/InformationModal';
 type Props = NativeStackScreenProps<AuthStackParamList, 'SignUp'>;
 
 export function SignUp({ navigation, route }: Props) {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [registration, setRegistration] = useState('');
-  const [name, setName] = useState('');
-  const [hasMoreThanEightChar, setHasMoreThanEightChar] = useState(false);
-  const [hasSpecialChar, setHasSpecialChar] = useState(false);
+  const [email, setEmail] = React.useState('');
+  const [password, setPassword] = React.useState('');
+  const [registration, setRegistration] = React.useState('');
+  const [name, setName] = React.useState('');
+  const [hasMoreThanEightChar, setHasMoreThanEightChar] = React.useState(false);
+  const [hasSpecialChar, setHasSpecialChar] = React.useState(false);
   const [hasUpperAndLowercaseChar, setHasUpperAndLowercaseChar] =
-    useState(false);
+    React.useState(false);
 
   const [modalTexts, setModalTexts] = React.useState({
     title: '',
