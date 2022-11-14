@@ -41,3 +41,24 @@ export const getInteractionByDiscussion = async (
       throw error.code;
     });
 };
+
+export const deleteInteraction = async (interaction_id: string) => {
+  await interactionsCollection
+    .doc(interaction_id)
+    .delete()
+    .catch((error) => {
+      console.log(error.code);
+    });
+};
+
+export const deleteInteractionsByDiscussion = async (
+  interaction_id: string
+) => {
+  const interactions = await getInteractionByDiscussion(interaction_id);
+
+  interactions.forEach(async (interaction) => {
+    await deleteInteraction(interaction.id).catch((error) => {
+      console.log(error.code);
+    });
+  });
+};
