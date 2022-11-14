@@ -19,25 +19,40 @@ import {
 } from './styles';
 
 import { MaterialIcons, Entypo } from '@expo/vector-icons';
-import { useState } from 'react';
 import { useAuth } from '../../../contexts/useAuth';
-import { Alert } from 'react-native';
+import InformationModal from '../../../components/InformationModal';
+import React from 'react';
+import { useLoading } from '../../../contexts/loading';
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'SignIn'>;
 
 export function SignIn({ navigation, route }: Props) {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [isPasswordVisible, setIsPasswordVisible] = useState(true);
+  const [email, setEmail] = React.useState('');
+  const [password, setPassword] = React.useState('');
+  const [isPasswordVisible, setIsPasswordVisible] = React.useState(true);
   const { signIn } = useAuth();
+  const { setLoading } = useLoading();
+  const [modalTexts, setModalTexts] = React.useState({
+    title: '',
+    message: ''
+  });
+  const [showInformationModal, setShowInformationModal] = React.useState(false);
 
   async function handleSignIn(email: string, password: string) {
+    setLoading(true);
     await signIn(email, password).catch((error: string) => {
       if (error === 'auth/user-not-found') {
-        Alert.alert('Erro', 'Usuário não encontrado');
+        setModalTexts({
+          title: 'Erro',
+          message: 'Usuário não encontrado'
+        });
       } else if (error === 'auth/wrong-password') {
-        Alert.alert('Erro', 'Senha incorreta');
+        setModalTexts({
+          title: 'Erro',
+          message: 'Senha incorreta'
+        });
       }
+      setShowInformationModal(true);
     });
   }
 
@@ -98,6 +113,14 @@ export function SignIn({ navigation, route }: Props) {
           <SignUpLinkText>Cadastre-se</SignUpLinkText>
         </SignUpLink>
       </SignUpWrapper>
+
+      <InformationModal
+        message={modalTexts.message}
+        showModal={setShowInformationModal}
+        handleAction={() => setShowInformationModal(false)}
+        title={modalTexts.title}
+        visible={showInformationModal}
+      />
     </SignInContainer>
   );
 }
