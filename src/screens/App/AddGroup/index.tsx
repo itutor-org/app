@@ -14,8 +14,7 @@ import {
   StudentCard,
   StudentName,
   ActionsButtonsWrapper,
-  StudentsList,
-  InfoModalText
+  StudentsList
 } from './styles';
 import { MaterialIcons, Octicons } from '@expo/vector-icons';
 import { theme } from '../../../styles/theme';
@@ -181,7 +180,7 @@ export function AddGroup({ navigation, route }: Props) {
             </InputWrapper>
             <SubmitButton
               onPress={() => {
-                if (student.email.includes('@aluno.cesupa.br')) {
+                if (student.email.includes('.cesupa.br')) {
                   setStudents((prevState) => [...prevState, student]),
                     setModalVisible(!modalVisible);
                 } else {

@@ -53,7 +53,7 @@ export function SignUp({ navigation, route }: Props) {
       });
       setShowInformationModal(true);
       return;
-    } else if (!email.includes('@aluno.cesupa.br')) {
+    } else if (!email.includes('.cesupa.br')) {
       setModalTexts({
         title: 'Email inválido',
         message: 'Você precisa usar um email institucional'

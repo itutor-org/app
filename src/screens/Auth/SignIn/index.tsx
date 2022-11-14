@@ -43,7 +43,7 @@ export function SignIn({ navigation, route }: Props) {
 
   return (
     <SignInContainer>
-      <LogoText>ITutor</LogoText>
+      <LogoText>iTutor</LogoText>
       <WelcomeText>Seja bem vind@</WelcomeText>
       <InputWrapper>
         <MaterialIcons
@@ -70,25 +70,14 @@ export function SignIn({ navigation, route }: Props) {
           placeholder="*************"
           secureTextEntry={isPasswordVisible}
           onChangeText={(value) => setPassword(value)}
-          width={100}
         />
-        {isPasswordVisible ? (
-          <Entypo
-            name="eye"
-            size={19}
-            color={'#8D8D99'}
-            style={{ marginRight: 7, marginLeft: 7 }}
-            onPress={() => setIsPasswordVisible(!isPasswordVisible)}
-          />
-        ) : (
-          <Entypo
-            name="eye-with-line"
-            size={19}
-            color={'#8D8D99'}
-            style={{ marginRight: 7, marginLeft: 7 }}
-            onPress={() => setIsPasswordVisible(!isPasswordVisible)}
-          />
-        )}
+        <Entypo
+          name={isPasswordVisible ? 'eye' : 'eye-with-line'}
+          size={19}
+          color={'#8D8D99'}
+          style={{ marginRight: 7, marginLeft: 7 }}
+          onPress={() => setIsPasswordVisible(!isPasswordVisible)}
+        />
       </InputWrapper>
 
       <RecoverPasswordButton

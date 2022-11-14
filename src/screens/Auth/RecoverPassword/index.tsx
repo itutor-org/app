@@ -31,7 +31,7 @@ export function RecoverPassword({ navigation, route }: Props) {
   const [showInformationModal, setShowInformationModal] = React.useState(false);
 
   async function handleRecoverPassword(email: string) {
-    if (!email.includes('@aluno.cesupa.br')) {
+    if (!email.includes('.cesupa.br')) {
       setModalTexts({
         title: 'Email inválido',
         message: 'Você precisa usar um email institucional'

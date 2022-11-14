@@ -55,7 +55,7 @@ export function EditGroup({ navigation, route }: Props) {
   }
 
   async function handleAddStudent() {
-    if (student.email.includes('@aluno.cesupa.br')) {
+    if (student.email.includes('.cesupa.br')) {
       createStudent(
         student.name,
         student.email,
@@ -131,7 +131,7 @@ export function EditGroup({ navigation, route }: Props) {
           showsVerticalScrollIndicator={true}
           data={students}
           keyExtractor={({ registration }: Student) => registration}
-          renderItem={({ item }) => (
+          renderItem={({ item }: any) => (
             <StudentCard key={item.id}>
               <StudentName>{item.name}</StudentName>
               <ActionsButtonsWrapper>

@@ -12,7 +12,7 @@ interface CardProps {
 
 interface StudentCardProps {
   theme: DefaultTheme;
-  color: string;
+  color: () => string;
   isSelected: boolean;
 }
 
