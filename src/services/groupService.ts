@@ -7,6 +7,9 @@ import {
   getStudentsByGroup
 } from './studentService';
 
+import { deleteDiscussion, getDiscussions } from './discussionService';
+import { deleteInteractionsByDiscussion } from './interactionService';
+
 const groupsCollection = firestore().collection('groups');
 
 export const getGroups = async (id: string): Promise<Group[]> => {
@@ -76,10 +79,20 @@ export const updateGroup = async (
 };
 
 export const deleteGroup = async (group_id: string) => {
-  await getStudentsByGroup(group_id).then(async (students) => {
-    students.forEach(async (student) => {
-      await deleteStudent(student.id);
-    });
+  const discussions = await getDiscussions(group_id);
+
+  discussions.forEach(async (discussion) => {
+    await deleteInteractionsByDiscussion(discussion.id);
+  });
+
+  discussions.forEach(async (discussion) => {
+    await deleteDiscussion(discussion.id);
+  });
+
+  const students = await getStudentsByGroup(group_id);
+
+  students.forEach(async (student) => {
+    await deleteStudent(student.id);
   });
 
   await groupsCollection
