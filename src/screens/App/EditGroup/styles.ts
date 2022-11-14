@@ -57,7 +57,7 @@ export const ButtonText = styled.Text`
 
 export const AddStudentArea = styled.View`
   width: 90%;
-  height: 25%;
+  height: 35%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -100,7 +100,6 @@ export const ActionsButtonsWrapper = styled.View`
 export const StudentsList = styled.FlatList`
   width: 100%;
   min-width: 100%;
-  height: 100%;
 `;
 
 export const InfoModalText = styled.Text`

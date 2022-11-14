@@ -14,8 +14,7 @@ import {
   StudentCard,
   StudentName,
   ActionsButtonsWrapper,
-  StudentsList,
-  InfoModalText
+  StudentsList
 } from './styles';
 import { MaterialIcons, Octicons } from '@expo/vector-icons';
 import { theme } from '../../../styles/theme';
