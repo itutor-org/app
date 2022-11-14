@@ -1,10 +1,9 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { Alert, StatusBar } from 'react-native';
+import { StatusBar } from 'react-native';
 import { AuthStackParamList } from '../../../routes/auth.routes';
 
 import {
   Container,
-  LogoText,
   ActionText,
   InputWrapper,
   Input,
