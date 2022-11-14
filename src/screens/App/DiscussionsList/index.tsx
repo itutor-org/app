@@ -116,7 +116,7 @@ export function DiscussionsList({ navigation, route }: Props) {
           name="arrow-back"
           size={30}
           color={theme.colors.dark_yellow}
-          onPress={() => navigation.replace('Home')}
+          onPress={() => navigation.popToTop()}
         />
         <TeacherInfo>
           <TeacherName>Prof. {user.name}</TeacherName>

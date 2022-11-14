@@ -9,6 +9,11 @@
     ],
     "android": {
       "package": "itutor.test"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "7e2833ac-a98b-4e2d-a430-b59c539402c2"
+      }
     }
   }
 }
