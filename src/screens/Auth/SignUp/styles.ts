@@ -21,7 +21,7 @@ export const LogoText = styled.Text`
 `;
 
 export const ActionText = styled.Text`
-  font-size: ${({ theme }) => theme.font_size.MD}px;
+  font-size: ${({ theme }) => theme.font_size.XXL}px;
   font-weight: ${({ theme }) => theme.font_weight.bold};
   color: ${({ theme }) => theme.colors.white};
   margin-bottom: ${({ theme }) => theme.margins.MD}px;
