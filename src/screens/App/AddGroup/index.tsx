@@ -32,6 +32,7 @@ export function AddGroup({ navigation, route }: Props) {
 
   const [modalVisible, setModalVisible] = React.useState(false);
   const [infoModalVisible, setInfoModalVisible] = React.useState(false);
+  const [errorModalVisible, setErrorModalVisible] = React.useState(false);
   const [groupName, setGroupName] = React.useState('');
   const [className, setClassName] = React.useState('');
   const [students, setStudents] = React.useState<StudentDTO[]>([]);
@@ -95,34 +96,32 @@ export function AddGroup({ navigation, route }: Props) {
         <AddStudentButton onPress={() => setModalVisible(!modalVisible)}>
           <ButtonText>Adicionar aluno</ButtonText>
         </AddStudentButton>
-        <ActionsButtonsWrapper>
-          <StudentsList
-            data={students}
-            keyExtractor={({ registration }: StudentDTO) => registration}
-            renderItem={({ item }) => (
-              <StudentCard key={item.id}>
-                <StudentName>{item.name}</StudentName>
-                <ActionsButtonsWrapper>
-                  <MaterialIcons
-                    name="delete"
-                    size={25}
-                    color={theme.colors.gray_200}
-                    style={{
-                      marginLeft: 15
-                    }}
-                    onPress={() => {
-                      setStudents(
-                        students.filter(
-                          (s) => s.registration !== item.registration
-                        )
-                      );
-                    }}
-                  />
-                </ActionsButtonsWrapper>
-              </StudentCard>
-            )}
-          />
-        </ActionsButtonsWrapper>
+        <StudentsList
+          data={students}
+          keyExtractor={({ registration }: StudentDTO) => registration}
+          renderItem={({ item }: any) => (
+            <StudentCard key={item.id}>
+              <StudentName>{item.name}</StudentName>
+              <ActionsButtonsWrapper>
+                <MaterialIcons
+                  name="delete"
+                  size={25}
+                  color={theme.colors.gray_200}
+                  style={{
+                    marginLeft: 15
+                  }}
+                  onPress={() => {
+                    setStudents(
+                      students.filter(
+                        (s) => s.registration !== item.registration
+                      )
+                    );
+                  }}
+                />
+              </ActionsButtonsWrapper>
+            </StudentCard>
+          )}
+        />
       </AddStudentArea>
 
       <ModalComponent
@@ -184,7 +183,7 @@ export function AddGroup({ navigation, route }: Props) {
                   setStudents((prevState) => [...prevState, student]),
                     setModalVisible(!modalVisible);
                 } else {
-                  console.log('Email inválido');
+                  setErrorModalVisible(!errorModalVisible);
                 }
               }}>
               <ButtonText>Adicionar Aluno</ButtonText>
@@ -199,6 +198,14 @@ export function AddGroup({ navigation, route }: Props) {
         visible={infoModalVisible}
         message="Grupo criado com sucesso"
         handleAction={() => navigation.navigate('Home')}
+      />
+
+      <InformationModal
+        title="Erro"
+        showModal={setErrorModalVisible}
+        visible={errorModalVisible}
+        message="Email inválido, o aluno deve possuir um e-mail institucional"
+        handleAction={() => setErrorModalVisible(!errorModalVisible)}
       />
 
       <SubmitButton onPress={handleCreateGroup}>
