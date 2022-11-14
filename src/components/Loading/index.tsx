@@ -15,7 +15,7 @@ export function Loading({ visible, showModal }: LoadingProps) {
       title="Carregando..."
       visible={visible}
       showModal={showModal}
-      height={150}
+      height={160}
       children={
         <ActivityIndicator size="large" color={theme.colors.dark_blue} />
       }
