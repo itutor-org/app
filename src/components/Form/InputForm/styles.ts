@@ -18,7 +18,6 @@ export const Input = styled.TextInput`
   width: 90%;
   height: 100%;
   background-color: ${({ theme }) => theme.colors.white};
-  border: none;
 `;
 
 export const Error = styled.Text`
