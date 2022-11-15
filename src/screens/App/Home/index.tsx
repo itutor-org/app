@@ -57,7 +57,8 @@ export function Home({ navigation, route }: Props) {
       })
       .catch((error) => {
         console.log(error);
-      });
+      })
+      .finally(() => setLoading(false));
   }
 
   React.useEffect(() => {
