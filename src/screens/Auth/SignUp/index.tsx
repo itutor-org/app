@@ -1,204 +1,177 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { StatusBar } from 'react-native';
+import {
+  Alert,
+  Keyboard,
+  ScrollView,
+  StatusBar,
+  TouchableWithoutFeedback
+} from 'react-native';
 import { AuthStackParamList } from '../../../routes/auth.routes';
 
-import {
-  Container,
-  ActionText,
-  InputWrapper,
-  Input,
-  SubmitButton,
-  SubmitButtonText,
-  HintText,
-  Hints
-} from './styles';
+import { ActionText, SubmitButton, SubmitButtonText } from './styles';
 
-import { MaterialIcons } from '@expo/vector-icons';
+import { MaterialIcons, Octicons } from '@expo/vector-icons';
 import { theme } from '../../../styles/theme';
 import { useAuth } from '../../../contexts/useAuth';
 import React from 'react';
-import InformationModal from '../../../components/InformationModal';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { InputForm } from '../../../components/Form/InputForm';
+import { SignUpSchema } from './schema';
+import { SignUpData } from '../../../entities/Forms/SignUp';
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'SignUp'>;
 
 export function SignUp({ navigation, route }: Props) {
-  const [email, setEmail] = React.useState('');
-  const [password, setPassword] = React.useState('');
-  const [registration, setRegistration] = React.useState('');
-  const [name, setName] = React.useState('');
-  const [hasMoreThanEightChar, setHasMoreThanEightChar] = React.useState(false);
-  const [hasSpecialChar, setHasSpecialChar] = React.useState(false);
-  const [hasUpperAndLowercaseChar, setHasUpperAndLowercaseChar] =
-    React.useState(false);
-
-  const [modalTexts, setModalTexts] = React.useState({
-    title: '',
-    message: ''
+  const {
+    control,
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors }
+  } = useForm({
+    resolver: yupResolver(SignUpSchema)
   });
-  const [showInformationModal, setShowInformationModal] = React.useState(false);
 
   const { registerUser } = useAuth();
 
-  async function handleSignUp(
-    email: string,
-    password: string,
-    registration: string
-  ) {
-    if (!hasMoreThanEightChar || !hasSpecialChar || !hasUpperAndLowercaseChar) {
-      setModalTexts({
-        title: 'Senha inválida',
-        message: 'As senha não atende aos requisitos mínimos'
+  async function handleRegister(form: SignUpData) {
+    await registerUser(form.name, form.email, form.registration, form.password)
+      .then(() => {
+        Alert.alert(
+          'Cadastro realizado com sucesso!',
+          'Você já pode fazer login na aplicação.',
+          [
+            {
+              text: 'Ok',
+              onPress: () => navigation.navigate('SignIn')
+            }
+          ]
+        );
+      })
+      .catch((error) => {
+        if (error === 'auth/email-already-in-use') {
+          Alert.alert(
+            'Ops! Esse e-mail já está sendo utilizado.',
+            'Por favor, tente novamente.'
+          );
+        } else if (error === 'auth/invalid-email') {
+          Alert.alert(
+            'Ops! Esse e-mail é inválido.',
+            'Por favor, tente novamente.'
+          );
+        }
       });
-      setShowInformationModal(true);
-      return;
-    } else if (!email.includes('prof.cesupa.br')) {
-      setModalTexts({
-        title: 'Email inválido',
-        message: 'Você precisa usar um email institucional'
-      });
-      setShowInformationModal(true);
-      return;
-    } else {
-      await registerUser(name, email, registration, password)
-        .then(() => {
-          setModalTexts({
-            title: 'Cadastro realizado',
-            message: 'Seu cadastro foi realizado com sucesso'
-          });
-          setShowInformationModal(true);
-        })
-        .catch((error) => {
-          if (error === 'auth/email-already-in-use') {
-            setModalTexts({
-              title: 'Erro no cadastro',
-              message: 'Esse email já está cadastrado'
-            });
-            setShowInformationModal(true);
-          } else if (error === 'auth/invalid-email') {
-            setModalTexts({
-              title: 'Erro no cadastro',
-              message: 'Esse email é inválido'
-            });
-            setShowInformationModal(true);
-          }
-        });
-    }
-  }
-
-  function handlePasswordVerification(password: string) {
-    const hasMoreThanEightChar = password.length >= 8;
-    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
-    const hasUpperAndLowercaseChar =
-      /[a-z]/.test(password) && /[A-Z]/.test(password);
-
-    setHasMoreThanEightChar(hasMoreThanEightChar);
-    setHasSpecialChar(hasSpecialChar);
-    setHasUpperAndLowercaseChar(hasUpperAndLowercaseChar);
   }
 
   return (
-    <Container>
-      <MaterialIcons
-        name="arrow-back"
-        size={30}
-        color={theme.colors.dark_yellow}
-        style={{
-          position: 'absolute',
-          left: 15,
-          top: StatusBar.currentHeight + 15
-        }}
-        onPress={() => navigation.navigate('SignIn')}
-      />
-      <ActionText>Cadastro</ActionText>
-      <InputWrapper>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <ScrollView
+        contentContainerStyle={{
+          flexGrow: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+          padding: 25,
+          backgroundColor: theme.colors.dark_blue
+        }}>
         <MaterialIcons
-          name="person"
-          size={19}
-          color={'#8D8D99'}
-          style={{ marginRight: 7 }}
-        />
-        <Input
-          placeholder="John Doe"
-          onChangeText={(value) => {
-            setName(value);
+          name="arrow-back"
+          size={30}
+          color={theme.colors.dark_yellow}
+          style={{
+            position: 'absolute',
+            left: 15,
+            top: StatusBar.currentHeight + 15
           }}
+          onPress={() => navigation.navigate('SignIn')}
         />
-      </InputWrapper>
-      <InputWrapper>
-        <MaterialIcons
-          name="email"
-          size={19}
-          color={'#8D8D99'}
-          style={{ marginRight: 7 }}
-        />
-        <Input
-          placeholder="johndoe@mail.com"
-          keyboardType="email-address"
-          onChangeText={(value) => {
-            setEmail(value);
-          }}
-        />
-      </InputWrapper>
-      <InputWrapper>
-        <MaterialIcons
-          name="lock"
-          size={19}
-          color={'#8D8D99'}
-          style={{ marginRight: 7 }}
-        />
-        <Input
-          placeholder="**********"
-          onChangeText={(value) => {
-            setPassword(value), handlePasswordVerification(value);
-          }}
-        />
-      </InputWrapper>
-      <InputWrapper>
-        <MaterialIcons
-          name="lock"
-          size={19}
-          color={'#8D8D99'}
-          style={{ marginRight: 7 }}
-        />
-        <Input
-          placeholder="19070002"
-          keyboardType="numeric"
-          maxLength={8}
-          onChangeText={(value) => {
-            setRegistration(value);
-          }}
-        />
-      </InputWrapper>
-
-      <Hints>
-        <HintText isPresent={hasMoreThanEightChar}>
-          - Senha com mais de 8 caracteres
-        </HintText>
-        <HintText isPresent={hasSpecialChar}>
-          - Senha com caracteres especiais
-        </HintText>
-        <HintText isPresent={hasUpperAndLowercaseChar}>
-          - Senha com letras maiúsculas e minusculas
-        </HintText>
-      </Hints>
-
-      <SubmitButton onPress={() => handleSignUp(email, password, registration)}>
-        <SubmitButtonText>Cadastrar</SubmitButtonText>
-      </SubmitButton>
-
-      <InformationModal
-        message={modalTexts.message}
-        showModal={setShowInformationModal}
-        handleAction={() => {
-          if (modalTexts.message === 'Seu cadastro foi realizado com sucesso') {
-            navigation.navigate('SignIn');
-          } else {
-            setShowInformationModal(false);
+        <ActionText>Cadastro</ActionText>
+        <InputForm
+          name="name"
+          control={control}
+          error={errors.name && (errors.name.message as any)}
+          icon={
+            <MaterialIcons
+              name="person"
+              size={19}
+              color={'#8D8D99'}
+              style={{ marginRight: 10 }}
+            />
           }
-        }}
-        title={modalTexts.title}
-        visible={showInformationModal}
-      />
-    </Container>
+          keyboardType="default"
+          placeholder="Nome"
+          autoCapitalize="sentences"
+          autoCorrect={false}
+        />
+        <InputForm
+          name="email"
+          control={control}
+          error={errors.email && (errors.email.message as any)}
+          icon={
+            <MaterialIcons
+              name="email"
+              size={19}
+              color={'#8D8D99'}
+              style={{ marginRight: 10 }}
+            />
+          }
+          keyboardType="email-address"
+          placeholder="Email"
+        />
+        <InputForm
+          name="password"
+          control={control}
+          error={errors.password && (errors.password.message as any)}
+          icon={
+            <MaterialIcons
+              name="lock"
+              size={19}
+              color={'#8D8D99'}
+              style={{ marginRight: 10 }}
+            />
+          }
+          keyboardType="visible-password"
+          placeholder="Senha"
+        />
+        <InputForm
+          name="password_confirmation"
+          control={control}
+          error={
+            errors.password_confirmation &&
+            (errors.password_confirmation.message as any)
+          }
+          icon={
+            <MaterialIcons
+              name="lock"
+              size={19}
+              color={'#8D8D99'}
+              style={{ marginRight: 10 }}
+            />
+          }
+          keyboardType="visible-password"
+          placeholder="Confirme sua senha"
+        />
+        <InputForm
+          name="registration"
+          control={control}
+          error={errors.registration && (errors.registration.message as any)}
+          icon={
+            <Octicons
+              name="number"
+              size={19}
+              color={'#8D8D99'}
+              style={{ marginRight: 10 }}
+            />
+          }
+          keyboardType="numeric"
+          placeholder="Registration"
+          maxLength={8}
+        />
+
+        <SubmitButton onPress={handleSubmit(handleRegister)}>
+          <SubmitButtonText>Cadastrar</SubmitButtonText>
+        </SubmitButton>
+      </ScrollView>
+    </TouchableWithoutFeedback>
   );
 }
