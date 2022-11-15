@@ -19,6 +19,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { InputForm } from '../../../components/Form/InputForm';
 import { SignUpSchema } from './schema';
 import { SignUpData } from '../../../entities/Forms/SignUp';
+import { useLoading } from '../../../contexts/loading';
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'SignUp'>;
 
@@ -34,17 +35,22 @@ export function SignUp({ navigation, route }: Props) {
   });
 
   const { registerUser } = useAuth();
+  const { setLoading } = useLoading();
 
   async function handleRegister(form: SignUpData) {
+    setLoading(true);
     await registerUser(form.name, form.email, form.registration, form.password)
       .then(() => {
+        setLoading(false);
         Alert.alert(
           'Cadastro realizado com sucesso!',
           'Você já pode fazer login na aplicação.',
           [
             {
               text: 'Ok',
-              onPress: () => navigation.navigate('SignIn')
+              onPress: () => {
+                navigation.navigate('SignIn');
+              }
             }
           ]
         );
