@@ -72,7 +72,7 @@ export function AddGroup({ navigation, route }: Props) {
           style={{ marginRight: 7 }}
         />
         <Input
-          placeholder="Nome"
+          placeholder="MED MANHA 2019"
           autoCapitalize="characters"
           onChangeText={(value: string) => setGroupName(value)}
         />
@@ -86,7 +86,7 @@ export function AddGroup({ navigation, route }: Props) {
           style={{ marginRight: 7 }}
         />
         <Input
-          placeholder="Nome da turma"
+          placeholder="ME2MA"
           autoCapitalize="characters"
           onChangeText={(value: string) => setClassName(value)}
         />
