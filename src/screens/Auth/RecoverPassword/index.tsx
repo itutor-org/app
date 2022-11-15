@@ -1,115 +1,112 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { AuthStackParamList } from '../../../routes/auth.routes';
 
-import {
-  Container,
-  LogoText,
-  ActionText,
-  InputWrapper,
-  Input,
-  SubmitButton,
-  SubmitButtonText
-} from './styles';
+import { LogoText, Title } from './styles';
 
 import { MaterialIcons } from '@expo/vector-icons';
 import { theme } from '../../../styles/theme';
-import { StatusBar } from 'react-native';
+import {
+  Alert,
+  Keyboard,
+  ScrollView,
+  StatusBar,
+  TouchableWithoutFeedback
+} from 'react-native';
 import { useAuth } from '../../../contexts/useAuth';
 import React from 'react';
-import InformationModal from '../../../components/InformationModal';
+import Button from '../../../components/Button';
+import { InputForm } from '../../../components/Form/InputForm';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { RecoverPasswordSchema } from './schema';
+import { useLoading } from '../../../contexts/loading';
+import { RecoverPasswordData } from '../../../entities/Forms/RecoverPassword';
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'RecoverPassword'>;
 
 export function RecoverPassword({ navigation, route }: Props) {
-  const [email, setEmail] = React.useState('');
   const { recoverPassword } = useAuth();
+  const { setLoading } = useLoading();
 
-  const [modalTexts, setModalTexts] = React.useState({
-    title: '',
-    message: ''
+  const {
+    control,
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors }
+  } = useForm({
+    resolver: yupResolver(RecoverPasswordSchema)
   });
-  const [showInformationModal, setShowInformationModal] = React.useState(false);
 
-  async function handleRecoverPassword(email: string) {
-    if (!email.includes('.cesupa.br')) {
-      setModalTexts({
-        title: 'Email inválido',
-        message: 'Você precisa usar um email institucional'
+  async function handleRecoverPassword({ email }: RecoverPasswordData) {
+    setLoading(true);
+    await recoverPassword(email)
+      .then(() => {
+        setLoading(false);
+        Alert.alert(
+          'Sucesso!',
+          'Enviamos um e-mail para você recuperar sua senha',
+          [
+            {
+              text: 'Ok',
+              onPress: () => navigation.navigate('SignIn')
+            }
+          ]
+        );
+      })
+      .catch((error) => {
+        setLoading(false);
+        if (error === 'auth/user-not-found') {
+          Alert.alert('Erro!', 'E-mail não cadastrado');
+        }
       });
-      setShowInformationModal(true);
-      return;
-    } else {
-      await recoverPassword(email)
-        .then(() => {
-          setModalTexts({
-            title: 'Email enviado',
-            message:
-              'Um email foi enviado para você com as instruções para recuperar sua senha'
-          });
-          setShowInformationModal(true);
-        })
-        .catch((error) => {
-          if (error === 'auth/user-not-found') {
-            setModalTexts({
-              title: 'Email não encontrado',
-              message: 'Não existe nenhum usuário com esse email'
-            });
-            setShowInformationModal(true);
-          }
-        });
-    }
   }
 
   return (
-    <Container>
-      <MaterialIcons
-        name="arrow-back"
-        size={30}
-        color={theme.colors.dark_yellow}
-        style={{
-          position: 'absolute',
-          left: 15,
-          top: StatusBar.currentHeight + 15
-        }}
-        onPress={() => navigation.navigate('SignIn')}
-      />
-      <LogoText>ITutor</LogoText>
-      <ActionText>Recuperação de senha</ActionText>
-      <InputWrapper>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <ScrollView
+        contentContainerStyle={{
+          flexGrow: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+          padding: 25,
+          backgroundColor: theme.colors.dark_blue
+        }}>
         <MaterialIcons
+          name="arrow-back"
+          size={30}
+          color={theme.colors.dark_yellow}
+          style={{
+            position: 'absolute',
+            left: 15,
+            top: StatusBar.currentHeight + 15
+          }}
+          onPress={() => navigation.navigate('SignIn')}
+        />
+        <LogoText>ITutor</LogoText>
+        <Title>Recuperação de senha</Title>
+
+        <InputForm
           name="email"
-          size={19}
-          color={'#8D8D99'}
-          style={{ marginRight: 7 }}
-        />
-        <Input
-          placeholder="Digite seu e-mail"
-          keyboardType="email-address"
-          onChangeText={(value) => setEmail(value)}
-        />
-      </InputWrapper>
-
-      <SubmitButton onPress={() => handleRecoverPassword(email)}>
-        <SubmitButtonText>Mandar Instruções</SubmitButtonText>
-      </SubmitButton>
-
-      <InformationModal
-        message={modalTexts.message}
-        showModal={setShowInformationModal}
-        handleAction={() => {
-          if (
-            modalTexts.message !==
-            'Email enviado com sucesso, cheque seu email para recuperar a senha'
-          ) {
-            setShowInformationModal(false);
-          } else {
-            setShowInformationModal(false);
-            navigation.navigate('SignIn');
+          control={control}
+          error={errors.email && (errors.email.message as any)}
+          icon={
+            <MaterialIcons
+              name="person"
+              size={19}
+              color={'#8D8D99'}
+              style={{ marginRight: 7 }}
+            />
           }
-        }}
-        title={modalTexts.title}
-        visible={showInformationModal}
-      />
-    </Container>
+          keyboardType="email-address"
+          placeholder="Email"
+        />
+
+        <Button
+          text="Recuperar senha"
+          onPress={handleSubmit(handleRecoverPassword)}
+        />
+      </ScrollView>
+    </TouchableWithoutFeedback>
   );
 }
