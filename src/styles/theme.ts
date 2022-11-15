@@ -35,6 +35,7 @@ export const theme = {
   },
 
   margins: {
+    SSM: 4,
     SM: 8,
     MD: 16,
     LG: 24,
