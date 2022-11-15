@@ -1,17 +1,13 @@
 import React from 'react';
-import {
-  Control,
-  Controller,
-  FieldError,
-  FieldErrorsImpl,
-  Merge
-} from 'react-hook-form';
+import { Control, Controller } from 'react-hook-form';
 import { TextInput } from 'react-native';
 
 import { Input, InputWrapper, Error } from './styles';
 
 interface InputFormProps extends React.ComponentProps<typeof TextInput> {
   icon: React.ReactNode;
+  isPassword?: boolean;
+  PasswordIcon?: React.ReactNode;
   control: Control;
   name: string;
   error?: string;
@@ -22,6 +18,8 @@ export function InputForm({
   control,
   name,
   error,
+  isPassword,
+  PasswordIcon,
   ...rest
 }: InputFormProps) {
   return (
@@ -43,6 +41,7 @@ export function InputForm({
               onChangeText={onChange}
               {...rest}
             />
+            {isPassword && PasswordIcon}
           </InputWrapper>
           {error && <Error>{error}</Error>}
         </>
