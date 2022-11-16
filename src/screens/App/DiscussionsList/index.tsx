@@ -1,26 +1,13 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { StatusBar } from 'react-native';
 import { useAuth } from '../../../contexts/useAuth';
 import { AppStackParamList } from '../../../routes/app.routes';
 import {
   HomeContainer,
   GroupContainer,
   Title,
-  SearchInputWrapper,
-  SearchInput,
-  SearchWrapper,
   GroupsWrapper,
-  GroupList,
-  TopBar,
-  TeacherInfo,
-  TeacherName,
-  TeacherEmail,
-  InputWrapper,
-  Input,
-  SubmitButton,
-  ButtonText
+  GroupList
 } from './styles';
-import { theme } from '../../../styles/theme';
 import { MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
 import {
@@ -33,6 +20,14 @@ import ModalComponent from '../../../components/Modal';
 import { Discussion } from '../../../entities/discussion.entity';
 import { DeleteDiscussionResult } from '../../../services/graphService';
 import { useLoading } from '../../../contexts/loading';
+import { TopBar } from '../../../components/TopBar';
+import { SearchBar } from '../../../components/SearchBar';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useForm } from 'react-hook-form';
+import { CreateDiscussionSchema } from './schema';
+import { InputForm } from '../../../components/Form/InputForm';
+import Button from '../../../components/Button';
+import { CreateDiscussionData } from '../../../entities/Forms/CreateDiscussion';
 
 type Props = NativeStackScreenProps<AppStackParamList, 'DiscussionsList'>;
 
@@ -43,11 +38,18 @@ export function DiscussionsList({ navigation, route }: Props) {
   const [showCreateDiscussionModal, setShowCreateDiscussionModal] =
     React.useState(false);
 
-  const [discussion, setDiscussion] = React.useState<Discussion>(
-    {} as Discussion
-  );
-
   const [searchText, setSearchText] = React.useState('');
+
+  const {
+    control,
+    register,
+    reset,
+    handleSubmit,
+    watch,
+    formState: { errors }
+  } = useForm({
+    resolver: yupResolver(CreateDiscussionSchema)
+  });
 
   async function handleDeleteDiscussion(discussion_id: string) {
     setLoading(true);
@@ -70,18 +72,23 @@ export function DiscussionsList({ navigation, route }: Props) {
       .finally(() => setLoading(false));
   }
 
-  async function handleCreateDiscussion(group_id: string) {
+  async function handleCreateDiscussion({
+    general_subject,
+    specific_subject,
+    duration
+  }: CreateDiscussionData) {
+    setLoading(true);
     await createDiscussion(
-      group_id,
-      discussion.general_subject,
-      discussion.specific_subject,
+      route.params.group_id,
+      general_subject,
+      specific_subject,
       route.params.participants_number,
-      discussion.duration
+      duration
     )
       .then((data) => {
         if (data) {
           navigation.push('Discussion', {
-            group_id: group_id,
+            group_id: route.params.group_id,
             discussion_id: data.id,
             duration: data.duration,
             general_subject: data.general_subject,
@@ -111,50 +118,16 @@ export function DiscussionsList({ navigation, route }: Props) {
 
   return (
     <HomeContainer>
-      <TopBar marginTop={StatusBar.currentHeight + 15}>
-        <MaterialIcons
-          name="arrow-back"
-          size={30}
-          color={theme.colors.dark_yellow}
-          onPress={() => navigation.popToTop()}
-        />
-        <TeacherInfo>
-          <TeacherName>Prof. {user.name}</TeacherName>
-          <TeacherEmail>{user.email}</TeacherEmail>
-        </TeacherInfo>
-        <MaterialIcons
-          name="logout"
-          size={30}
-          color={theme.colors.white}
-          onPress={logoff}
-        />
-      </TopBar>
+      <TopBar navigation={navigation} />
       <GroupContainer>
         <Title>DISCUSSÕES</Title>
 
-        <SearchWrapper>
-          <SearchInputWrapper>
-            <SearchInput
-              placeholder="Pesquisar"
-              onChangeText={(value) => setSearchText(value)}
-            />
-            <MaterialIcons
-              name="search"
-              size={30}
-              color={theme.colors.gray_200}
-              style={{ marginLeft: 5 }}
-            />
-          </SearchInputWrapper>
-
-          <MaterialIcons
-            name="add-circle-outline"
-            size={30}
-            color={theme.colors.white}
-            onPress={() =>
-              setShowCreateDiscussionModal(!showCreateDiscussionModal)
-            }
-          />
-        </SearchWrapper>
+        <SearchBar
+          onChangeText={(value) => setSearchText(value)}
+          iconAction={() =>
+            setShowCreateDiscussionModal(!showCreateDiscussionModal)
+          }
+        />
 
         <GroupsWrapper>
           <GroupList
@@ -191,58 +164,73 @@ export function DiscussionsList({ navigation, route }: Props) {
         title="Criar discussão"
         showCloseButton={true}
         visible={showCreateDiscussionModal}
-        showModal={setShowCreateDiscussionModal}
-        height={350}
+        showModal={() => {
+          reset();
+          setShowCreateDiscussionModal(!showCreateDiscussionModal);
+        }}
         children={
           <>
-            <InputWrapper>
-              <MaterialIcons
-                name="topic"
-                size={19}
-                color={'#8D8D99'}
-                style={{ marginRight: 7 }}
-              />
-              <Input
-                placeholder="Tópico geral"
-                onChangeText={(value: string) =>
-                  setDiscussion({ ...discussion, general_subject: value })
-                }
-              />
-            </InputWrapper>
-            <InputWrapper>
-              <MaterialIcons
-                name="subject"
-                size={19}
-                color={'#8D8D99'}
-                style={{ marginRight: 7 }}
-              />
-              <Input
-                placeholder="Sub-tópico"
-                onChangeText={(value: string) =>
-                  setDiscussion({ ...discussion, specific_subject: value })
-                }
-              />
-            </InputWrapper>
-            <InputWrapper>
-              <MaterialIcons
-                name="access-time"
-                size={19}
-                color={'#8D8D99'}
-                style={{ marginRight: 7 }}
-              />
-              <Input
-                placeholder="Duração em minutos"
-                keyboardType="numeric"
-                maxLength={3}
-                onChangeText={(value) =>
-                  setDiscussion({ ...discussion, duration: Number(value) })
-                }
-              />
-            </InputWrapper>
-            <SubmitButton
-              onPress={() => handleCreateDiscussion(route.params.group_id)}>
-              <ButtonText>Iniciar Discussão</ButtonText>
-            </SubmitButton>
+            <InputForm
+              name="general_subject"
+              control={control}
+              error={
+                errors.general_subject &&
+                (errors.general_subject.message as any)
+              }
+              icon={
+                <MaterialIcons
+                  name="topic"
+                  size={19}
+                  color={'#8D8D99'}
+                  style={{ marginRight: 10 }}
+                />
+              }
+              keyboardType="default"
+              placeholder="Tópico geral"
+              autoCapitalize="sentences"
+            />
+
+            <InputForm
+              name="specific_subject"
+              control={control}
+              error={
+                errors.specific_subject &&
+                (errors.specific_subject.message as any)
+              }
+              icon={
+                <MaterialIcons
+                  name="subject"
+                  size={19}
+                  color={'#8D8D99'}
+                  style={{ marginRight: 10 }}
+                />
+              }
+              keyboardType="default"
+              placeholder="Tópico específico"
+              autoCapitalize="sentences"
+            />
+
+            <InputForm
+              name="duration"
+              control={control}
+              error={errors.duration && (errors.duration.message as any)}
+              icon={
+                <MaterialIcons
+                  name="access-time"
+                  size={19}
+                  color={'#8D8D99'}
+                  style={{ marginRight: 10 }}
+                />
+              }
+              keyboardType="numeric"
+              placeholder="Duração em minutos"
+              autoCapitalize="sentences"
+            />
+
+            <Button
+              text="Iniciar discussão"
+              onPress={handleSubmit(handleCreateDiscussion)}
+            />
           </>
         }
       />
