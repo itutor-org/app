@@ -28,7 +28,7 @@ export const CardRightSection = styled(CardSection)`
 `;
 
 export const CardTitle = styled.Text`
-  font-size: ${({ theme }) => theme.font_size.SM}px;
+  font-size: ${({ theme }) => theme.font_size.MD}px;
   font-weight: ${({ theme }) => theme.font_weight.bold};
   color: ${({ theme }) => theme.colors.black};
   text-align: center;
@@ -62,7 +62,9 @@ export const SectionWrapper = styled.View`
 
 export const GraphImage = styled.Image`
   width: 100%;
-  height: 45%;
+  height: 75%;
+  border-radius: 5px;
+  border: 1px solid #d1d1d1;
 `;
 
 export const MiddleText = styled.Text`
@@ -70,7 +72,6 @@ export const MiddleText = styled.Text`
   font-weight: ${({ theme }) => theme.font_weight.bold};
   color: ${({ theme }) => theme.colors.black};
   text-align: center;
-  margin: ${({ theme }) => theme.margins.SM}px 0;
   width: 100%;
 `;
 

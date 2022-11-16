@@ -1,5 +1,4 @@
 import React from 'react';
-import ConfirmationModal from '../ConfirmationModal';
 import { FontAwesome5, MaterialIcons } from '@expo/vector-icons';
 
 import {
@@ -19,7 +18,7 @@ import {
   RandomnessIndexText
 } from './styles';
 import { theme } from '../../styles/theme';
-import { Text } from 'react-native';
+import { Alert, Text } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { AppStackParamList } from '../../routes/app.routes';
 import ModalComponent from '../Modal';
@@ -45,9 +44,6 @@ export function DiscussionCard({
   graph,
   navigation
 }: DiscussionCardProps) {
-  const [showConfirmationModal, setShowConfirmationModal] =
-    React.useState(false);
-
   const [showInfoModal, setShowInfoModal] = React.useState(false);
 
   return (
@@ -80,14 +76,22 @@ export function DiscussionCard({
               style={{
                 marginLeft: 15
               }}
-              onPress={() => setShowConfirmationModal(!showConfirmationModal)}
-            />
-
-            <ConfirmationModal
-              message="Deseja mesmo excluir essa discussão?"
-              showModal={setShowConfirmationModal}
-              visible={showConfirmationModal}
-              handleAction={deleteAction}
+              onPress={() =>
+                Alert.alert(
+                  'Excluir grupo',
+                  'Tem certeza que deseja excluir este grupo?',
+                  [
+                    {
+                      text: 'Cancelar',
+                      style: 'cancel'
+                    },
+                    {
+                      text: 'Excluir',
+                      onPress: () => deleteAction()
+                    }
+                  ]
+                )
+              }
             />
 
             <ModalComponent
@@ -95,12 +99,11 @@ export function DiscussionCard({
               showCloseButton={true}
               visible={showInfoModal}
               showModal={setShowInfoModal}
-              height={500}
               children={
                 <>
                   <CardTitle>{specific_subject}</CardTitle>
                   <GraphImage
-                    resizeMode="cover"
+                    resizeMode="stretch"
                     source={{
                       uri: graph
                     }}
