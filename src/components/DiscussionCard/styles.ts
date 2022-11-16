@@ -33,6 +33,7 @@ export const CardTitle = styled.Text`
   color: ${({ theme }) => theme.colors.black};
   text-align: center;
   width: 100%;
+  margin-bottom: ${({ theme }) => theme.margins.SM}px;
 `;
 
 export const Button = styled.TouchableOpacity`
@@ -62,9 +63,9 @@ export const SectionWrapper = styled.View`
 
 export const GraphImage = styled.Image`
   width: 100%;
-  height: 75%;
+  height: 70%;
   border-radius: 5px;
-  border: 1px solid #d1d1d1;
+  border: 2px solid ${({ theme }) => theme.colors.light_orange};
 `;
 
 export const MiddleText = styled.Text`
