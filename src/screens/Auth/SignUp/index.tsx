@@ -19,7 +19,6 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { InputForm } from '../../../components/Form/InputForm';
 import { SignUpSchema } from './schema';
 import { SignUpData } from '../../../entities/Forms/signUp.data';
-import { useLoading } from '../../../contexts/loading';
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'SignUp'>;
 
@@ -35,39 +34,41 @@ export function SignUp({ navigation, route }: Props) {
   });
 
   const { registerUser } = useAuth();
-  const { setLoading } = useLoading();
 
   async function handleRegister(form: SignUpData) {
-    setLoading(true);
-    await registerUser(form.name, form.email, form.registration, form.password)
-      .then(() => {
-        setLoading(false);
-        Alert.alert(
-          'Cadastro realizado com sucesso!',
-          'Você já pode fazer login na aplicação.',
-          [
-            {
-              text: 'Ok',
-              onPress: () => {
-                navigation.navigate('SignIn');
-              }
+    try {
+      await registerUser(
+        form.name,
+        form.email,
+        form.registration,
+        form.password
+      );
+
+      Alert.alert(
+        'Cadastro realizado com sucesso!',
+        'Você já pode fazer login na aplicação.',
+        [
+          {
+            text: 'Ok',
+            onPress: () => {
+              navigation.navigate('SignIn');
             }
-          ]
+          }
+        ]
+      );
+    } catch (error) {
+      if (error === 'auth/email-already-in-use') {
+        Alert.alert(
+          'Ops! Esse e-mail já está sendo utilizado.',
+          'Por favor, tente novamente.'
         );
-      })
-      .catch((error) => {
-        if (error === 'auth/email-already-in-use') {
-          Alert.alert(
-            'Ops! Esse e-mail já está sendo utilizado.',
-            'Por favor, tente novamente.'
-          );
-        } else if (error === 'auth/invalid-email') {
-          Alert.alert(
-            'Ops! Esse e-mail é inválido.',
-            'Por favor, tente novamente.'
-          );
-        }
-      });
+      } else if (error === 'auth/invalid-email') {
+        Alert.alert(
+          'Ops! Esse e-mail é inválido.',
+          'Por favor, tente novamente.'
+        );
+      }
+    }
   }
 
   return (

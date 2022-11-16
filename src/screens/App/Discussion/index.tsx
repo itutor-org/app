@@ -38,7 +38,7 @@ import {
 import { ScreenStudent } from '../../../entities/student.entity';
 import { Action, Interaction } from '../../../entities/interaction.entity';
 import { createDiscussionResult } from '../../../services/graphService';
-import { useLoading } from '../../../contexts/loading';
+
 import { getStudentsByGroup } from '../../../services/studentService';
 import { actionsList } from './actions';
 
@@ -56,7 +56,6 @@ export function Discussion({ navigation, route }: Props) {
       finisher: null
     });
 
-  const { setLoading } = useLoading();
   const [countdown, setCountdown] = React.useState('');
 
   function timer(duration: number) {
@@ -218,16 +217,13 @@ export function Discussion({ navigation, route }: Props) {
   }
 
   async function handleUnsavedChanges() {
-    setLoading(true);
-    await deleteInteractionsByDiscussion(route.params.discussion_id)
-      .then(async () => {
-        await deleteDiscussion(route.params.discussion_id).catch((err) => {
-          console.log(err);
-        });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    try {
+      await deleteInteractionsByDiscussion(route.params.discussion_id);
+
+      await deleteDiscussion(route.params.discussion_id);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   function handleColor(student_id: string): string {
@@ -241,64 +237,55 @@ export function Discussion({ navigation, route }: Props) {
   }
 
   async function handleCreateDiscussionResult() {
-    setLoading(true);
-    await getInteractionByDiscussion(route.params.discussion_id)
-      .then(async (response) => {
-        await createDiscussionResult(response)
-          .then(async (discussion_result) => {
-            await updateDiscussion(
-              route.params.discussion_id,
-              'good',
-              discussion_result.graph,
-              discussion_result.random_percent
-            )
-              .then(() => {
-                navigation.navigate('Results', {
-                  discussion_id: route.params.discussion_id,
-                  group_id: route.params.group_id,
-                  participants_number: route.params.participants_number,
-                  discussion_result
-                });
-              })
-              .catch((err) => {
-                console.log(err);
-              });
-          })
-          .catch((err) => {
-            console.log(err);
-          })
-          .finally(() => setLoading(false));
-      })
-      .catch((err) => {
-        console.log(err);
+    try {
+      const interactions = await getInteractionByDiscussion(
+        route.params.discussion_id
+      );
+
+      const discussionResultFromApi = await createDiscussionResult(
+        interactions
+      );
+
+      await updateDiscussion(
+        route.params.discussion_id,
+        'good',
+        discussionResultFromApi.graph,
+        discussionResultFromApi.random_percent
+      );
+
+      navigation.navigate('Results', {
+        discussion_id: route.params.discussion_id,
+        group_id: route.params.group_id,
+        participants_number: route.params.participants_number,
+        discussion_result: discussionResultFromApi
       });
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   async function handleLoadStudents() {
-    await getStudentsByGroup(route.params.group_id)
-      .then((response) => {
-        const students = response.map((student) => ({
+    try {
+      const studentsByGroup = await getStudentsByGroup(route.params.group_id);
+
+      setStudents(
+        studentsByGroup.map((student) => ({
           id: student.id,
           name: student.name,
           registration: student.registration,
           email: student.email,
           group_id: student.group_id,
           isSelected: false
-        }));
-
-        setStudents(students);
-      })
-      .catch((err) => {
-        console.log(err);
-      })
-      .finally(() => {
-        timer(60 * route.params.duration);
-        setLoading(false);
-      });
+        }))
+      );
+    } catch (error) {
+      console.log(error);
+    } finally {
+      timer(60 * route.params.duration);
+    }
   }
 
   React.useEffect(() => {
-    setLoading(true);
     handleLoadStudents();
   }, []);
 

@@ -19,14 +19,13 @@ import { InputForm } from '../../../components/Form/InputForm';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { RecoverPasswordSchema } from './schema';
-import { useLoading } from '../../../contexts/loading';
+
 import { RecoverPasswordData } from '../../../entities/Forms/recoverPassword.data';
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'RecoverPassword'>;
 
 export function RecoverPassword({ navigation, route }: Props) {
   const { recoverPassword } = useAuth();
-  const { setLoading } = useLoading();
 
   const {
     control,
@@ -39,27 +38,25 @@ export function RecoverPassword({ navigation, route }: Props) {
   });
 
   async function handleRecoverPassword({ email }: RecoverPasswordData) {
-    setLoading(true);
-    await recoverPassword(email)
-      .then(() => {
-        setLoading(false);
-        Alert.alert(
-          'Sucesso!',
-          'Enviamos um e-mail para você recuperar sua senha',
-          [
-            {
-              text: 'Ok',
-              onPress: () => navigation.navigate('SignIn')
-            }
-          ]
-        );
-      })
-      .catch((error) => {
-        setLoading(false);
-        if (error === 'auth/user-not-found') {
-          Alert.alert('Erro!', 'E-mail não cadastrado');
-        }
-      });
+    try {
+      await recoverPassword(email);
+      Alert.alert(
+        'Sucesso!',
+        'Enviamos um e-mail para você recuperar sua senha',
+        [
+          {
+            text: 'Ok',
+            onPress: () => navigation.navigate('SignIn')
+          }
+        ]
+      );
+    } catch (error) {
+      if (error === 'auth/user-not-found') {
+        Alert.alert('Erro!', 'E-mail não cadastrado');
+      } else {
+        Alert.alert('Erro!', error);
+      }
+    }
   }
 
   return (

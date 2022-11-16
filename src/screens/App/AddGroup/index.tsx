@@ -53,24 +53,24 @@ export function AddGroup({ navigation, route }: Props) {
   });
 
   async function handleCreateGroup({ class_name, group_name }: AddGroupData) {
-    await createGroup(
-      user.id,
-      group_name,
-      students.length,
-      class_name,
-      students
-    )
-      .then(() => {
-        Alert.alert('Sucesso', 'O grupo criado com sucesso!', [
-          {
-            text: 'Ok',
-            onPress: () => navigation.navigate('Home')
-          }
-        ]);
-      })
-      .catch((error) => {
-        Alert.alert('Erro ao criar grupo', error.message);
-      });
+    try {
+      await createGroup(
+        user.id,
+        group_name,
+        students.length,
+        class_name,
+        students
+      );
+
+      Alert.alert('Sucesso', 'O grupo criado com sucesso!', [
+        {
+          text: 'Ok',
+          onPress: () => navigation.navigate('Home')
+        }
+      ]);
+    } catch (error) {
+      Alert.alert('Erro ao criar grupo', error.message);
+    }
   }
 
   async function handleAddStudent({ name, email, registration }: Student) {

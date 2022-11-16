@@ -12,7 +12,7 @@ import {
 import { deleteGroup, getGroups } from '../../../services/groupService';
 import { HomeCard } from '../../../components/HomeCard';
 import { Group } from '../../../entities/group.entity';
-import { useLoading } from '../../../contexts/loading';
+
 import { TopBar } from '../../../components/TopBar';
 import { SearchBar } from '../../../components/SearchBar';
 
@@ -20,34 +20,29 @@ type Props = NativeStackScreenProps<AppStackParamList, 'Home'>;
 
 export function Home({ navigation, route }: Props) {
   const { user } = useAuth();
-  const { setLoading } = useLoading();
+
   const [groups, setGroups] = React.useState<Group[]>([]);
   const [searchText, setSearchText] = React.useState('');
 
   async function handleDeleteGroup(group_id: string): Promise<void> {
-    setLoading(true);
-    await deleteGroup(group_id)
-      .then(() => {
-        groups.splice(
-          groups.findIndex((group) => group.id === group_id),
-          1
-        );
-      })
-      .catch((err) => {
-        console.log(err);
-      })
-      .finally(() => setLoading(false));
+    try {
+      await deleteGroup(group_id);
+      groups.splice(
+        groups.findIndex((group) => group.id === group_id),
+        1
+      );
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   async function loadGroups() {
-    await getGroups(user.id)
-      .then((data) => {
-        setGroups(data);
-      })
-      .catch((error) => {
-        console.log(error);
-      })
-      .finally(() => setLoading(false));
+    try {
+      const groups = await getGroups(user?.id);
+      setGroups(groups);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   React.useEffect(() => {

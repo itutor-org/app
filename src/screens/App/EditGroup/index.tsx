@@ -21,13 +21,10 @@ import { InputForm } from '../../../components/Form/InputForm';
 import { Button } from '../../../components/Button';
 import { EditGroupData } from '../../../entities/Forms/editStudent.data';
 import { StudentArea } from '../../../components/StudentArea';
-import { useLoading } from '../../../contexts/loading';
 
 type Props = NativeStackScreenProps<AppStackParamList, 'EditGroup'>;
 
 export function EditGroup({ navigation, route }: Props) {
-  const { setLoading } = useLoading();
-
   const [registerModalVisible, setRegisterModalVisible] = React.useState(false);
   const [students, setStudents] = React.useState<Student[]>([]);
   const [studentsToDelete, setStudentsToDelete] = React.useState<string[]>([]);
@@ -55,12 +52,15 @@ export function EditGroup({ navigation, route }: Props) {
   });
 
   async function handleUpdateGroup({ group_name, class_name }: EditGroupData) {
-    setLoading(true);
-    await handleDeleteStudentFromFirebase().then(async () => {
-      await handleCreateStudentOnFirebase().then(async () => {
-        await handleEditGroupOnFirebase({ group_name, class_name });
-      });
-    });
+    try {
+      await handleDeleteStudentFromFirebase();
+
+      await handleCreateStudentOnFirebase();
+
+      await handleEditGroupOnFirebase({ group_name, class_name });
+    } catch (error) {
+      Alert.alert('Erro ao editar grupo', error.message);
+    }
   }
 
   async function handleCreateStudentOnFirebase() {
@@ -83,9 +83,8 @@ export function EditGroup({ navigation, route }: Props) {
 
   async function handleDeleteStudentFromFirebase() {
     studentsToDelete.forEach(async (registration) => {
-      console.log(registration);
       await deleteStudentByRegistration(registration)
-        .then(async () => {
+        .then(() => {
           setStudents(
             students.filter((student) => student.registration !== registration)
           );
@@ -100,25 +99,23 @@ export function EditGroup({ navigation, route }: Props) {
     group_name,
     class_name
   }: EditGroupData) {
-    await updateGroup(
-      route.params.group_id,
-      group_name,
-      class_name,
-      students.length
-    )
-      .then(() => {
-        setLoading(false);
-        Alert.alert('Sucesso', 'O grupo foi editado com sucesso!', [
-          {
-            text: 'Ok',
-            onPress: () => navigation.navigate('Home')
-          }
-        ]);
-      })
-      .catch((error) => {
-        setLoading(false);
-        Alert.alert('Erro ao editar grupo', error.message);
-      });
+    try {
+      await updateGroup(
+        route.params.group_id,
+        group_name,
+        class_name,
+        students.length
+      );
+
+      Alert.alert('Sucesso', 'O grupo foi editado com sucesso!', [
+        {
+          text: 'Ok',
+          onPress: () => navigation.navigate('Home')
+        }
+      ]);
+    } catch (error) {
+      Alert.alert('Erro ao editar grupo', error.message);
+    }
   }
 
   function handleAddStudentOnCache({ name, email, registration }: Student) {
@@ -144,8 +141,12 @@ export function EditGroup({ navigation, route }: Props) {
   }
 
   async function getStudentsFromGroup() {
-    const data = await getStudentsByGroup(route.params.group_id);
-    setStudents(data);
+    try {
+      const data = await getStudentsByGroup(route.params.group_id);
+      setStudents(data);
+    } catch (error) {
+      Alert.alert('Erro ao buscar alunos', error.message);
+    }
   }
 
   React.useEffect(() => {

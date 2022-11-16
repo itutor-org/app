@@ -15,7 +15,7 @@ import {
 import { MaterialIcons, Entypo } from '@expo/vector-icons';
 import { useAuth } from '../../../contexts/useAuth';
 import React from 'react';
-import { useLoading } from '../../../contexts/loading';
+
 import { Alert, ScrollView } from 'react-native';
 import { theme } from '../../../styles/theme';
 import { useForm } from 'react-hook-form';
@@ -30,7 +30,6 @@ type Props = NativeStackScreenProps<AuthStackParamList, 'SignIn'>;
 export function SignIn({ navigation, route }: Props) {
   const [isPasswordVisible, setIsPasswordVisible] = React.useState(true);
   const { signIn } = useAuth();
-  const { setLoading } = useLoading();
 
   const {
     control,
@@ -43,14 +42,17 @@ export function SignIn({ navigation, route }: Props) {
   });
 
   async function handleSignIn({ email, password }: SignInData) {
-    setLoading(true);
-    await signIn(email, password).catch((error: string) => {
-      setLoading(false);
-      if (error === 'auth/user-not-found')
-        Alert.alert('Erro na autenticação', 'E-mail não cadastrado.');
-      else if (error === 'auth/wrong-password')
-        Alert.alert('Erro na autenticação', 'Senha incorreta.');
-    });
+    try {
+      await signIn(email, password);
+    } catch (error) {
+      if (error === 'auth/user-not-found') {
+        Alert.alert('Erro!', 'E-mail não cadastrado');
+      } else if (error === 'auth/wrong-password') {
+        Alert.alert('Erro!', 'Senha incorreta');
+      } else {
+        Alert.alert('Erro!', error);
+      }
+    }
   }
 
   return (
