@@ -4,12 +4,15 @@ import { ButtonContainer, Text } from './styles';
 interface ButtonProps {
   onPress: () => void;
   text: string;
+  color?: string;
 }
 
-export function Button({ onPress, text }: ButtonProps) {
+export function Button({ onPress, text, color }: ButtonProps) {
   return (
     <>
-      <ButtonContainer onPress={onPress}>
+      <ButtonContainer
+        {...(color && { style: { backgroundColor: color } })}
+        onPress={onPress}>
         <Text>{text}</Text>
       </ButtonContainer>
     </>
