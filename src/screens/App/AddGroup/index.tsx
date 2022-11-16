@@ -27,8 +27,9 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { AddGroupSchema, AddStudentSchema } from './schema';
 import { AddGroupData } from '../../../entities/Forms/AddGroup';
-import Button from '../../../components/Button';
+import { Button } from '../../../components/Button';
 import { InputForm } from '../../../components/Form/InputForm';
+import { StudentArea } from '../../../components/StudentArea';
 
 type Props = NativeStackScreenProps<AppStackParamList, 'AddGroup'>;
 
@@ -150,45 +151,17 @@ export function AddGroup({ navigation, route }: Props) {
           autoCorrect={false}
         />
 
-        <AddStudentArea>
-          <Button
-            text="Adicionar aluno"
-            onPress={() => setModalVisible(!modalVisible)}
-            style={{
-              marginBottom: 5,
-              backgroundColor: theme.colors.medium_green
-            }}
-          />
-          <StudentsList
-            data={students}
-            keyExtractor={({ registration }: StudentForValidation) =>
-              registration
-            }
-            renderItem={({ item }: any) => (
-              <StudentCard key={item.id}>
-                <StudentName>{item.name}</StudentName>
-                <ActionsButtonsWrapper>
-                  <MaterialIcons
-                    name="delete"
-                    size={25}
-                    color={theme.colors.gray_200}
-                    style={{
-                      marginLeft: 15
-                    }}
-                    onPress={() => {
-                      setStudents(
-                        students.filter(
-                          (student) =>
-                            student.registration !== item.registration
-                        )
-                      );
-                    }}
-                  />
-                </ActionsButtonsWrapper>
-              </StudentCard>
-            )}
-          />
-        </AddStudentArea>
+        <StudentArea
+          students={students}
+          handleDeleteStudent={(registration) =>
+            setStudents(
+              students.filter(
+                (student) => student.registration !== registration
+              )
+            )
+          }
+          openRegisterModal={() => setModalVisible(true)}
+        />
 
         <ModalComponent
           title="Adicionar aluno"
