@@ -60,3 +60,21 @@ export const getStudentsByGroup = async (id: string): Promise<Student[]> => {
 export const deleteStudent = async (id: string): Promise<void> => {
   await studentsCollection.doc(id).delete();
 };
+
+export const updateStudent = async (
+  student_id: string,
+  name?: string,
+  email?: string,
+  registration?: number
+) => {
+  await studentsCollection
+    .doc(student_id)
+    .update({
+      name,
+      email,
+      registration
+    })
+    .catch((error) => {
+      throw error.code;
+    });
+};
