@@ -22,15 +22,12 @@ export function Home({ navigation, route }: Props) {
   const { user } = useAuth();
   const { setLoading } = useLoading();
   const [groups, setGroups] = React.useState<Group[]>([]);
-  const [showConfirmationModal, setShowConfirmationModal] =
-    React.useState(false);
   const [searchText, setSearchText] = React.useState('');
 
   async function handleDeleteGroup(group_id: string): Promise<void> {
     setLoading(true);
     await deleteGroup(group_id)
       .then(() => {
-        setShowConfirmationModal(!showConfirmationModal);
         groups.splice(
           groups.findIndex((group) => group.id === group_id),
           1
