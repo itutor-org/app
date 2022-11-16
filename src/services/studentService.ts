@@ -61,6 +61,19 @@ export const deleteStudent = async (id: string): Promise<void> => {
   await studentsCollection.doc(id).delete();
 };
 
+export const deleteStudentByRegistration = async (
+  registration: string
+): Promise<void> => {
+  await studentsCollection
+    .where('registration', '==', registration)
+    .get()
+    .then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        doc.ref.delete();
+      });
+    });
+};
+
 export const updateStudent = async (
   student_id: string,
   name?: string,
