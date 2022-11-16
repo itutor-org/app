@@ -31,7 +31,7 @@ export const Container = styled.View`
   align-items: center;
   justify-content: space-around;
   height: 100%;
-  padding: 10px 0;
+  padding: 0 0 10px;
 `;
 
 export const TopBar = styled.View<TopBarProps>`
