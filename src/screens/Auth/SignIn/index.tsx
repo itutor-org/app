@@ -104,7 +104,7 @@ export function SignIn({ navigation, route }: Props) {
             name={isPasswordVisible ? 'eye' : 'eye-with-line'}
             size={19}
             color={'#8D8D99'}
-            style={{ marginLeft: -20 }}
+            style={{ marginLeft: -20, zIndex: 1 }}
             onPress={() => setIsPasswordVisible(!isPasswordVisible)}
           />
         }

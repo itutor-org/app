@@ -8,7 +8,7 @@ interface InputFormProps extends React.ComponentProps<typeof TextInput> {
   icon: React.ReactNode;
   isPassword?: boolean;
   PasswordIcon?: React.ReactNode;
-  control: Control;
+  control: Control<any, any>;
   name: string;
   error?: string;
 }

@@ -37,7 +37,11 @@ export function EditGroup({ navigation, route }: Props) {
     watch,
     formState: { errors }
   } = useForm({
-    resolver: yupResolver(EditGroupSchema)
+    resolver: yupResolver(EditGroupSchema),
+    defaultValues: {
+      group_name: route.params.name,
+      class_name: route.params.class_name
+    }
   });
 
   const {
@@ -184,7 +188,7 @@ export function EditGroup({ navigation, route }: Props) {
       <Title>Editar Grupo</Title>
       <InputForm
         name="group_name"
-        placeholder={route.params.name}
+        placeholder="Nome do grupo"
         control={control}
         error={errors.group_name && (errors.group_name.message as any)}
         icon={
@@ -201,7 +205,7 @@ export function EditGroup({ navigation, route }: Props) {
       />
       <InputForm
         name="class_name"
-        placeholder={route.params.class_name}
+        placeholder="Sigla da turma: Ex: CC2MA"
         control={control}
         error={errors.class_name && (errors.class_name.message as any)}
         icon={
