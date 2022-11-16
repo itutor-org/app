@@ -158,6 +158,7 @@ export function AddGroup({ navigation, route }: Props) {
           <Button
             text="Adicionar aluno"
             onPress={() => setModalVisible(!modalVisible)}
+            color={theme.colors.medium_green}
           />
           <StudentsList
             data={students}
