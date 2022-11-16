@@ -24,7 +24,7 @@ export const RecoverPasswordButton = styled.TouchableOpacity`
 `;
 
 export const RecoverPasswordButtonText = styled.Text`
-  color: ${({ theme }) => theme.colors.light_red};
+  color: ${({ theme }) => theme.colors.light_orange};
   font-size: ${({ theme }) => theme.font_size.SM}px;
   font-weight: ${({ theme }) => theme.font_weight.bold};
   margin-left: ${({ theme }) => theme.margins.SM}px;
