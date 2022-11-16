@@ -5,12 +5,7 @@ import { AppStackParamList } from '../../../routes/app.routes';
 import { Container, Title } from './styles';
 import { MaterialIcons } from '@expo/vector-icons';
 import { theme } from '../../../styles/theme';
-import {
-  Alert,
-  Keyboard,
-  StatusBar,
-  TouchableWithoutFeedback
-} from 'react-native';
+import { Alert, StatusBar } from 'react-native';
 import ModalComponent from '../../../components/Modal';
 import { useAuth } from '../../../contexts/useAuth';
 import { createGroup } from '../../../services/groupService';
@@ -88,149 +83,158 @@ export function AddGroup({ navigation, route }: Props) {
   }
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <Container>
-        <MaterialIcons
-          name="arrow-back"
-          size={30}
-          color={theme.colors.dark_yellow}
-          style={{
-            position: 'absolute',
-            left: 15,
-            top: StatusBar.currentHeight + 15
-          }}
-          onPress={() => navigation.navigate('Home')}
-        />
-        <Title>Criar Grupo</Title>
+    <Container>
+      <MaterialIcons
+        name="arrow-back"
+        size={30}
+        color={theme.colors.dark_yellow}
+        style={{
+          position: 'absolute',
+          left: 15,
+          top: StatusBar.currentHeight + 15
+        }}
+        onPress={() =>
+          Alert.alert(
+            'Atenção',
+            'Deseja sair da criação? Sua alterações serão perdidas',
+            [
+              {
+                text: 'Não',
+                style: 'cancel'
+              },
+              {
+                text: 'Sim',
+                onPress: () => navigation.navigate('Home')
+              }
+            ]
+          )
+        }
+      />
+      <Title>Criar Grupo</Title>
 
-        <InputForm
-          name="group_name"
-          control={control}
-          error={errors.group_name && (errors.group_name.message as any)}
-          icon={
-            <MaterialIcons
-              name="group"
-              size={19}
-              color={'#8D8D99'}
-              style={{ marginRight: 10 }}
+      <InputForm
+        name="group_name"
+        control={control}
+        error={errors.group_name && (errors.group_name.message as any)}
+        icon={
+          <MaterialIcons
+            name="group"
+            size={19}
+            color={'#8D8D99'}
+            style={{ marginRight: 10 }}
+          />
+        }
+        keyboardType="default"
+        placeholder="Nome do grupo"
+        autoCapitalize="sentences"
+        autoCorrect={false}
+      />
+
+      <InputForm
+        name="class_name"
+        control={control}
+        error={errors.class_name && (errors.class_name.message as any)}
+        icon={
+          <MaterialIcons
+            name="class"
+            size={19}
+            color={'#8D8D99'}
+            style={{ marginRight: 10 }}
+          />
+        }
+        keyboardType="default"
+        placeholder="Sigla da turma: Ex: CC2MA"
+        autoCapitalize="sentences"
+        autoCorrect={false}
+      />
+
+      <StudentArea
+        students={students}
+        handleDeleteStudent={(registration) =>
+          setStudents(
+            students.filter((student) => student.registration !== registration)
+          )
+        }
+        openRegisterModal={() => setModalVisible(true)}
+      />
+
+      <ModalComponent
+        title="Adicionar aluno"
+        showModal={() => {
+          resetStudent();
+          setModalVisible(!modalVisible);
+        }}
+        visible={modalVisible}
+        showCloseButton={true}
+        children={
+          <>
+            <InputForm
+              name="name"
+              control={controlStudent}
+              error={errorsStudent.name && (errorsStudent.name.message as any)}
+              icon={
+                <MaterialIcons
+                  name="person"
+                  size={19}
+                  color={'#8D8D99'}
+                  style={{ marginRight: 7 }}
+                />
+              }
+              keyboardType="default"
+              placeholder="Nome do aluno"
+              autoCapitalize="sentences"
             />
-          }
-          keyboardType="default"
-          placeholder="Nome do grupo"
-          autoCapitalize="sentences"
-          autoCorrect={false}
-        />
 
-        <InputForm
-          name="class_name"
-          control={control}
-          error={errors.class_name && (errors.class_name.message as any)}
-          icon={
-            <MaterialIcons
-              name="class"
-              size={19}
-              color={'#8D8D99'}
-              style={{ marginRight: 10 }}
+            <InputForm
+              name="email"
+              control={controlStudent}
+              error={
+                errorsStudent.email && (errorsStudent.email.message as any)
+              }
+              icon={
+                <MaterialIcons
+                  name="email"
+                  size={19}
+                  color={'#8D8D99'}
+                  style={{ marginRight: 7 }}
+                />
+              }
+              keyboardType="email-address"
+              placeholder="E-mail"
             />
-          }
-          keyboardType="default"
-          placeholder="Sigla da turma: Ex: CC2MA"
-          autoCapitalize="sentences"
-          autoCorrect={false}
-        />
 
-        <StudentArea
-          students={students}
-          handleDeleteStudent={(registration) =>
-            setStudents(
-              students.filter(
-                (student) => student.registration !== registration
-              )
-            )
-          }
-          openRegisterModal={() => setModalVisible(true)}
-        />
+            <InputForm
+              name="registration"
+              control={controlStudent}
+              error={
+                errorsStudent.registration &&
+                (errorsStudent.registration.message as any)
+              }
+              icon={
+                <MaterialIcons
+                  name="assignment-ind"
+                  size={19}
+                  color={'#8D8D99'}
+                  style={{ marginRight: 7 }}
+                />
+              }
+              keyboardType="default"
+              placeholder="Matrícula"
+              autoCapitalize="sentences"
+              autoCorrect={false}
+              maxLength={8}
+            />
 
-        <ModalComponent
-          title="Adicionar aluno"
-          showModal={() => {
-            resetStudent();
-            setModalVisible(!modalVisible);
-          }}
-          visible={modalVisible}
-          showCloseButton={true}
-          children={
-            <>
-              <InputForm
-                name="name"
-                control={controlStudent}
-                error={
-                  errorsStudent.name && (errorsStudent.name.message as any)
-                }
-                icon={
-                  <MaterialIcons
-                    name="person"
-                    size={19}
-                    color={'#8D8D99'}
-                    style={{ marginRight: 7 }}
-                  />
-                }
-                keyboardType="default"
-                placeholder="Nome do aluno"
-                autoCapitalize="sentences"
-              />
+            <Button
+              text="Adicionar aluno"
+              onPress={handleSubmitStudent(handleAddStudent)}
+            />
+          </>
+        }
+      />
 
-              <InputForm
-                name="email"
-                control={controlStudent}
-                error={
-                  errorsStudent.email && (errorsStudent.email.message as any)
-                }
-                icon={
-                  <MaterialIcons
-                    name="email"
-                    size={19}
-                    color={'#8D8D99'}
-                    style={{ marginRight: 7 }}
-                  />
-                }
-                keyboardType="email-address"
-                placeholder="E-mail"
-              />
-
-              <InputForm
-                name="registration"
-                control={controlStudent}
-                error={
-                  errorsStudent.registration &&
-                  (errorsStudent.registration.message as any)
-                }
-                icon={
-                  <MaterialIcons
-                    name="assignment-ind"
-                    size={19}
-                    color={'#8D8D99'}
-                    style={{ marginRight: 7 }}
-                  />
-                }
-                keyboardType="default"
-                placeholder="Matrícula"
-                autoCapitalize="sentences"
-                autoCorrect={false}
-                maxLength={8}
-              />
-
-              <Button
-                text="Adicionar aluno"
-                onPress={handleSubmitStudent(handleAddStudent)}
-              />
-            </>
-          }
-        />
-
-        <Button text="Criar Grupo" onPress={handleSubmit(handleCreateGroup)} />
-      </Container>
-    </TouchableWithoutFeedback>
+      <Button text="Criar Grupo" onPress={handleSubmit(handleCreateGroup)} />
+    </Container>
   );
 }
 
