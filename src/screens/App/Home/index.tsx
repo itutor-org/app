@@ -1,33 +1,25 @@
 import React from 'react';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { StatusBar } from 'react-native';
 import { useAuth } from '../../../contexts/useAuth';
 import { AppStackParamList } from '../../../routes/app.routes';
 import {
   HomeContainer,
   GroupContainer,
   Title,
-  SearchInputWrapper,
-  SearchInput,
-  SearchWrapper,
   GroupsWrapper,
-  GroupList,
-  TopBar,
-  TeacherInfo,
-  TeacherName,
-  TeacherEmail
+  GroupList
 } from './styles';
-import { theme } from '../../../styles/theme';
-import { MaterialIcons } from '@expo/vector-icons';
 import { deleteGroup, getGroups } from '../../../services/groupService';
 import { HomeCard } from '../../../components/HomeCard';
 import { Group } from '../../../entities/group.entity';
 import { useLoading } from '../../../contexts/loading';
+import { TopBar } from '../../../components/TopBar';
+import { SearchBar } from '../../../components/SearchBar';
 
 type Props = NativeStackScreenProps<AppStackParamList, 'Home'>;
 
 export function Home({ navigation, route }: Props) {
-  const { logoff, user } = useAuth();
+  const { user } = useAuth();
   const { setLoading } = useLoading();
   const [groups, setGroups] = React.useState<Group[]>([]);
   const [showConfirmationModal, setShowConfirmationModal] =
@@ -73,42 +65,14 @@ export function Home({ navigation, route }: Props) {
 
   return (
     <HomeContainer>
-      <TopBar marginTop={StatusBar.currentHeight + 15}>
-        <TeacherInfo>
-          <TeacherName>Prof. {user.name}</TeacherName>
-          <TeacherEmail>{user.email}</TeacherEmail>
-        </TeacherInfo>
-        <MaterialIcons
-          name="logout"
-          size={30}
-          color={theme.colors.white}
-          onPress={logoff}
-        />
-      </TopBar>
+      <TopBar navigation={navigation} isHome={true} />
       <GroupContainer>
         <Title>GRUPOS</Title>
 
-        <SearchWrapper>
-          <SearchInputWrapper>
-            <SearchInput
-              placeholder="Pesquisar"
-              onChangeText={(value) => setSearchText(value)}
-            />
-            <MaterialIcons
-              name="search"
-              size={30}
-              color={theme.colors.gray_200}
-              style={{ marginLeft: 5 }}
-            />
-          </SearchInputWrapper>
-
-          <MaterialIcons
-            name="add-circle-outline"
-            size={30}
-            color={theme.colors.white}
-            onPress={() => navigation.navigate('AddGroup')}
-          />
-        </SearchWrapper>
+        <SearchBar
+          onChangeText={(value) => setSearchText(value)}
+          iconAction={() => navigation.navigate('AddGroup')}
+        />
 
         <GroupsWrapper>
           <GroupList
