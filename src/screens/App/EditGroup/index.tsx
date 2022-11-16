@@ -5,20 +5,15 @@ import { AppStackParamList } from '../../../routes/app.routes';
 import {
   Container,
   Title,
-  InputWrapper,
-  Input,
-  SubmitButton,
-  ButtonText,
   AddStudentArea,
-  AddStudentButton,
   StudentCard,
   StudentName,
   ActionsButtonsWrapper,
   StudentsList
 } from './styles';
-import { MaterialIcons, Octicons } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
 import { theme } from '../../../styles/theme';
-import { StatusBar } from 'react-native';
+import { Alert, StatusBar } from 'react-native';
 import ModalComponent from '../../../components/Modal';
 import { updateGroup } from '../../../services/groupService';
 import {
@@ -26,48 +21,94 @@ import {
   deleteStudent,
   getStudentsByGroup
 } from '../../../services/studentService';
-import { Student } from '../../../entities/student.entity';
-import InformationModal from '../../../components/InformationModal';
+import {
+  Student,
+  StudentForValidation
+} from '../../../entities/student.entity';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { EditGroupSchema, EditStudentSchema } from './schema';
+import { InputForm } from '../../../components/Form/InputForm';
+import Button from '../../../components/Button';
+import { EditGroupData } from '../../../entities/Forms/EditStudent';
 
 type Props = NativeStackScreenProps<AppStackParamList, 'EditGroup'>;
 
 export function EditGroup({ navigation, route }: Props) {
   const [registerModalVisible, setRegisterModalVisible] = React.useState(false);
-  const [infoModalVisible, setInfoModalVisible] = React.useState(false);
-  const [errorModalVisible, setErrorModalVisible] = React.useState(false);
-  const [groupName, setGroupName] = React.useState(route.params.name);
-  const [className, setClassName] = React.useState(route.params.class_name);
   const [students, setStudents] = React.useState<Student[]>([]);
-  const [student, setStudent] = React.useState<Student>();
 
-  async function handleUpdateGroup(group_id: string) {
-    await updateGroup(group_id, groupName, className, students.length).then(
-      () => {
-        setInfoModalVisible(!infoModalVisible);
-      }
-    );
+  const {
+    control,
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors }
+  } = useForm({
+    resolver: yupResolver(EditGroupSchema)
+  });
+
+  const {
+    control: controlStudent,
+    register: registerStudent,
+    handleSubmit: handleSubmitStudent,
+    watch: watchStudent,
+    reset: resetStudent,
+    formState: { errors: errorsStudent }
+  } = useForm({
+    resolver: yupResolver(EditStudentSchema)
+  });
+
+  async function handleUpdateGroup({ group_name, class_name }: EditGroupData) {
+    await updateGroup(
+      route.params.group_id,
+      group_name,
+      class_name,
+      students.length
+    )
+      .then(() => {
+        Alert.alert('Sucesso', 'O grupo foi editado com sucesso!', [
+          {
+            text: 'Ok',
+            onPress: () => navigation.navigate('Home')
+          }
+        ]);
+      })
+      .catch((error) => {
+        Alert.alert('Erro ao editar grupo', error.message);
+      });
   }
 
   async function handleDeleteStudent(studentID: string) {
-    await deleteStudent(studentID).then(() => {
-      setStudents(students.filter((student) => student.id !== studentID));
-    });
+    await deleteStudent(studentID)
+      .then(() => {
+        setStudents(students.filter((student) => student.id !== studentID));
+      })
+      .catch((error) => {
+        Alert.alert('Erro ao deletar aluno', error.message);
+      });
   }
 
-  async function handleAddStudent() {
-    if (student.email.includes('aluno.cesupa.br')) {
-      createStudent(
-        student.name,
-        student.email,
-        student.registration,
-        route.params.group_id
-      );
-
-      setStudents((prevState) => [...prevState, student]),
-        setStudent({} as Student),
-        setRegisterModalVisible(!registerModalVisible);
+  async function handleAddStudent({
+    name,
+    email,
+    registration
+  }: StudentForValidation) {
+    if (
+      students.find((student) => student.registration === registration) ||
+      students.find((student) => student.email === email) ||
+      students.find((student) => student.name === name)
+    ) {
+      Alert.alert('Erro', 'Esse aluno já foi adicionado ao grupo.');
     } else {
-      setErrorModalVisible(!errorModalVisible);
+      await createStudent(name, email, registration, route.params.group_id)
+        .then((student) => {
+          setStudents([...students, student]);
+          setRegisterModalVisible(false);
+        })
+        .catch((error) => {
+          Alert.alert('Erro ao adicionar aluno', error.message);
+        });
     }
   }
 
@@ -94,39 +135,51 @@ export function EditGroup({ navigation, route }: Props) {
         onPress={() => navigation.navigate('Home')}
       />
       <Title>Editar Grupo</Title>
-      <InputWrapper>
-        <MaterialIcons
-          name="person"
-          size={19}
-          color={'#8D8D99'}
-          style={{ marginRight: 7 }}
-        />
-        <Input
-          placeholder="Nome"
-          value={groupName}
-          onChangeText={(value: string) => setGroupName(value)}
-        />
-      </InputWrapper>
+      <InputForm
+        name="group_name"
+        placeholder={route.params.name}
+        control={control}
+        error={errors.group_name && (errors.group_name.message as any)}
+        icon={
+          <MaterialIcons
+            name="group"
+            size={19}
+            color={'#8D8D99'}
+            style={{ marginRight: 10 }}
+          />
+        }
+        keyboardType="default"
+        autoCapitalize="sentences"
+        autoCorrect={false}
+      />
 
-      <InputWrapper>
-        <MaterialIcons
-          name="class"
-          size={19}
-          color={'#8D8D99'}
-          style={{ marginRight: 7 }}
-        />
-        <Input
-          placeholder="Nome da turma"
-          value={className}
-          onChangeText={(value: string) => setClassName(value)}
-        />
-      </InputWrapper>
+      <InputForm
+        name="class_name"
+        placeholder={route.params.class_name}
+        control={control}
+        error={errors.class_name && (errors.class_name.message as any)}
+        icon={
+          <MaterialIcons
+            name="class"
+            size={19}
+            color={'#8D8D99'}
+            style={{ marginRight: 10 }}
+          />
+        }
+        keyboardType="default"
+        autoCapitalize="sentences"
+        autoCorrect={false}
+      />
 
       <AddStudentArea>
-        <AddStudentButton
-          onPress={() => setRegisterModalVisible(!registerModalVisible)}>
-          <ButtonText>Adicionar aluno</ButtonText>
-        </AddStudentButton>
+        <Button
+          text="Adicionar aluno"
+          onPress={() => setRegisterModalVisible(!registerModalVisible)}
+          style={{
+            marginBottom: 5,
+            backgroundColor: theme.colors.medium_green
+          }}
+        />
         <StudentsList
           showsVerticalScrollIndicator={true}
           data={students}
@@ -155,78 +208,74 @@ export function EditGroup({ navigation, route }: Props) {
         showModal={setRegisterModalVisible}
         visible={registerModalVisible}
         showCloseButton={true}
-        height={350}
         children={
           <>
-            <InputWrapper>
-              <MaterialIcons
-                name="person"
-                size={19}
-                color={'#8D8D99'}
-                style={{ marginRight: 7 }}
-              />
-              <Input
-                placeholder="Nome"
-                onChangeText={(value: string) =>
-                  setStudent({ ...student, name: value })
-                }
-              />
-            </InputWrapper>
-            <InputWrapper>
-              <Octicons
-                name="number"
-                size={19}
-                color={'#8D8D99'}
-                style={{ marginRight: 10 }}
-              />
-              <Input
-                placeholder="Matricula"
-                keyboardType="numeric"
-                onChangeText={(value: string) =>
-                  setStudent({ ...student, registration: value })
-                }
-              />
-            </InputWrapper>
-            <InputWrapper>
-              <MaterialIcons
-                name="email"
-                size={19}
-                color={'#8D8D99'}
-                style={{ marginRight: 7 }}
-              />
-              <Input
-                placeholder="Email"
-                keyboardType="email-address"
-                onChangeText={(value: string) =>
-                  setStudent({ ...student, email: value })
-                }
-              />
-            </InputWrapper>
-            <SubmitButton onPress={handleAddStudent}>
-              <ButtonText>Adicionar Aluno</ButtonText>
-            </SubmitButton>
+            <InputForm
+              name="name"
+              control={controlStudent}
+              error={errorsStudent.name && (errorsStudent.name.message as any)}
+              icon={
+                <MaterialIcons
+                  name="person"
+                  size={19}
+                  color={'#8D8D99'}
+                  style={{ marginRight: 7 }}
+                />
+              }
+              keyboardType="default"
+              placeholder="Nome do aluno"
+              autoCapitalize="sentences"
+            />
+
+            <InputForm
+              name="email"
+              control={controlStudent}
+              error={
+                errorsStudent.email && (errorsStudent.email.message as any)
+              }
+              icon={
+                <MaterialIcons
+                  name="email"
+                  size={19}
+                  color={'#8D8D99'}
+                  style={{ marginRight: 7 }}
+                />
+              }
+              keyboardType="email-address"
+              placeholder="E-mail"
+            />
+
+            <InputForm
+              name="registration"
+              control={controlStudent}
+              error={
+                errorsStudent.registration &&
+                (errorsStudent.registration.message as any)
+              }
+              icon={
+                <MaterialIcons
+                  name="assignment-ind"
+                  size={19}
+                  color={'#8D8D99'}
+                  style={{ marginRight: 7 }}
+                />
+              }
+              keyboardType="default"
+              placeholder="Matrícula"
+              autoCapitalize="sentences"
+              autoCorrect={false}
+              maxLength={8}
+            />
+
+            <Button
+              text="Adicionar aluno"
+              onPress={handleSubmitStudent(handleAddStudent)}
+            />
           </>
         }
       />
 
-      <InformationModal
-        title="Sucesso"
-        showModal={setInfoModalVisible}
-        visible={infoModalVisible}
-        message="Grupo editado com sucesso"
-        handleAction={() => navigation.navigate('Home')}
-      />
-      <InformationModal
-        title="Erro"
-        showModal={setErrorModalVisible}
-        visible={errorModalVisible}
-        message="Email inválido, o aluno deve possuir um e-mail institucional"
-        handleAction={() => setErrorModalVisible(!errorModalVisible)}
-      />
-
-      <SubmitButton onPress={() => handleUpdateGroup(route.params.group_id)}>
-        <ButtonText>Confirmar</ButtonText>
-      </SubmitButton>
+      <Button text="Editar Grupo" onPress={handleSubmit(handleUpdateGroup)} />
     </Container>
   );
 }
