@@ -1,5 +1,4 @@
 import React from 'react';
-import ConfirmationModal from '../ConfirmationModal';
 import { FontAwesome5, MaterialIcons, Feather } from '@expo/vector-icons';
 
 import {
@@ -12,7 +11,7 @@ import {
   SectionWrapper
 } from './styles';
 import { theme } from '../../styles/theme';
-import { Text } from 'react-native';
+import { Alert, Text } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { AppStackParamList } from '../../routes/app.routes';
 
@@ -33,9 +32,6 @@ export function HomeCard({
   deleteAction,
   navigation
 }: HomeCardProps) {
-  const [showConfirmationModal, setShowConfirmationModal] =
-    React.useState(false);
-
   return (
     <>
       <Container>
@@ -85,14 +81,22 @@ export function HomeCard({
               style={{
                 marginLeft: 15
               }}
-              onPress={() => setShowConfirmationModal(!showConfirmationModal)}
-            />
-
-            <ConfirmationModal
-              message="Deseja mesmo excluir esse grupo?"
-              showModal={setShowConfirmationModal}
-              visible={showConfirmationModal}
-              handleAction={deleteAction}
+              onPress={() =>
+                Alert.alert(
+                  'Excluir grupo',
+                  'Tem certeza que deseja excluir este grupo?',
+                  [
+                    {
+                      text: 'Cancelar',
+                      style: 'cancel'
+                    },
+                    {
+                      text: 'Excluir',
+                      onPress: () => deleteAction()
+                    }
+                  ]
+                )
+              }
             />
           </SectionWrapper>
         </CardRightSection>
