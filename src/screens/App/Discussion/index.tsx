@@ -24,9 +24,8 @@ import {
 } from './styles';
 import { AntDesign } from '@expo/vector-icons';
 import { theme } from '../../../styles/theme';
-import { StatusBar } from 'react-native';
+import { Alert, StatusBar } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
-import { ConfirmationModal } from '../../../components/ConfirmationModal';
 import { deleteDiscussion } from '../../../services/discussionService';
 import {
   createInteraction,
@@ -36,56 +35,25 @@ import {
 import { ScreenStudent } from '../../../entities/student.entity';
 import { Action, Interaction } from '../../../entities/interaction.entity';
 import { createDiscussionResult } from '../../../services/graphService';
-import { DiscussionResult } from '../../../entities/discussion.entity';
 import { useLoading } from '../../../contexts/loading';
 import { getStudentsByGroup } from '../../../services/studentService';
-import InformationModal from '../../../components/InformationModal';
+import { actionsList } from './actions';
 
 type Props = NativeStackScreenProps<AppStackParamList, 'Discussion'>;
 
 export function Discussion({ navigation, route }: Props) {
   const [students, setStudents] = React.useState<ScreenStudent[]>([]);
-  const [actions, setActions] = React.useState<Action[]>([
-    {
-      name: 'Concordou',
-      tag: 'C',
-      color: theme.colors.light_red,
-      isSelected: false
-    },
-    {
-      name: 'Discordou',
-      tag: 'D',
-      color: theme.colors.dark_yellow,
-      isSelected: false
-    },
-    {
-      name: 'Iniciou',
-      tag: 'I',
-      color: theme.colors.dark_green,
-      isSelected: false
-    },
-    {
-      name: 'Respondeu',
-      tag: 'R',
-      color: theme.colors.gray_200,
-      isSelected: false
-    }
-  ]);
+  const [actions, setActions] = React.useState<Action[]>(actionsList);
 
-  const [interaction, setInteraction] = React.useState<Interaction>({
-    discussion_id: route.params.discussion_id,
-    starter: null,
-    type: null,
-    finisher: null
-  });
+  const [currentInteraction, setCurrentInteraction] =
+    React.useState<Interaction>({
+      discussion_id: route.params.discussion_id,
+      starter: null,
+      type: null,
+      finisher: null
+    });
 
   const { setLoading } = useLoading();
-
-  const [showConfirmationModal, setShowConfirmationModal] =
-    React.useState(false);
-  const [showUnsavedChangesModal, setShowUnsavedChangesModal] =
-    React.useState(false);
-  const [showFinishModal, setShowFinishModal] = React.useState(false);
   const [countdown, setCountdown] = React.useState('');
 
   function timer(duration: number) {
@@ -104,7 +72,12 @@ export function Discussion({ navigation, route }: Props) {
       if (--timer < 0) {
         timer = 0;
         clearInterval(interval);
-        setShowFinishModal(true);
+        Alert.alert('Tempo esgotado!', 'A discussão foi encerrada.', [
+          {
+            text: 'OK',
+            onPress: handleCreateDiscussionResult
+          }
+        ]);
       }
     }, 1000);
   }
@@ -124,14 +97,14 @@ export function Discussion({ navigation, route }: Props) {
         return item;
       });
 
-      if (interaction.starter.id === student.id) {
-        setInteraction({
-          ...interaction,
+      if (currentInteraction.starter.id === student.id) {
+        setCurrentInteraction({
+          ...currentInteraction,
           starter: null
         });
-      } else if (interaction.finisher.id === student.id) {
-        setInteraction({
-          ...interaction,
+      } else if (currentInteraction.finisher.id === student.id) {
+        setCurrentInteraction({
+          ...currentInteraction,
           finisher: null
         });
       }
@@ -145,9 +118,9 @@ export function Discussion({ navigation, route }: Props) {
         return item;
       });
 
-      if (interaction.starter) {
-        setInteraction({
-          ...interaction,
+      if (currentInteraction.starter) {
+        setCurrentInteraction({
+          ...currentInteraction,
           finisher: {
             id: student.id,
             name: student.name,
@@ -157,8 +130,8 @@ export function Discussion({ navigation, route }: Props) {
           }
         });
       } else {
-        setInteraction({
-          ...interaction,
+        setCurrentInteraction({
+          ...currentInteraction,
           starter: {
             id: student.id,
             name: student.name,
@@ -190,7 +163,7 @@ export function Discussion({ navigation, route }: Props) {
         return item;
       })
     );
-    setInteraction({
+    setCurrentInteraction({
       discussion_id: route.params.discussion_id,
       starter: null,
       type: null,
@@ -203,8 +176,8 @@ export function Discussion({ navigation, route }: Props) {
       actions.map((item) => {
         if (item.name === name) {
           item.isSelected = !item.isSelected;
-          setInteraction({
-            ...interaction,
+          setCurrentInteraction({
+            ...currentInteraction,
             type: item.name
           });
         } else {
@@ -216,24 +189,28 @@ export function Discussion({ navigation, route }: Props) {
   }
 
   async function handleStoreInteraction() {
-    if (interaction.starter && interaction.finisher && interaction.type) {
+    if (
+      currentInteraction.starter &&
+      currentInteraction.finisher &&
+      currentInteraction.type
+    ) {
       await createInteraction(
-        interaction.discussion_id,
-        interaction.starter,
-        interaction.type,
-        interaction.finisher
+        currentInteraction.discussion_id,
+        currentInteraction.starter,
+        currentInteraction.type,
+        currentInteraction.finisher
       ).then(() => {
         handleResetInteraction();
       });
     } else if (
-      interaction.starter &&
-      !interaction.finisher &&
-      interaction.type
+      currentInteraction.starter &&
+      !currentInteraction.finisher &&
+      currentInteraction.type
     ) {
       await createInteraction(
-        interaction.discussion_id,
-        interaction.starter,
-        interaction.type,
+        currentInteraction.discussion_id,
+        currentInteraction.starter,
+        currentInteraction.type,
         null
       ).then(() => {
         handleResetInteraction();
@@ -243,22 +220,12 @@ export function Discussion({ navigation, route }: Props) {
     }
   }
 
-  function handleFinalize(discussion_result: DiscussionResult) {
-    navigation.replace('Results', {
-      discussion_id: route.params.discussion_id,
-      group_id: route.params.group_id,
-      participants_number: route.params.participants_number,
-      discussion_result
-    });
-  }
-
   async function handleUnsavedChanges() {
     await deleteInteractionsByDiscussion(route.params.discussion_id)
       .then(async () => {
         await deleteDiscussion(route.params.discussion_id)
           .then(() => {
             navigation.popToTop();
-            setShowUnsavedChangesModal(!showUnsavedChangesModal);
           })
           .catch((err) => {
             console.log(err);
@@ -270,10 +237,10 @@ export function Discussion({ navigation, route }: Props) {
   }
 
   function handleColor(student_id: string): string {
-    if (interaction.starter || interaction.finisher) {
-      if (interaction.starter?.id === student_id) {
+    if (currentInteraction.starter || currentInteraction.finisher) {
+      if (currentInteraction.starter?.id === student_id) {
         return theme.colors.orange;
-      } else if (interaction.finisher?.id === student_id) {
+      } else if (currentInteraction.finisher?.id === student_id) {
         return theme.colors.purple;
       }
     } else {
@@ -284,10 +251,15 @@ export function Discussion({ navigation, route }: Props) {
   async function handleCreateDiscussionResult() {
     setLoading(true);
     await getInteractionByDiscussion(route.params.discussion_id)
-      .then(async (response: Interaction[]) => {
+      .then(async (response) => {
         await createDiscussionResult(response)
-          .then((response: DiscussionResult) => {
-            handleFinalize(response);
+          .then((discussion_result) => {
+            navigation.replace('Results', {
+              discussion_id: route.params.discussion_id,
+              group_id: route.params.group_id,
+              participants_number: route.params.participants_number,
+              discussion_result
+            });
           })
           .catch((err) => {
             console.log(err);
@@ -318,8 +290,8 @@ export function Discussion({ navigation, route }: Props) {
         console.log(err);
       })
       .finally(() => {
-        setLoading(false);
         timer(60 * route.params.duration);
+        setLoading(false);
       });
   }
 
@@ -329,7 +301,7 @@ export function Discussion({ navigation, route }: Props) {
 
   return (
     <Container>
-      <TopBar marginTop={StatusBar.currentHeight + 15}>
+      <TopBar marginTop={StatusBar.currentHeight}>
         <Wrapper>
           <MaterialIcons
             name="watch-later"
@@ -351,7 +323,18 @@ export function Discussion({ navigation, route }: Props) {
           size={30}
           color={theme.colors.white}
           onPress={() => {
-            setShowUnsavedChangesModal(!showUnsavedChangesModal);
+            Alert.alert('Atenção', 'Deseja realmente sair da discussão?', [
+              {
+                text: 'Não',
+                style: 'cancel'
+              },
+              {
+                text: 'Sim',
+                onPress: () => {
+                  handleUnsavedChanges();
+                }
+              }
+            ]);
           }}
         />
       </TopBar>
@@ -395,34 +378,24 @@ export function Discussion({ navigation, route }: Props) {
 
         <Button
           isSubmit={false}
-          onPress={() => setShowConfirmationModal(!showConfirmationModal)}>
+          onPress={() =>
+            Alert.alert('Atenção', 'Deseja realmente finalizar a discussão?', [
+              {
+                text: 'Não',
+                style: 'cancel'
+              },
+              {
+                text: 'Sim',
+                onPress: () => {
+                  timer(0);
+                  handleCreateDiscussionResult();
+                }
+              }
+            ])
+          }>
           <ButtonText>FINALIZAR DISCUSSÃO</ButtonText>
         </Button>
       </ButtonsWrapper>
-
-      <ConfirmationModal
-        message={'Deseja mesmo finalizar essa discussão?'}
-        showModal={setShowConfirmationModal}
-        visible={showConfirmationModal}
-        handleAction={handleCreateDiscussionResult}
-      />
-
-      <ConfirmationModal
-        message={
-          'Deseja finalizar esta discussão? Você perderá todos os dados gerados nessa sessão'
-        }
-        showModal={setShowUnsavedChangesModal}
-        visible={showUnsavedChangesModal}
-        handleAction={handleUnsavedChanges}
-      />
-
-      <InformationModal
-        message={'Sua discussão foi finalizada porquê o tempo acabou!'}
-        showModal={setShowFinishModal}
-        handleAction={handleCreateDiscussionResult}
-        visible={showFinishModal}
-        title={'Tempo esgotado!'}
-      />
     </Container>
   );
 }
