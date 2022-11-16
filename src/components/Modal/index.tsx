@@ -2,7 +2,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
 import { Modal } from 'react-native';
 
-import { ModalContainer, ModalContent, ModalTitle } from './styles';
+import { ModalContainer, ModalContent, ModalTitle, CloseDiv } from './styles';
 
 interface ModalComponentProps {
   title?: string;
@@ -10,7 +10,6 @@ interface ModalComponentProps {
   showModal: (value: boolean) => void;
   children: React.ReactNode;
   showCloseButton?: boolean;
-  height: number;
 }
 
 export function ModalComponent({
@@ -18,8 +17,7 @@ export function ModalComponent({
   visible,
   showModal,
   children,
-  showCloseButton,
-  height
+  showCloseButton
 }: ModalComponentProps) {
   return (
     <Modal
@@ -33,19 +31,16 @@ export function ModalComponent({
         showModal(!visible);
       }}>
       <ModalContainer>
-        <ModalContent height={height}>
+        <ModalContent>
           {showCloseButton && (
-            <MaterialIcons
-              name="close"
-              size={30}
-              color={'#8D8D99'}
-              style={{
-                position: 'absolute',
-                right: 10,
-                top: 10
-              }}
-              onPress={() => showModal(!visible)}
-            />
+            <CloseDiv>
+              <MaterialIcons
+                name="close"
+                size={30}
+                color={'#8D8D99'}
+                onPress={() => showModal(!visible)}
+              />
+            </CloseDiv>
           )}
           {title && <ModalTitle>{title}</ModalTitle>}
           {children}
