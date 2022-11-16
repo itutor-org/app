@@ -84,7 +84,7 @@ export function DiscussionsList({ navigation, route }: Props) {
       duration
     )
       .then((data) => {
-        if (data) {
+        if (data)
           navigation.push('Discussion', {
             group_id: route.params.group_id,
             discussion_id: data.id,
@@ -93,7 +93,6 @@ export function DiscussionsList({ navigation, route }: Props) {
             specific_subject: data.specific_subject,
             participants_number: data.participants_number
           });
-        }
       })
       .catch((err) => {
         console.log(err);
