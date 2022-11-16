@@ -50,6 +50,15 @@ export const Wrapper = styled.View`
   justify-content: center;
 `;
 
+export const TopicWrapper = styled.View`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin-top: ${({ theme }) => theme.margins.SM}px;
+`;
+
 export const Title = styled.Text`
   font-size: ${({ theme }) => theme.font_size.LG}px;
   color: ${({ theme }) => theme.colors.white};
@@ -57,6 +66,7 @@ export const Title = styled.Text`
 `;
 
 export const TimeText = styled(Title)`
+  margin-top: ${({ theme }) => theme.margins.SSM}px;
   font-size: ${({ theme }) => theme.font_size.MD}px;
   font-weight: ${({ theme }) => theme.font_weight.regular};
 `;
@@ -71,7 +81,7 @@ export const Middle = styled.View`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-evenly;
+  justify-content: center;
   width: 100%;
   height: 65%;
 `;
@@ -81,7 +91,7 @@ export const CardsWrapper = styled.View`
   flex-direction: row;
   align-items: center;
   justify-content: space-around;
-  width: 95%;
+  width: 100%;
   flex-wrap: wrap;
 `;
 
@@ -113,6 +123,7 @@ export const InteractionsWrapper = styled.View`
   justify-content: space-evenly;
   width: 100%;
   padding: ${({ theme }) => theme.margins.MD}px 0;
+  margin-top: ${({ theme }) => theme.margins.MD}px;
   background-color: ${({ theme }) => theme.colors.light_blue};
 `;
 
@@ -123,7 +134,7 @@ export const InteractionCard = styled.TouchableOpacity<InteractionCardProps>`
   justify-content: center;
   width: 80px;
   height: 80px;
-  border-radius: 50px;
+  border-radius: 40px;
   background-color: ${(props) => props.color};
   border: 10px solid
     ${(props) => (props.isSelected ? props.theme.colors.white : props.color)};
@@ -145,39 +156,7 @@ export const ButtonsWrapper = styled.View`
 
 export const InteractionButtonsWrapper = styled(ButtonsWrapper)`
   flex-direction: row;
-  width: 90%;
-`;
-
-export const Button = styled.TouchableOpacity<ButtonProps>`
-  width: 90%;
-  height: 50px;
-  padding: ${({ theme }) => theme.margins.SM}px;
-  background-color: ${(props) =>
-    props.isSubmit
-      ? props.theme.colors.medium_green
-      : props.theme.colors.dark_yellow};
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: ${({ theme }) => theme.margins.SM}px 0;
-  border-radius: 6px;
-`;
-
-export const InteractionButton = styled(Button)`
-  width: 48%;
-  background-color: ${(props) =>
-    props.isSubmit
-      ? props.theme.colors.medium_green
-      : props.theme.colors.light_red};
-`;
-
-export const ButtonText = styled.Text`
-  color: ${({ theme }) => theme.colors.white};
-  font-size: ${({ theme }) => theme.font_size.MD}px;
-  font-weight: ${({ theme }) => theme.font_weight.bold};
-  text-transform: uppercase;
-`;
-
-export const InteractionButtonText = styled(ButtonText)`
-  font-size: ${({ theme }) => theme.font_size.SM}px;
+  width: 100%;
+  padding: 0 10px;
+  margin-bottom: ${({ theme }) => theme.margins.MD}px;
 `;
