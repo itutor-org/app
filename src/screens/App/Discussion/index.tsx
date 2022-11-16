@@ -26,7 +26,10 @@ import { AntDesign } from '@expo/vector-icons';
 import { theme } from '../../../styles/theme';
 import { Alert, StatusBar } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
-import { deleteDiscussion } from '../../../services/discussionService';
+import {
+  deleteDiscussion,
+  updateDiscussion
+} from '../../../services/discussionService';
 import {
   createInteraction,
   deleteInteractionsByDiscussion,
@@ -72,12 +75,6 @@ export function Discussion({ navigation, route }: Props) {
       if (--timer < 0) {
         timer = 0;
         clearInterval(interval);
-        Alert.alert('Tempo esgotado!', 'A discussão foi encerrada.', [
-          {
-            text: 'OK',
-            onPress: handleCreateDiscussionResult
-          }
-        ]);
       }
     }, 1000);
   }
@@ -221,15 +218,12 @@ export function Discussion({ navigation, route }: Props) {
   }
 
   async function handleUnsavedChanges() {
+    setLoading(true);
     await deleteInteractionsByDiscussion(route.params.discussion_id)
       .then(async () => {
-        await deleteDiscussion(route.params.discussion_id)
-          .then(() => {
-            navigation.popToTop();
-          })
-          .catch((err) => {
-            console.log(err);
-          });
+        await deleteDiscussion(route.params.discussion_id).catch((err) => {
+          console.log(err);
+        });
       })
       .catch((err) => {
         console.log(err);
@@ -237,14 +231,12 @@ export function Discussion({ navigation, route }: Props) {
   }
 
   function handleColor(student_id: string): string {
-    if (currentInteraction.starter || currentInteraction.finisher) {
-      if (currentInteraction.starter?.id === student_id) {
-        return theme.colors.orange;
-      } else if (currentInteraction.finisher?.id === student_id) {
-        return theme.colors.purple;
-      }
-    } else {
+    if (!student_id) {
       return theme.colors.white;
+    } else if (student_id === currentInteraction.starter?.id) {
+      return theme.colors.orange;
+    } else if (student_id === currentInteraction.finisher?.id) {
+      return theme.colors.purple;
     }
   }
 
@@ -253,13 +245,24 @@ export function Discussion({ navigation, route }: Props) {
     await getInteractionByDiscussion(route.params.discussion_id)
       .then(async (response) => {
         await createDiscussionResult(response)
-          .then((discussion_result) => {
-            navigation.replace('Results', {
-              discussion_id: route.params.discussion_id,
-              group_id: route.params.group_id,
-              participants_number: route.params.participants_number,
-              discussion_result
-            });
+          .then(async (discussion_result) => {
+            await updateDiscussion(
+              route.params.discussion_id,
+              'good',
+              discussion_result.graph,
+              discussion_result.random_percent
+            )
+              .then(() => {
+                navigation.navigate('Results', {
+                  discussion_id: route.params.discussion_id,
+                  group_id: route.params.group_id,
+                  participants_number: route.params.participants_number,
+                  discussion_result
+                });
+              })
+              .catch((err) => {
+                console.log(err);
+              });
           })
           .catch((err) => {
             console.log(err);
@@ -272,7 +275,6 @@ export function Discussion({ navigation, route }: Props) {
   }
 
   async function handleLoadStudents() {
-    setLoading(true);
     await getStudentsByGroup(route.params.group_id)
       .then((response) => {
         const students = response.map((student) => ({
@@ -296,12 +298,38 @@ export function Discussion({ navigation, route }: Props) {
   }
 
   React.useEffect(() => {
+    setLoading(true);
     handleLoadStudents();
   }, []);
 
+  React.useEffect(() => {
+    navigation.addListener('beforeRemove', (e) => {
+      e.preventDefault();
+      console.log(e.data);
+
+      Alert.alert(
+        'Atenção?',
+        'Você tem certeza que deseja sair? Todas os seus dados serão perdidos.',
+        [
+          {
+            text: 'Voltar',
+            style: 'cancel'
+          },
+          {
+            text: 'Sair',
+
+            onPress: () => {
+              handleUnsavedChanges(), navigation.dispatch(e.data.action);
+            }
+          }
+        ]
+      );
+    });
+  }, [navigation]);
+
   return (
     <Container>
-      <TopBar marginTop={StatusBar.currentHeight}>
+      <TopBar marginTop={StatusBar.currentHeight + 5}>
         <Wrapper>
           <MaterialIcons
             name="watch-later"
@@ -322,20 +350,7 @@ export function Discussion({ navigation, route }: Props) {
           name="closecircleo"
           size={30}
           color={theme.colors.white}
-          onPress={() => {
-            Alert.alert('Atenção', 'Deseja realmente sair da discussão?', [
-              {
-                text: 'Não',
-                style: 'cancel'
-              },
-              {
-                text: 'Sim',
-                onPress: () => {
-                  handleUnsavedChanges();
-                }
-              }
-            ]);
-          }}
+          onPress={() => navigation.goBack()}
         />
       </TopBar>
       <Middle>
