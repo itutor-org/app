@@ -16,10 +16,9 @@ export function StudentsList({
     <List
       showsVerticalScrollIndicator={true}
       data={students}
-      keyExtractor={({ registration }: Student) => registration}
+      keyExtractor={({ email }: Student) => email}
       renderItem={({ item }: any) => (
         <StudentCard
-          key={item.id}
           id={item.id}
           name={item.name}
           handleDeleteStudent={() => handleDeleteStudent(item.registration)}
