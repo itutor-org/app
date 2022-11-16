@@ -6,5 +6,4 @@ export const SearchWrapper = styled.View`
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  margin-bottom: ${({ theme }) => theme.margins.MD}px;
 `;
