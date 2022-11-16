@@ -9,8 +9,8 @@ export const InputWrapper = styled.View`
   flex-direction: row;
   align-items: center;
   justify-content: flex-start;
-  margin-bottom: ${({ theme }) => theme.margins.SSM}px;
-  border: 2px solid ${({ theme }) => theme.colors.gray_300};
+  margin-bottom: ${({ theme }) => theme.margins.SM}px;
+  border: 1px solid ${({ theme }) => theme.colors.gray_300};
   border-radius: 6px;
 `;
 
@@ -25,5 +25,5 @@ export const Error = styled.Text`
   font-size: ${({ theme }) => theme.font_size.SM}px;
   font-weight: ${({ theme }) => theme.font_weight.bold};
   line-height: ${({ theme }) => theme.font_size.SM}px;
-  margin: 3px;
+  margin-bottom: 5px;
 `;
