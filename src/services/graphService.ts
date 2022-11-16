@@ -1,9 +1,9 @@
 import { DiscussionResult } from '../entities/discussion.entity';
-import { InteractionResponse } from '../entities/interaction.entity';
+import { Interaction } from '../entities/interaction.entity';
 import { api } from './axios';
 
 export const createDiscussionResult = async (
-  interactions: InteractionResponse[]
+  interactions: Interaction[]
 ): Promise<DiscussionResult> => {
   return await api
     .post('/graph', interactions)

@@ -1,5 +1,5 @@
 import firestore from '@react-native-firebase/firestore';
-import { InteractionResponse } from '../entities/interaction.entity';
+import { Interaction } from '../entities/interaction.entity';
 import { Student } from '../entities/student.entity';
 
 const interactionsCollection = firestore().collection('interactions');
@@ -24,7 +24,7 @@ export const createInteraction = async (
 
 export const getInteractionByDiscussion = async (
   id: string
-): Promise<InteractionResponse[]> => {
+): Promise<Interaction[]> => {
   return await interactionsCollection
     .where('discussion_id', '==', id)
     .get()

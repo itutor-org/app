@@ -1,6 +1,6 @@
 import firestore from '@react-native-firebase/firestore';
 import { Group } from '../entities/group.entity';
-import { StudentDTO } from '../entities/student.entity';
+import { Student } from '../entities/student.entity';
 import {
   createStudent,
   deleteStudent,
@@ -51,7 +51,7 @@ export const createGroup = async (
       class_name
     })
     .then(async (group) => {
-      students.forEach(async (item: StudentDTO) => {
+      students.forEach(async (item: Student) => {
         await createStudent(item.name, item.email, item.registration, group.id);
       });
     })
