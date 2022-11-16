@@ -66,8 +66,7 @@ export function DiscussionsList({ navigation, route }: Props) {
       })
       .catch((err) => {
         console.log(err);
-      })
-      .finally(() => setLoading(false));
+      });
   }
 
   async function handleCreateDiscussion({
@@ -75,6 +74,7 @@ export function DiscussionsList({ navigation, route }: Props) {
     specific_subject,
     duration
   }: CreateDiscussionData) {
+    setShowCreateDiscussionModal(false);
     setLoading(true);
     await createDiscussion(
       route.params.group_id,
@@ -97,7 +97,8 @@ export function DiscussionsList({ navigation, route }: Props) {
       })
       .catch((err) => {
         console.log(err);
-      });
+      })
+      .finally(() => setLoading(false));
   }
 
   async function loadDiscussions() {
@@ -223,6 +224,7 @@ export function DiscussionsList({ navigation, route }: Props) {
               keyboardType="numeric"
               placeholder="Duração em minutos"
               autoCapitalize="sentences"
+              maxLength={3}
             />
 
             <Button
