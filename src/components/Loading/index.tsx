@@ -4,6 +4,8 @@ import { ModalComponent } from '../Modal';
 
 import { theme } from '../../styles/theme';
 
+import { Container } from './styles';
+
 interface LoadingProps {
   visible: boolean;
   showModal: (value: boolean) => void;
@@ -16,7 +18,9 @@ export function Loading({ visible, showModal }: LoadingProps) {
       visible={visible}
       showModal={showModal}
       children={
-        <ActivityIndicator size="large" color={theme.colors.dark_blue} />
+        <Container>
+          <ActivityIndicator size="large" color={theme.colors.dark_blue} />
+        </Container>
       }
       showCloseButton={false}
     />
