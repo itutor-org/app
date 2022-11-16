@@ -16,11 +16,8 @@ import {
   InteractionCard,
   InteractionCardText,
   ButtonsWrapper,
-  Button,
-  ButtonText,
   InteractionButtonsWrapper,
-  InteractionButton,
-  InteractionButtonText
+  TopicWrapper
 } from './styles';
 import { AntDesign } from '@expo/vector-icons';
 import { theme } from '../../../styles/theme';
@@ -41,6 +38,7 @@ import { createDiscussionResult } from '../../../services/graphService';
 
 import { getStudentsByGroup } from '../../../services/studentService';
 import { actionsList } from './actions';
+import { Button } from '../../../components/Button';
 
 type Props = NativeStackScreenProps<AppStackParamList, 'Discussion'>;
 
@@ -216,11 +214,13 @@ export function Discussion({ navigation, route }: Props) {
     }
   }
 
-  async function handleUnsavedChanges() {
+  async function handleUnsavedChanges(action: any) {
     try {
       await deleteInteractionsByDiscussion(route.params.discussion_id);
 
       await deleteDiscussion(route.params.discussion_id);
+
+      navigation.dispatch(action);
     } catch (error) {
       console.log(error);
     }
@@ -292,7 +292,6 @@ export function Discussion({ navigation, route }: Props) {
   React.useEffect(() => {
     navigation.addListener('beforeRemove', (e) => {
       e.preventDefault();
-      console.log(e.data);
 
       Alert.alert(
         'Atenção?',
@@ -306,7 +305,7 @@ export function Discussion({ navigation, route }: Props) {
             text: 'Sair',
 
             onPress: () => {
-              handleUnsavedChanges(), navigation.dispatch(e.data.action);
+              handleUnsavedChanges(e.data.action);
             }
           }
         ]
@@ -316,23 +315,19 @@ export function Discussion({ navigation, route }: Props) {
 
   return (
     <Container>
-      <TopBar marginTop={StatusBar.currentHeight + 5}>
+      <TopBar marginTop={StatusBar.currentHeight + 10}>
         <Wrapper>
           <MaterialIcons
             name="watch-later"
             size={30}
             color={theme.colors.white}
           />
-          <TimeText>Tempo</TimeText>
-          <Subtitle>{countdown} min</Subtitle>
+          <TimeText>{countdown} min</TimeText>
         </Wrapper>
         <Wrapper
           style={{
             marginRight: 20
-          }}>
-          <Title>{route.params.general_subject}</Title>
-          <Subtitle>{route.params.specific_subject}</Subtitle>
-        </Wrapper>
+          }}></Wrapper>
         <AntDesign
           name="closecircleo"
           size={30}
@@ -340,6 +335,11 @@ export function Discussion({ navigation, route }: Props) {
           onPress={() => navigation.goBack()}
         />
       </TopBar>
+
+      <TopicWrapper>
+        <Title>{route.params.general_subject}</Title>
+        <Subtitle>{route.params.specific_subject}</Subtitle>
+      </TopicWrapper>
       <Middle>
         <CardsWrapper>
           {students.map((student) => (
@@ -370,16 +370,30 @@ export function Discussion({ navigation, route }: Props) {
       </Middle>
       <ButtonsWrapper>
         <InteractionButtonsWrapper>
-          <InteractionButton isSubmit={true} onPress={handleStoreInteraction}>
-            <InteractionButtonText>GUARDAR INTERAÇÃO</InteractionButtonText>
-          </InteractionButton>
-          <InteractionButton isSubmit={false} onPress={handleResetInteraction}>
-            <InteractionButtonText>DESCARTAR</InteractionButtonText>
-          </InteractionButton>
+          <Button
+            text="GUARDAR INTERAÇÃO"
+            onPress={handleStoreInteraction}
+            style={{
+              width: '58%',
+              backgroundColor: theme.colors.medium_green
+            }}
+          />
+
+          <Button
+            text="DESCARTAR"
+            onPress={handleResetInteraction}
+            style={{
+              width: '40%',
+              backgroundColor: theme.colors.light_red
+            }}
+          />
         </InteractionButtonsWrapper>
 
         <Button
-          isSubmit={false}
+          text="FINALIZAR DISCUSSÃO"
+          style={{
+            width: '95%'
+          }}
           onPress={() =>
             Alert.alert('Atenção', 'Deseja realmente finalizar a discussão?', [
               {
@@ -394,9 +408,8 @@ export function Discussion({ navigation, route }: Props) {
                 }
               }
             ])
-          }>
-          <ButtonText>FINALIZAR DISCUSSÃO</ButtonText>
-        </Button>
+          }
+        />
       </ButtonsWrapper>
     </Container>
   );
