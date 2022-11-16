@@ -33,18 +33,14 @@ export function ModalComponent({
       <ModalContainer>
         <ModalContent>
           {showCloseButton && (
-            <MaterialIcons
-              name="close"
-              size={30}
-              color={'#8D8D99'}
-              style={{
-                position: 'absolute',
-                right: 20,
-                top: 17,
-                zIndex: 1
-              }}
-              onPress={() => showModal(!visible)}
-            />
+            <CloseDiv>
+              <MaterialIcons
+                name="close"
+                size={30}
+                color={'#8D8D99'}
+                onPress={() => showModal(!visible)}
+              />
+            </CloseDiv>
           )}
           {title && <ModalTitle>{title}</ModalTitle>}
           {children}

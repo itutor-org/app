@@ -34,6 +34,7 @@ export const ModalTitle = styled.Text`
   font-size: ${({ theme }) => theme.font_size.LG}px;
   font-weight: ${({ theme }) => theme.font_weight.bold};
   color: ${({ theme }) => theme.colors.black};
+  margin-bottom: ${({ theme }) => theme.margins.SM}px;
   width: 100%;
   text-align: center;
 `;
