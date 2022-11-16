@@ -2,15 +2,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React from 'react';
 import { AppStackParamList } from '../../../routes/app.routes';
 
-import {
-  Container,
-  Title,
-  AddStudentArea,
-  StudentCard,
-  StudentName,
-  ActionsButtonsWrapper,
-  StudentsList
-} from './styles';
+import { Container, Title } from './styles';
 import { MaterialIcons } from '@expo/vector-icons';
 import { theme } from '../../../styles/theme';
 import { Alert, StatusBar } from 'react-native';
@@ -18,25 +10,30 @@ import ModalComponent from '../../../components/Modal';
 import { updateGroup } from '../../../services/groupService';
 import {
   createStudent,
-  deleteStudent,
+  deleteStudentByRegistration,
   getStudentsByGroup
 } from '../../../services/studentService';
-import {
-  Student,
-  StudentForValidation
-} from '../../../entities/student.entity';
+import { StudentForValidation } from '../../../entities/student.entity';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { EditGroupSchema, EditStudentSchema } from './schema';
 import { InputForm } from '../../../components/Form/InputForm';
-import Button from '../../../components/Button';
+import { Button } from '../../../components/Button';
 import { EditGroupData } from '../../../entities/Forms/EditStudent';
+import { StudentArea } from '../../../components/StudentArea';
+import { useLoading } from '../../../contexts/loading';
 
 type Props = NativeStackScreenProps<AppStackParamList, 'EditGroup'>;
 
 export function EditGroup({ navigation, route }: Props) {
+  const { setLoading } = useLoading();
+
   const [registerModalVisible, setRegisterModalVisible] = React.useState(false);
-  const [students, setStudents] = React.useState<Student[]>([]);
+  const [students, setStudents] = React.useState<StudentForValidation[]>([]);
+  const [studentsToDelete, setStudentsToDelete] = React.useState<string[]>([]);
+  const [studentsToCreate, setStudentsToCreate] = React.useState<
+    StudentForValidation[]
+  >([]);
 
   const {
     control,
@@ -60,6 +57,51 @@ export function EditGroup({ navigation, route }: Props) {
   });
 
   async function handleUpdateGroup({ group_name, class_name }: EditGroupData) {
+    setLoading(true);
+    await handleDeleteStudentFromFirebase().then(async () => {
+      await handleCreateStudentOnFirebase().then(async () => {
+        await handleEditGroupOnFirebase({ group_name, class_name });
+      });
+    });
+  }
+
+  async function handleCreateStudentOnFirebase() {
+    studentsToCreate.forEach(async (student) => {
+      await createStudent(
+        student.name,
+        student.email,
+        student.registration,
+        route.params.group_id
+      )
+        .then((student) => {
+          setStudents([...students, student]);
+          setRegisterModalVisible(false);
+        })
+        .catch((error) => {
+          Alert.alert('Erro ao adicionar aluno', error.message);
+        });
+    });
+  }
+
+  async function handleDeleteStudentFromFirebase() {
+    studentsToDelete.forEach(async (registration) => {
+      console.log(registration);
+      await deleteStudentByRegistration(registration)
+        .then(async () => {
+          setStudents(
+            students.filter((student) => student.registration !== registration)
+          );
+        })
+        .catch((error) => {
+          Alert.alert('Erro ao deletar aluno', error.message);
+        });
+    });
+  }
+
+  async function handleEditGroupOnFirebase({
+    group_name,
+    class_name
+  }: EditGroupData) {
     await updateGroup(
       route.params.group_id,
       group_name,
@@ -67,6 +109,7 @@ export function EditGroup({ navigation, route }: Props) {
       students.length
     )
       .then(() => {
+        setLoading(false);
         Alert.alert('Sucesso', 'O grupo foi editado com sucesso!', [
           {
             text: 'Ok',
@@ -75,21 +118,12 @@ export function EditGroup({ navigation, route }: Props) {
         ]);
       })
       .catch((error) => {
+        setLoading(false);
         Alert.alert('Erro ao editar grupo', error.message);
       });
   }
 
-  async function handleDeleteStudent(studentID: string) {
-    await deleteStudent(studentID)
-      .then(() => {
-        setStudents(students.filter((student) => student.id !== studentID));
-      })
-      .catch((error) => {
-        Alert.alert('Erro ao deletar aluno', error.message);
-      });
-  }
-
-  async function handleAddStudent({
+  function handleAddStudentOnCache({
     name,
     email,
     registration
@@ -101,15 +135,18 @@ export function EditGroup({ navigation, route }: Props) {
     ) {
       Alert.alert('Erro', 'Esse aluno já foi adicionado ao grupo.');
     } else {
-      await createStudent(name, email, registration, route.params.group_id)
-        .then((student) => {
-          setStudents([...students, student]);
-          setRegisterModalVisible(false);
-        })
-        .catch((error) => {
-          Alert.alert('Erro ao adicionar aluno', error.message);
-        });
+      setStudents([...students, { name, email, registration }]);
+      setStudentsToCreate([...studentsToCreate, { name, email, registration }]);
+      resetStudent();
+      setRegisterModalVisible(false);
     }
+  }
+
+  function handleDeleteStudentOnCache(registration: string) {
+    setStudents(
+      students.filter((student) => student.registration !== registration)
+    );
+    setStudentsToDelete([...studentsToDelete, registration]);
   }
 
   async function getStudentsFromGroup() {
@@ -132,7 +169,22 @@ export function EditGroup({ navigation, route }: Props) {
           left: 15,
           top: StatusBar.currentHeight + 15
         }}
-        onPress={() => navigation.navigate('Home')}
+        onPress={() =>
+          Alert.alert(
+            'Atenção',
+            'Deseja sair da edição? Sua alterações serão perdidas',
+            [
+              {
+                text: 'Não',
+                style: 'cancel'
+              },
+              {
+                text: 'Sim',
+                onPress: () => navigation.navigate('Home')
+              }
+            ]
+          )
+        }
       />
       <Title>Editar Grupo</Title>
       <InputForm
@@ -152,7 +204,6 @@ export function EditGroup({ navigation, route }: Props) {
         autoCapitalize="sentences"
         autoCorrect={false}
       />
-
       <InputForm
         name="class_name"
         placeholder={route.params.class_name}
@@ -171,37 +222,13 @@ export function EditGroup({ navigation, route }: Props) {
         autoCorrect={false}
       />
 
-      <AddStudentArea>
-        <Button
-          text="Adicionar aluno"
-          onPress={() => setRegisterModalVisible(!registerModalVisible)}
-          style={{
-            marginBottom: 5,
-            backgroundColor: theme.colors.medium_green
-          }}
-        />
-        <StudentsList
-          showsVerticalScrollIndicator={true}
-          data={students}
-          keyExtractor={({ registration }: Student) => registration}
-          renderItem={({ item }: any) => (
-            <StudentCard key={item.id}>
-              <StudentName>{item.name}</StudentName>
-              <ActionsButtonsWrapper>
-                <MaterialIcons
-                  name="delete"
-                  size={25}
-                  color={theme.colors.gray_200}
-                  style={{
-                    marginLeft: 15
-                  }}
-                  onPress={() => handleDeleteStudent(item.id)}
-                />
-              </ActionsButtonsWrapper>
-            </StudentCard>
-          )}
-        />
-      </AddStudentArea>
+      <StudentArea
+        students={students}
+        openRegisterModal={() => setRegisterModalVisible(true)}
+        handleDeleteStudent={(registration) =>
+          handleDeleteStudentOnCache(registration)
+        }
+      />
 
       <ModalComponent
         title="Adicionar aluno"
@@ -269,12 +296,11 @@ export function EditGroup({ navigation, route }: Props) {
 
             <Button
               text="Adicionar aluno"
-              onPress={handleSubmitStudent(handleAddStudent)}
+              onPress={handleSubmitStudent(handleAddStudentOnCache)}
             />
           </>
         }
       />
-
       <Button text="Editar Grupo" onPress={handleSubmit(handleUpdateGroup)} />
     </Container>
   );
