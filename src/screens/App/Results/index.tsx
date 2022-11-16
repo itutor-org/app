@@ -1,5 +1,7 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React from 'react';
+import { StatusBar } from 'react-native';
+import { Button } from '../../../components/Button';
 import { useLoading } from '../../../contexts/loading';
 import { AppStackParamList } from '../../../routes/app.routes';
 import { updateDiscussion } from '../../../services/discussionService';
@@ -10,9 +12,7 @@ import {
   Subtitle,
   Image,
   RandomnessTitle,
-  RandomnessPercentage,
-  Button,
-  ButtonText
+  RandomnessPercentage
 } from './styles';
 
 type Props = NativeStackScreenProps<AppStackParamList, 'Results'>;
@@ -37,10 +37,12 @@ export function Results({ navigation, route }: Props) {
 
   return (
     <Container>
-      <Title>Resultado</Title>
+      <Title style={{ marginTop: StatusBar.currentHeight + 10 }}>
+        Resultado
+      </Title>
       <Subtitle>Seu resultado foi:</Subtitle>
       <Image
-        resizeMode="cover"
+        resizeMode="stretch"
         source={{ uri: route.params.discussion_result.graph }}
       />
       <RandomnessTitle>Índice de Aleatoriedade</RandomnessTitle>
@@ -48,9 +50,7 @@ export function Results({ navigation, route }: Props) {
         {route.params.discussion_result.random_percent}
       </RandomnessPercentage>
 
-      <Button onPress={handleUpdateDiscussion}>
-        <ButtonText>Finalizar</ButtonText>
-      </Button>
+      <Button text="Finalizar" onPress={handleUpdateDiscussion} />
     </Container>
   );
 }
