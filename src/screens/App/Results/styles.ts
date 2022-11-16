@@ -11,7 +11,9 @@ export const Container = styled.View`
 
 export const Image = styled.Image`
   width: 100%;
-  height: 50%;
+  height: 60%;
+  border-radius: 5px;
+  border: 2px solid ${({ theme }) => theme.colors.light_orange};
 `;
 
 export const Title = styled.Text`
