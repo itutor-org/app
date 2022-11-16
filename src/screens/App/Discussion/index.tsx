@@ -34,11 +34,7 @@ import {
   getInteractionByDiscussion
 } from '../../../services/interactionService';
 import { ScreenStudent } from '../../../entities/student.entity';
-import {
-  Action,
-  Interaction,
-  InteractionResponse
-} from '../../../entities/interaction.entity';
+import { Action, Interaction } from '../../../entities/interaction.entity';
 import { createDiscussionResult } from '../../../services/graphService';
 import { DiscussionResult } from '../../../entities/discussion.entity';
 import { useLoading } from '../../../contexts/loading';
@@ -288,7 +284,7 @@ export function Discussion({ navigation, route }: Props) {
   async function handleCreateDiscussionResult() {
     setLoading(true);
     await getInteractionByDiscussion(route.params.discussion_id)
-      .then(async (response: InteractionResponse[]) => {
+      .then(async (response: Interaction[]) => {
         await createDiscussionResult(response)
           .then((response: DiscussionResult) => {
             handleFinalize(response);

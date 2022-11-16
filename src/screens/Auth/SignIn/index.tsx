@@ -21,7 +21,7 @@ import { theme } from '../../../styles/theme';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { SignInSchema } from './schema';
-import { SignInData } from '../../../entities/Forms/SignIn';
+import { SignInData } from '../../../entities/Forms/signIn.data';
 import { InputForm } from '../../../components/Form/InputForm';
 import { Button } from '../../../components/Button';
 

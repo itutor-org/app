@@ -18,7 +18,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { InputForm } from '../../../components/Form/InputForm';
 import { SignUpSchema } from './schema';
-import { SignUpData } from '../../../entities/Forms/SignUp';
+import { SignUpData } from '../../../entities/Forms/signUp.data';
 import { useLoading } from '../../../contexts/loading';
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'SignUp'>;

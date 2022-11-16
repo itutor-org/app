@@ -20,7 +20,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { RecoverPasswordSchema } from './schema';
 import { useLoading } from '../../../contexts/loading';
-import { RecoverPasswordData } from '../../../entities/Forms/RecoverPassword';
+import { RecoverPasswordData } from '../../../entities/Forms/recoverPassword.data';
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'RecoverPassword'>;
 

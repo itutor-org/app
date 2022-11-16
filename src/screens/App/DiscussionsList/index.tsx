@@ -1,5 +1,4 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { useAuth } from '../../../contexts/useAuth';
 import { AppStackParamList } from '../../../routes/app.routes';
 import {
   HomeContainer,
@@ -27,7 +26,7 @@ import { useForm } from 'react-hook-form';
 import { CreateDiscussionSchema } from './schema';
 import { InputForm } from '../../../components/Form/InputForm';
 import { Button } from '../../../components/Button';
-import { CreateDiscussionData } from '../../../entities/Forms/CreateDiscussion';
+import { CreateDiscussionData } from '../../../entities/Forms/createDiscussion.data';
 
 type Props = NativeStackScreenProps<AppStackParamList, 'DiscussionsList'>;
 
