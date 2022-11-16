@@ -2,10 +2,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React from 'react';
 import { StatusBar } from 'react-native';
 import { Button } from '../../../components/Button';
-import { useLoading } from '../../../contexts/loading';
 import { AppStackParamList } from '../../../routes/app.routes';
-import { updateDiscussion } from '../../../services/discussionService';
-
 import {
   Container,
   Title,
@@ -18,22 +15,12 @@ import {
 type Props = NativeStackScreenProps<AppStackParamList, 'Results'>;
 
 export function Results({ navigation, route }: Props) {
-  const { setLoading } = useLoading();
-  async function handleUpdateDiscussion() {
-    setLoading(true);
-    await updateDiscussion(
-      route.params.discussion_id,
-      'good',
-      route.params.discussion_result.graph,
-      route.params.discussion_result.random_percent
-    ).finally(() => {
-      setLoading(false);
-      navigation.replace('DiscussionsList', {
-        group_id: route.params.group_id,
-        participants_number: route.params.participants_number
-      });
+  React.useEffect(() => {
+    navigation.addListener('beforeRemove', (e) => {
+      if (e.data.action.type === 'NAVIGATE') navigation.dispatch(e.data.action);
+      else e.preventDefault();
     });
-  }
+  }, [navigation]);
 
   return (
     <Container>
@@ -50,7 +37,15 @@ export function Results({ navigation, route }: Props) {
         {route.params.discussion_result.random_percent}
       </RandomnessPercentage>
 
-      <Button text="Finalizar" onPress={handleUpdateDiscussion} />
+      <Button
+        text="Finalizar"
+        onPress={() =>
+          navigation.navigate('DiscussionsList', {
+            group_id: route.params.group_id,
+            participants_number: route.params.participants_number
+          })
+        }
+      />
     </Container>
   );
 }
