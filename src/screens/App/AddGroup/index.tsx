@@ -50,9 +50,9 @@ export function AddGroup({ navigation, route }: Props) {
 
   const {
     control: controlStudent,
-    register: register2,
+    register: registerStudent,
     handleSubmit: handleSubmitStudent,
-    watch: watch2,
+    watch: watchStudent,
     reset: resetStudent,
     formState: { errors: errorsStudent }
   } = useForm({
@@ -68,16 +68,12 @@ export function AddGroup({ navigation, route }: Props) {
       students
     )
       .then(() => {
-        Alert.alert(
-          'Grupo criado com sucesso!',
-          'Agora você pode ver o grupo na lista de grupos.',
-          [
-            {
-              text: 'Ok',
-              onPress: () => navigation.navigate('Home')
-            }
-          ]
-        );
+        Alert.alert('Sucesso', 'O grupo criado com sucesso!', [
+          {
+            text: 'Ok',
+            onPress: () => navigation.navigate('Home')
+          }
+        ]);
       })
       .catch((error) => {
         Alert.alert('Erro ao criar grupo', error.message);
@@ -90,8 +86,8 @@ export function AddGroup({ navigation, route }: Props) {
     registration
   }: StudentForValidation) {
     if (
-      students.find((student) => student.registration === registration) &&
-      students.find((student) => student.email === email) &&
+      students.find((student) => student.registration === registration) ||
+      students.find((student) => student.email === email) ||
       students.find((student) => student.name === name)
     ) {
       Alert.alert('Erro', 'Esse aluno já foi adicionado ao grupo.');
@@ -158,7 +154,10 @@ export function AddGroup({ navigation, route }: Props) {
           <Button
             text="Adicionar aluno"
             onPress={() => setModalVisible(!modalVisible)}
-            color={theme.colors.medium_green}
+            style={{
+              marginBottom: 5,
+              backgroundColor: theme.colors.medium_green
+            }}
           />
           <StudentsList
             data={students}
@@ -257,6 +256,7 @@ export function AddGroup({ navigation, route }: Props) {
                 placeholder="Matrícula"
                 autoCapitalize="sentences"
                 autoCorrect={false}
+                maxLength={8}
               />
 
               <Button
