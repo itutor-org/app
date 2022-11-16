@@ -6,7 +6,7 @@ export const ModalContainer = styled.View`
   align-items: center;
   width: 100%;
   height: 100%;
-  background-color: #0000007f;
+  background-color: rgba(0, 0, 0, 0.3);
   padding: 20px;
   position: absolute;
 `;
