@@ -26,13 +26,12 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import { CreateDiscussionSchema } from './schema';
 import { InputForm } from '../../../components/Form/InputForm';
-import Button from '../../../components/Button';
+import { Button } from '../../../components/Button';
 import { CreateDiscussionData } from '../../../entities/Forms/CreateDiscussion';
 
 type Props = NativeStackScreenProps<AppStackParamList, 'DiscussionsList'>;
 
 export function DiscussionsList({ navigation, route }: Props) {
-  const { logoff, user } = useAuth();
   const { setLoading } = useLoading();
   const [discussions, setDiscussions] = React.useState<Discussion[]>([]);
   const [showCreateDiscussionModal, setShowCreateDiscussionModal] =

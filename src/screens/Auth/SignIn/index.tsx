@@ -23,7 +23,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { SignInSchema } from './schema';
 import { SignInData } from '../../../entities/Forms/SignIn';
 import { InputForm } from '../../../components/Form/InputForm';
-import Button from '../../../components/Button';
+import { Button } from '../../../components/Button';
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'SignIn'>;
 

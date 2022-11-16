@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import { useAuth } from '../../../contexts/useAuth';
 import React from 'react';
-import Button from '../../../components/Button';
+import { Button } from '../../../components/Button';
 import { InputForm } from '../../../components/Form/InputForm';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
