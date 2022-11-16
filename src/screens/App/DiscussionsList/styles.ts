@@ -20,7 +20,7 @@ export const Title = styled.Text`
   font-size: ${({ theme }) => theme.font_size.LG}px;
   font-weight: ${({ theme }) => theme.font_weight.bold};
   color: ${({ theme }) => theme.colors.white};
-  margin-bottom: ${({ theme }) => theme.margins.MD}px;
+  margin-bottom: ${({ theme }) => theme.margins.SM}px;
 `;
 
 export const GroupsWrapper = styled.View`
