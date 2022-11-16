@@ -2,15 +2,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React from 'react';
 import { AppStackParamList } from '../../../routes/app.routes';
 
-import {
-  Container,
-  Title,
-  AddStudentArea,
-  StudentCard,
-  StudentName,
-  ActionsButtonsWrapper,
-  StudentsList
-} from './styles';
+import { Container, Title } from './styles';
 import { MaterialIcons } from '@expo/vector-icons';
 import { theme } from '../../../styles/theme';
 import {
@@ -22,11 +14,11 @@ import {
 import ModalComponent from '../../../components/Modal';
 import { useAuth } from '../../../contexts/useAuth';
 import { createGroup } from '../../../services/groupService';
-import { StudentForValidation } from '../../../entities/student.entity';
+import { Student } from '../../../entities/student.entity';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { AddGroupSchema, AddStudentSchema } from './schema';
-import { AddGroupData } from '../../../entities/Forms/AddGroup';
+import { AddGroupData } from '../../../entities/Forms/addGroup.data';
 import { Button } from '../../../components/Button';
 import { InputForm } from '../../../components/Form/InputForm';
 import { StudentArea } from '../../../components/StudentArea';
@@ -37,7 +29,7 @@ export function AddGroup({ navigation, route }: Props) {
   const { user } = useAuth();
 
   const [modalVisible, setModalVisible] = React.useState(false);
-  const [students, setStudents] = React.useState<StudentForValidation[]>([]);
+  const [students, setStudents] = React.useState<Student[]>([]);
 
   const {
     control,
@@ -81,11 +73,7 @@ export function AddGroup({ navigation, route }: Props) {
       });
   }
 
-  async function handleAddStudent({
-    name,
-    email,
-    registration
-  }: StudentForValidation) {
+  async function handleAddStudent({ name, email, registration }: Student) {
     if (
       students.find((student) => student.registration === registration) ||
       students.find((student) => student.email === email) ||

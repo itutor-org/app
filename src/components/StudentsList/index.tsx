@@ -1,10 +1,10 @@
 import React from 'react';
-import { Student, StudentForValidation } from '../../entities/student.entity';
+import { Student } from '../../entities/student.entity';
 import { StudentCard } from '../StudentCard';
 import { List } from './styles';
 
 interface StudentsListProps {
-  students: Student[] | StudentForValidation[];
+  students: Student[];
   handleDeleteStudent: (registration: string) => void;
 }
 
@@ -16,7 +16,7 @@ export function StudentsList({
     <List
       showsVerticalScrollIndicator={true}
       data={students}
-      keyExtractor={({ registration }: StudentForValidation) => registration}
+      keyExtractor={({ registration }: Student) => registration}
       renderItem={({ item }: any) => (
         <StudentCard
           key={item.id}

@@ -13,13 +13,13 @@ import {
   deleteStudentByRegistration,
   getStudentsByGroup
 } from '../../../services/studentService';
-import { StudentForValidation } from '../../../entities/student.entity';
+import { Student } from '../../../entities/student.entity';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { EditGroupSchema, EditStudentSchema } from './schema';
 import { InputForm } from '../../../components/Form/InputForm';
 import { Button } from '../../../components/Button';
-import { EditGroupData } from '../../../entities/Forms/EditStudent';
+import { EditGroupData } from '../../../entities/Forms/editStudent.data';
 import { StudentArea } from '../../../components/StudentArea';
 import { useLoading } from '../../../contexts/loading';
 
@@ -29,11 +29,9 @@ export function EditGroup({ navigation, route }: Props) {
   const { setLoading } = useLoading();
 
   const [registerModalVisible, setRegisterModalVisible] = React.useState(false);
-  const [students, setStudents] = React.useState<StudentForValidation[]>([]);
+  const [students, setStudents] = React.useState<Student[]>([]);
   const [studentsToDelete, setStudentsToDelete] = React.useState<string[]>([]);
-  const [studentsToCreate, setStudentsToCreate] = React.useState<
-    StudentForValidation[]
-  >([]);
+  const [studentsToCreate, setStudentsToCreate] = React.useState<Student[]>([]);
 
   const {
     control,
@@ -123,11 +121,7 @@ export function EditGroup({ navigation, route }: Props) {
       });
   }
 
-  function handleAddStudentOnCache({
-    name,
-    email,
-    registration
-  }: StudentForValidation) {
+  function handleAddStudentOnCache({ name, email, registration }: Student) {
     if (
       students.find((student) => student.registration === registration) ||
       students.find((student) => student.email === email) ||

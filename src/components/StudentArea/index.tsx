@@ -1,12 +1,12 @@
 import React from 'react';
-import { Student, StudentForValidation } from '../../entities/student.entity';
+import { Student } from '../../entities/student.entity';
 import { theme } from '../../styles/theme';
 import { Button } from '../Button';
 import { StudentsList } from '../StudentsList';
 import { Container } from './styles';
 
 interface StudentAreaProps {
-  students: Student[] | StudentForValidation[];
+  students: Student[];
   handleDeleteStudent: (registration: string) => void;
   openRegisterModal: () => void;
 }
