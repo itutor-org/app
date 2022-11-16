@@ -1,0 +1,31 @@
+import * as Yup from 'yup';
+
+export const AddGroupSchema = Yup.object().shape({
+  group_name: Yup.string().required('Nome do grupo obrigatório'),
+  class_name: Yup.string().required('Sigla do grupo é obrigatória'),
+  students: Yup.array().of(
+    Yup.object().shape({
+      name: Yup.string().required('Nome obrigatório'),
+      email: Yup.string()
+        .required('E-mail obrigatório')
+        .email('E-mail inválido')
+        .matches(/@aluno.cesupa.br$/, 'O email deve ser de aluno do cesupa'),
+      registration: Yup.string()
+        .required('Matrícula obrigatória')
+        .min(8, 'Matrícula inválida')
+        .max(8, 'Matrícula inválida')
+        .matches(/^[0-9]+$/, 'Matrícula inválida')
+    })
+  )
+});
+
+export const AddStudentSchema = Yup.object().shape({
+  name: Yup.string().required('Nome obrigatório'),
+  email: Yup.string()
+    .required('E-mail obrigatório')
+    .email('E-mail inválido')
+    .matches(/@aluno.cesupa.br$/, 'O email deve ser de aluno do cesupa'),
+  registration: Yup.string()
+    .required('Matrícula obrigatória')
+    .min(8, 'Matrícula inválida')
+});
