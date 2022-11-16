@@ -1,5 +1,5 @@
 export interface Discussion {
-  id: string;
+  id?: string;
   group_id: string;
   general_subject: string;
   specific_subject: string;
@@ -9,8 +9,6 @@ export interface Discussion {
   randomness_index: string;
   classification: string;
 }
-
-export type DiscussionDTO = Omit<Discussion, 'id'>;
 
 export interface DiscussionResult {
   graph: string;
