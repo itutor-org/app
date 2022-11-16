@@ -6,6 +6,8 @@ export interface Student {
   group_id: string;
 }
 
+export type StudentForValidation = Omit<Student, 'id' | 'group_id'>;
+
 export type StudentDTO = Omit<Student, 'id'>;
 
 export type StudentForInteraction = Omit<Student, 'id' | 'email'>;
