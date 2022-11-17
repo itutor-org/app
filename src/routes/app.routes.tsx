@@ -9,6 +9,7 @@ import {
   Discussion,
   Results
 } from '../screens/App/index';
+import { theme } from '../styles/theme';
 
 export type AppStackParamList = {
   Home: undefined;
@@ -42,7 +43,13 @@ const { Navigator, Screen } = createNativeStackNavigator<AppStackParamList>();
 
 export function AppRoutes() {
   return (
-    <Navigator screenOptions={{ headerShown: false }}>
+    <Navigator
+      screenOptions={{
+        headerShown: false,
+        animation: 'slide_from_bottom',
+        animationTypeForReplace: 'push',
+        orientation: 'portrait_up'
+      }}>
       <Screen name="Home" component={Home} />
       <Screen name="AddGroup" component={AddGroup} />
       <Screen name="EditGroup" component={EditGroup} />
