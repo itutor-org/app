@@ -116,23 +116,22 @@ export function SignIn({ navigation, route }: Props) {
             />
           }
         />
-
-        <RecoverPasswordButton
-          onPress={() => navigation.navigate('RecoverPassword')}>
-          <RecoverPasswordButtonText>
-            Esqueci minha senha
-          </RecoverPasswordButtonText>
-        </RecoverPasswordButton>
-
-        <Button onPress={handleSubmit(handleSignIn)} text="Entrar" />
-
-        <SignUpWrapper>
-          <SignUpText>Não tem uma conta?</SignUpText>
-          <SignUpLink onPress={() => navigation.navigate('SignUp')}>
-            <SignUpLinkText>Cadastre-se</SignUpLinkText>
-          </SignUpLink>
-        </SignUpWrapper>
       </ScrollView>
+      <RecoverPasswordButton
+        onPress={() => navigation.navigate('RecoverPassword')}>
+        <RecoverPasswordButtonText>
+          Esqueci minha senha
+        </RecoverPasswordButtonText>
+      </RecoverPasswordButton>
+
+      <Button onPress={handleSubmit(handleSignIn)} text="Entrar" />
+
+      <SignUpWrapper>
+        <SignUpText>Não tem uma conta?</SignUpText>
+        <SignUpLink onPress={() => navigation.navigate('SignUp')}>
+          <SignUpLinkText>Cadastre-se</SignUpLinkText>
+        </SignUpLink>
+      </SignUpWrapper>
     </Container>
   );
 }
