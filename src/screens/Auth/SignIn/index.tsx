@@ -2,6 +2,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { AuthStackParamList } from '../../../routes/auth.routes';
 
 import {
+  TopContainer,
   LogoText,
   WelcomeText,
   RecoverPasswordButton,
@@ -9,7 +10,8 @@ import {
   SignUpWrapper,
   SignUpText,
   SignUpLink,
-  SignUpLinkText
+  SignUpLinkText,
+  Container
 } from './styles';
 
 import { MaterialIcons, Entypo } from '@expo/vector-icons';
@@ -56,75 +58,81 @@ export function SignIn({ navigation, route }: Props) {
   }
 
   return (
-    <ScrollView
-      contentContainerStyle={{
-        flexGrow: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: 25,
-        backgroundColor: theme.colors.dark_blue
-      }}>
-      <LogoText>iTutor</LogoText>
-      <WelcomeText>Seja bem vind@</WelcomeText>
+    <Container>
+      <TopContainer>
+        <LogoText>iTutor</LogoText>
+        <WelcomeText>Seja bem vind@</WelcomeText>
+      </TopContainer>
 
-      <InputForm
-        name="email"
-        control={control}
-        error={errors.email && (errors.email.message as any)}
-        icon={
-          <MaterialIcons
-            name="person"
-            size={19}
-            color={'#8D8D99'}
-            style={{ marginRight: 7 }}
-          />
-        }
-        keyboardType="email-address"
-        placeholder="Email"
-      />
+      <ScrollView
+        contentContainerStyle={{
+          flexGrow: 1,
+          justifyContent: 'flex-start',
+          alignItems: 'center',
+          backgroundColor: theme.colors.dark_blue
+        }}
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
+        showsHorizontalScrollIndicator={false}>
+        <InputForm
+          name="email"
+          control={control}
+          error={errors.email && (errors.email.message as any)}
+          icon={
+            <MaterialIcons
+              name="person"
+              size={19}
+              color={'#8D8D99'}
+              style={{ marginRight: 7 }}
+            />
+          }
+          keyboardType="email-address"
+          placeholder="Email"
+        />
 
-      <InputForm
-        name="password"
-        control={control}
-        error={errors.password && (errors.password.message as any)}
-        icon={
-          <MaterialIcons
-            name="lock"
-            size={19}
-            color={'#8D8D99'}
-            style={{ marginRight: 7 }}
-          />
-        }
-        secureTextEntry={isPasswordVisible}
-        keyboardType="default"
-        placeholder="Senha"
-        isPassword={true}
-        PasswordIcon={
-          <Entypo
-            name={isPasswordVisible ? 'eye' : 'eye-with-line'}
-            size={19}
-            color={'#8D8D99'}
-            style={{ marginLeft: -20, zIndex: 1 }}
-            onPress={() => setIsPasswordVisible(!isPasswordVisible)}
-          />
-        }
-      />
+        <InputForm
+          name="password"
+          control={control}
+          error={errors.password && (errors.password.message as any)}
+          icon={
+            <MaterialIcons
+              name="lock"
+              size={19}
+              color={'#8D8D99'}
+              style={{ marginRight: 7 }}
+            />
+          }
+          secureTextEntry={isPasswordVisible}
+          keyboardType="default"
+          placeholder="Senha"
+          isPassword={true}
+          PasswordIcon={
+            <Entypo
+              name={isPasswordVisible ? 'eye' : 'eye-with-line'}
+              size={19}
+              color={'#8D8D99'}
+              style={{ marginLeft: -20, zIndex: 1 }}
+              onPress={() => setIsPasswordVisible(!isPasswordVisible)}
+            />
+          }
+        />
 
-      <RecoverPasswordButton
-        onPress={() => navigation.navigate('RecoverPassword')}>
-        <RecoverPasswordButtonText>
-          Esqueci minha senha
-        </RecoverPasswordButtonText>
-      </RecoverPasswordButton>
+        <RecoverPasswordButton
+          onPress={() => navigation.navigate('RecoverPassword')}>
+          <RecoverPasswordButtonText>
+            Esqueci minha senha
+          </RecoverPasswordButtonText>
+        </RecoverPasswordButton>
 
-      <Button onPress={handleSubmit(handleSignIn)} text="Entrar" />
+        <Button onPress={handleSubmit(handleSignIn)} text="Entrar" />
 
-      <SignUpWrapper>
-        <SignUpText>Não tem uma conta?</SignUpText>
-        <SignUpLink onPress={() => navigation.navigate('SignUp')}>
-          <SignUpLinkText>Cadastre-se</SignUpLinkText>
-        </SignUpLink>
-      </SignUpWrapper>
-    </ScrollView>
+        <SignUpWrapper>
+          <SignUpText>Não tem uma conta?</SignUpText>
+          <SignUpLink onPress={() => navigation.navigate('SignUp')}>
+            <SignUpLinkText>Cadastre-se</SignUpLinkText>
+          </SignUpLink>
+        </SignUpWrapper>
+      </ScrollView>
+    </Container>
   );
 }

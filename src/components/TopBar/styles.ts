@@ -1,16 +1,12 @@
 import styled from 'styled-components/native';
 
-interface TopBarProps {
-  marginTop: number;
-}
-
-export const Container = styled.View<TopBarProps>`
+export const Container = styled.View`
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  margin-top: ${({ marginTop }) => marginTop}px;
+  background-color: ${({ theme }) => theme.colors.dark_blue};
 `;
 
 export const TeacherInfo = styled.View`

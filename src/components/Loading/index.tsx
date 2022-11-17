@@ -17,6 +17,7 @@ export function Loading({ visible, showModal }: LoadingProps) {
       title="Carregando..."
       visible={visible}
       showModal={showModal}
+      style={{ zIndex: 999 }}
       children={
         <Container>
           <ActivityIndicator size="large" color={theme.colors.dark_blue} />

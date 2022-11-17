@@ -16,7 +16,7 @@ export function TopBar({ navigation, isHome }: TopBarProps) {
   const { user, logoff } = useAuth();
 
   return (
-    <Container marginTop={StatusBar.currentHeight + 5}>
+    <Container>
       {!isHome && (
         <MaterialIcons
           name="arrow-back"

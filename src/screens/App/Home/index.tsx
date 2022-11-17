@@ -3,11 +3,11 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useAuth } from '../../../contexts/useAuth';
 import { AppStackParamList } from '../../../routes/app.routes';
 import {
-  HomeContainer,
   GroupContainer,
   Title,
   GroupsWrapper,
-  GroupList
+  GroupList,
+  Container
 } from './styles';
 import { deleteGroup, getGroups } from '../../../services/groupService';
 import { HomeCard } from '../../../components/HomeCard';
@@ -56,7 +56,7 @@ export function Home({ navigation, route }: Props) {
   }, [navigation]);
 
   return (
-    <HomeContainer>
+    <Container>
       <TopBar navigation={navigation} isHome={true} />
       <GroupContainer>
         <Title>GRUPOS</Title>
@@ -92,6 +92,6 @@ export function Home({ navigation, route }: Props) {
           />
         </GroupsWrapper>
       </GroupContainer>
-    </HomeContainer>
+    </Container>
   );
 }

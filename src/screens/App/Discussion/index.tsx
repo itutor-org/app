@@ -8,7 +8,6 @@ import {
   Title,
   TimeText,
   Subtitle,
-  Middle,
   CardsWrapper,
   StudentCard,
   StudentCardText,
@@ -21,7 +20,7 @@ import {
 } from './styles';
 import { AntDesign } from '@expo/vector-icons';
 import { theme } from '../../../styles/theme';
-import { Alert, StatusBar } from 'react-native';
+import { Alert } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import {
   deleteDiscussion,
@@ -39,10 +38,13 @@ import { createDiscussionResult } from '../../../services/graphService';
 import { getStudentsByGroup } from '../../../services/studentService';
 import { actionsList } from './actions';
 import { Button } from '../../../components/Button';
+import { useLoading } from '../../../contexts/loading';
 
 type Props = NativeStackScreenProps<AppStackParamList, 'Discussion'>;
 
 export function Discussion({ navigation, route }: Props) {
+  const { setLoading } = useLoading();
+
   const [students, setStudents] = React.useState<ScreenStudent[]>([]);
   const [actions, setActions] = React.useState<Action[]>(actionsList);
 
@@ -287,35 +289,42 @@ export function Discussion({ navigation, route }: Props) {
 
   React.useEffect(() => {
     handleLoadStudents();
+    setTimeout(() => {
+      setLoading(false);
+    }, 2000);
   }, []);
 
   React.useEffect(() => {
     navigation.addListener('beforeRemove', (e) => {
       e.preventDefault();
 
-      Alert.alert(
-        'Atenção?',
-        'Você tem certeza que deseja sair? Todas os seus dados serão perdidos.',
-        [
-          {
-            text: 'Voltar',
-            style: 'cancel'
-          },
-          {
-            text: 'Sair',
+      if (e.data.action.type === 'GO_BACK') {
+        Alert.alert(
+          'Atenção?',
+          'Você tem certeza que deseja sair? Todas os seus dados serão perdidos.',
+          [
+            {
+              text: 'Voltar',
+              style: 'cancel'
+            },
+            {
+              text: 'Sair',
 
-            onPress: () => {
-              handleUnsavedChanges(e.data.action);
+              onPress: () => {
+                handleUnsavedChanges(e.data.action);
+              }
             }
-          }
-        ]
-      );
+          ]
+        );
+      } else {
+        navigation.dispatch(e.data.action);
+      }
     });
   }, [navigation]);
 
   return (
     <Container>
-      <TopBar marginTop={StatusBar.currentHeight + 10}>
+      <TopBar>
         <Wrapper>
           <MaterialIcons
             name="watch-later"
@@ -324,10 +333,6 @@ export function Discussion({ navigation, route }: Props) {
           />
           <TimeText>{countdown} min</TimeText>
         </Wrapper>
-        <Wrapper
-          style={{
-            marginRight: 20
-          }}></Wrapper>
         <AntDesign
           name="closecircleo"
           size={30}
@@ -340,50 +345,45 @@ export function Discussion({ navigation, route }: Props) {
         <Title>{route.params.general_subject}</Title>
         <Subtitle>{route.params.specific_subject}</Subtitle>
       </TopicWrapper>
-      <Middle>
-        <CardsWrapper>
-          {students.map((student) => (
-            <StudentCard
-              key={student.name}
-              isSelected={student.isSelected}
-              color={() => handleColor(student.id)}
-              onPress={() =>
-                handleSelectStudent(student, students, setStudents)
-              }>
-              <StudentCardText>{student.name}</StudentCardText>
-            </StudentCard>
-          ))}
-        </CardsWrapper>
-        <InteractionsWrapper>
-          {actions.map((interaction) => (
-            <InteractionCard
-              key={interaction.name}
-              color={interaction.color}
-              isSelected={interaction.isSelected}
-              onPress={() => {
-                handleStoreAction(interaction.name);
-              }}>
-              <InteractionCardText>{interaction.tag}</InteractionCardText>
-            </InteractionCard>
-          ))}
-        </InteractionsWrapper>
-      </Middle>
+      <CardsWrapper>
+        {students.map((student) => (
+          <StudentCard
+            key={student.name}
+            isSelected={student.isSelected}
+            color={() => handleColor(student.id)}
+            onPress={() => handleSelectStudent(student, students, setStudents)}>
+            <StudentCardText>{student.name}</StudentCardText>
+          </StudentCard>
+        ))}
+      </CardsWrapper>
+      <InteractionsWrapper>
+        {actions.map((interaction) => (
+          <InteractionCard
+            key={interaction.name}
+            color={interaction.color}
+            isSelected={interaction.isSelected}
+            onPress={() => {
+              handleStoreAction(interaction.name);
+            }}>
+            <InteractionCardText>{interaction.tag}</InteractionCardText>
+          </InteractionCard>
+        ))}
+      </InteractionsWrapper>
       <ButtonsWrapper>
         <InteractionButtonsWrapper>
           <Button
             text="GUARDAR INTERAÇÃO"
             onPress={handleStoreInteraction}
             style={{
-              width: '58%',
+              width: '63%',
               backgroundColor: theme.colors.medium_green
             }}
           />
-
           <Button
             text="DESCARTAR"
             onPress={handleResetInteraction}
             style={{
-              width: '40%',
+              width: '35%',
               backgroundColor: theme.colors.light_red
             }}
           />
@@ -391,9 +391,6 @@ export function Discussion({ navigation, route }: Props) {
 
         <Button
           text="FINALIZAR DISCUSSÃO"
-          style={{
-            width: '95%'
-          }}
           onPress={() =>
             Alert.alert('Atenção', 'Deseja realmente finalizar a discussão?', [
               {

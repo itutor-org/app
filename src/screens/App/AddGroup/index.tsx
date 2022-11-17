@@ -90,8 +90,8 @@ export function AddGroup({ navigation, route }: Props) {
         color={theme.colors.dark_yellow}
         style={{
           position: 'absolute',
-          left: 15,
-          top: StatusBar.currentHeight + 15
+          left: 0,
+          top: 0
         }}
         onPress={() =>
           Alert.alert(

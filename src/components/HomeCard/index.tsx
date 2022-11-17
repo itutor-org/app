@@ -38,12 +38,12 @@ export function HomeCard({
         <CardSection>
           <CardTitle>{name}</CardTitle>
           <Button
-            onPress={() =>
+            onPress={() => {
               navigation.navigate('DiscussionsList', {
                 group_id: id,
                 participants_number
-              })
-            }>
+              });
+            }}>
             <ButtonText>ACESSAR GRUPO</ButtonText>
           </Button>
         </CardSection>

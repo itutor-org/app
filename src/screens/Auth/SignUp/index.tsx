@@ -1,14 +1,8 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import {
-  Alert,
-  Keyboard,
-  ScrollView,
-  StatusBar,
-  TouchableWithoutFeedback
-} from 'react-native';
+import { Alert, ScrollView } from 'react-native';
 import { AuthStackParamList } from '../../../routes/auth.routes';
 
-import { ActionText, SubmitButton, SubmitButtonText } from './styles';
+import { Top, ActionText, LogoText, Container } from './styles';
 
 import { MaterialIcons, Octicons } from '@expo/vector-icons';
 import { theme } from '../../../styles/theme';
@@ -19,6 +13,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { InputForm } from '../../../components/Form/InputForm';
 import { SignUpSchema } from './schema';
 import { SignUpData } from '../../../entities/Forms/signUp.data';
+import { Button } from '../../../components/Button';
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'SignUp'>;
 
@@ -72,27 +67,31 @@ export function SignUp({ navigation, route }: Props) {
   }
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <ScrollView
-        contentContainerStyle={{
-          flexGrow: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-          padding: 25,
-          backgroundColor: theme.colors.dark_blue
-        }}>
+    <Container>
+      <Top>
         <MaterialIcons
           name="arrow-back"
           size={30}
           color={theme.colors.dark_yellow}
           style={{
             position: 'absolute',
-            left: 15,
-            top: StatusBar.currentHeight + 15
+            left: 0,
+            top: 0
           }}
           onPress={() => navigation.navigate('SignIn')}
         />
+        <LogoText>iTutor</LogoText>
         <ActionText>Cadastro</ActionText>
+      </Top>
+      <ScrollView
+        contentContainerStyle={{
+          flexGrow: 1,
+          justifyContent: 'flex-start',
+          alignItems: 'center'
+        }}
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
+        showsHorizontalScrollIndicator={false}>
         <InputForm
           name="name"
           control={control}
@@ -174,11 +173,12 @@ export function SignUp({ navigation, route }: Props) {
           placeholder="Registration"
           maxLength={8}
         />
-
-        <SubmitButton onPress={handleSubmit(handleRegister)}>
-          <SubmitButtonText>Cadastrar</SubmitButtonText>
-        </SubmitButton>
       </ScrollView>
-    </TouchableWithoutFeedback>
+      <Button
+        style={{ marginTop: 20 }}
+        text="Cadastrar"
+        onPress={handleSubmit(handleRegister)}
+      />
+    </Container>
   );
 }

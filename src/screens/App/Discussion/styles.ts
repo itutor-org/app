@@ -1,10 +1,5 @@
 import styled, { DefaultTheme } from 'styled-components/native';
 
-interface ButtonProps {
-  theme: DefaultTheme;
-  isSubmit: boolean;
-}
-
 interface CardProps {
   theme: DefaultTheme;
   isSelected: boolean;
@@ -20,27 +15,21 @@ interface InteractionCardProps extends CardProps {
   color: string;
 }
 
-interface TopBarProps {
-  theme: DefaultTheme;
-  marginTop: number;
-}
-
 export const Container = styled.View`
+  flex: 1;
   background-color: ${({ theme }) => theme.colors.dark_blue};
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
+  width: 100%;
   height: 100%;
-  padding: 0 0 10px;
+  padding-top: 10px;
 `;
 
-export const TopBar = styled.View<TopBarProps>`
+export const TopBar = styled.View`
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  width: 90%;
-  margin-top: ${(props) => props.marginTop}px;
+  width: 100%;
+  padding: 0 20px;
 `;
 
 export const Wrapper = styled.View`
@@ -56,7 +45,7 @@ export const TopicWrapper = styled.View`
   align-items: center;
   justify-content: center;
   width: 100%;
-  margin-top: ${({ theme }) => theme.margins.SM}px;
+  padding: 8px 0;
 `;
 
 export const Title = styled.Text`
@@ -77,15 +66,6 @@ export const Subtitle = styled.Text`
   font-weight: 500;
 `;
 
-export const Middle = styled.View`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 65%;
-`;
-
 export const CardsWrapper = styled.View`
   display: flex;
   flex-direction: row;
@@ -93,6 +73,7 @@ export const CardsWrapper = styled.View`
   justify-content: space-around;
   width: 100%;
   flex-wrap: wrap;
+  padding: 0 10px;
 `;
 
 export const StudentCard = styled.TouchableOpacity<StudentCardProps>`
@@ -123,7 +104,7 @@ export const InteractionsWrapper = styled.View`
   justify-content: space-evenly;
   width: 100%;
   padding: ${({ theme }) => theme.margins.MD}px 0;
-  margin-top: ${({ theme }) => theme.margins.MD}px;
+  margin: ${({ theme }) => theme.margins.SM}px 0;
   background-color: ${({ theme }) => theme.colors.light_blue};
 `;
 
@@ -152,11 +133,12 @@ export const ButtonsWrapper = styled.View`
   align-items: center;
   justify-content: space-between;
   width: 100%;
+  padding: ${({ theme }) => theme.margins.SSM}px 20px;
 `;
 
 export const InteractionButtonsWrapper = styled(ButtonsWrapper)`
   flex-direction: row;
   width: 100%;
-  padding: 0 10px;
-  margin-bottom: ${({ theme }) => theme.margins.MD}px;
+  margin-bottom: ${({ theme }) => theme.margins.SM}px;
+  padding: ${({ theme }) => theme.margins.SSM}px 0;
 `;

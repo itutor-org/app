@@ -1,17 +1,11 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { AuthStackParamList } from '../../../routes/auth.routes';
 
-import { LogoText, Title } from './styles';
+import { Container, LogoText, Title } from './styles';
 
 import { MaterialIcons } from '@expo/vector-icons';
 import { theme } from '../../../styles/theme';
-import {
-  Alert,
-  Keyboard,
-  ScrollView,
-  StatusBar,
-  TouchableWithoutFeedback
-} from 'react-native';
+import { Alert, ScrollView } from 'react-native';
 import { useAuth } from '../../../contexts/useAuth';
 import React from 'react';
 import { Button } from '../../../components/Button';
@@ -60,14 +54,12 @@ export function RecoverPassword({ navigation, route }: Props) {
   }
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+    <Container>
       <ScrollView
         contentContainerStyle={{
           flexGrow: 1,
           justifyContent: 'center',
-          alignItems: 'center',
-          padding: 25,
-          backgroundColor: theme.colors.dark_blue
+          alignItems: 'center'
         }}>
         <MaterialIcons
           name="arrow-back"
@@ -75,8 +67,8 @@ export function RecoverPassword({ navigation, route }: Props) {
           color={theme.colors.dark_yellow}
           style={{
             position: 'absolute',
-            left: 15,
-            top: StatusBar.currentHeight + 15
+            left: 0,
+            top: 0
           }}
           onPress={() => navigation.navigate('SignIn')}
         />
@@ -104,6 +96,6 @@ export function RecoverPassword({ navigation, route }: Props) {
           onPress={handleSubmit(handleRecoverPassword)}
         />
       </ScrollView>
-    </TouchableWithoutFeedback>
+    </Container>
   );
 }

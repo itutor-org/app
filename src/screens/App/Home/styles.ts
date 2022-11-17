@@ -1,12 +1,9 @@
 import styled from 'styled-components/native';
 
-export const HomeContainer = styled.View`
+export const Container = styled.View`
+  flex: 1;
+  padding: 10px 20px 0;
   background-color: ${({ theme }) => theme.colors.dark_blue};
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 100%;
-  padding: 0 20px;
 `;
 
 export const GroupContainer = styled.View`
@@ -21,7 +18,7 @@ export const Title = styled.Text`
   font-size: ${({ theme }) => theme.font_size.LG}px;
   font-weight: ${({ theme }) => theme.font_weight.bold};
   color: ${({ theme }) => theme.colors.white};
-  margin-bottom: ${({ theme }) => theme.margins.MD}px;
+  margin-bottom: ${({ theme }) => theme.margins.SM}px;
 `;
 
 export const GroupsWrapper = styled.View`

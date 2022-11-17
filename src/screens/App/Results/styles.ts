@@ -6,14 +6,20 @@ export const Container = styled.View`
   justify-content: center;
   align-items: center;
   background-color: ${({ theme }) => theme.colors.dark_blue};
-  padding: 20px;
 `;
 
-export const Image = styled.Image`
+export const GraphImage = styled.Image`
   width: 100%;
-  height: 60%;
+  height: 100%;
+`;
+
+export const LoadingContainer = styled.View`
+  width: 90%;
+  height: 55%;
   border-radius: 5px;
   border: 2px solid ${({ theme }) => theme.colors.light_orange};
+  align-items: center;
+  justify-content: center;
 `;
 
 export const Title = styled.Text`

@@ -1,11 +1,11 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { AppStackParamList } from '../../../routes/app.routes';
 import {
-  HomeContainer,
   GroupContainer,
   Title,
   GroupsWrapper,
-  GroupList
+  GroupList,
+  Container
 } from './styles';
 import { MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
@@ -105,7 +105,7 @@ export function DiscussionsList({ navigation, route }: Props) {
   }, [discussions]);
 
   return (
-    <HomeContainer>
+    <Container>
       <TopBar navigation={navigation} />
       <GroupContainer>
         <Title>DISCUSSÕES</Title>
@@ -223,6 +223,6 @@ export function DiscussionsList({ navigation, route }: Props) {
           </>
         }
       />
-    </HomeContainer>
+    </Container>
   );
 }

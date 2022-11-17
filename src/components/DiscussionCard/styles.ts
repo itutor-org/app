@@ -68,7 +68,7 @@ export const GraphImage = styled.Image`
 
 export const LoadingContainer = styled.View`
   width: 100%;
-  height: 70%;
+  height: 65%;
   border-radius: 5px;
   border: 2px solid ${({ theme }) => theme.colors.light_orange};
   align-items: center;
