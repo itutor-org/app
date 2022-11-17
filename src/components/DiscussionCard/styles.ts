@@ -63,9 +63,16 @@ export const SectionWrapper = styled.View`
 
 export const GraphImage = styled.Image`
   width: 100%;
+  height: 100%;
+`;
+
+export const LoadingContainer = styled.View`
+  width: 100%;
   height: 70%;
   border-radius: 5px;
   border: 2px solid ${({ theme }) => theme.colors.light_orange};
+  align-items: center;
+  justify-content: center;
 `;
 
 export const MiddleText = styled.Text`

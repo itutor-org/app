@@ -15,10 +15,11 @@ import {
   ClassificationTextWrapper,
   ClassificationText,
   RandomnessIndexWrapper,
-  RandomnessIndexText
+  RandomnessIndexText,
+  LoadingContainer
 } from './styles';
 import { theme } from '../../styles/theme';
-import { Alert, Text } from 'react-native';
+import { ActivityIndicator, Alert, Text } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { AppStackParamList } from '../../routes/app.routes';
 import ModalComponent from '../Modal';
@@ -102,12 +103,23 @@ export function DiscussionCard({
               children={
                 <>
                   <CardTitle>{specific_subject}</CardTitle>
-                  <GraphImage
-                    resizeMode="stretch"
-                    source={{
-                      uri: graph
-                    }}
-                  />
+
+                  <LoadingContainer>
+                    {graph ? (
+                      <GraphImage
+                        resizeMode="stretch"
+                        source={{
+                          uri: graph
+                        }}
+                      />
+                    ) : (
+                      <ActivityIndicator
+                        size="large"
+                        color={theme.colors.dark_blue}
+                      />
+                    )}
+                  </LoadingContainer>
+
                   <MiddleText>Índice de Aleatoriedade</MiddleText>
                   <ClassificationWrapper>
                     <ClassificationTextWrapper>
