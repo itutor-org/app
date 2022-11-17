@@ -24,12 +24,14 @@ import { SignInSchema } from './schema';
 import { SignInData } from '../../../entities/Forms/signIn.data';
 import { InputForm } from '../../../components/Form/InputForm';
 import { Button } from '../../../components/Button';
+import { useLoading } from '../../../contexts/loading';
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'SignIn'>;
 
 export function SignIn({ navigation, route }: Props) {
   const [isPasswordVisible, setIsPasswordVisible] = React.useState(true);
   const { signIn } = useAuth();
+  const { loading, setLoading } = useLoading();
 
   const {
     control,
@@ -43,8 +45,10 @@ export function SignIn({ navigation, route }: Props) {
 
   async function handleSignIn({ email, password }: SignInData) {
     try {
+      setLoading(true);
       await signIn(email, password);
     } catch (error) {
+      setLoading(false);
       if (error === 'auth/user-not-found') {
         Alert.alert('Erro!', 'E-mail não cadastrado');
       } else if (error === 'auth/wrong-password') {
@@ -54,6 +58,19 @@ export function SignIn({ navigation, route }: Props) {
       }
     }
   }
+
+  React.useEffect(() => {
+    if (loading) {
+      setTimeout(() => {
+        setLoading(false);
+      }, 1500);
+    } else {
+      setLoading(true);
+      setTimeout(() => {
+        setLoading(false);
+      }, 1500);
+    }
+  }, []);
 
   return (
     <Container>

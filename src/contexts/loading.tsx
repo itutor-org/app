@@ -6,6 +6,7 @@ interface LoadingProviderProps {
 }
 
 interface LoadingContextData {
+  loading: boolean;
   setLoading: (value: boolean) => void;
 }
 
@@ -16,10 +17,7 @@ const LoadingContext = React.createContext<LoadingContextData>(
 export function LoadingProvider({ children }: LoadingProviderProps) {
   const [loading, setLoading] = React.useState(false);
   return (
-    <LoadingContext.Provider
-      value={{
-        setLoading
-      }}>
+    <LoadingContext.Provider value={{ loading, setLoading }}>
       <Loading visible={loading} showModal={setLoading} />
       {children}
     </LoadingContext.Provider>

@@ -30,16 +30,19 @@ export function SignUp({ navigation, route }: Props) {
   });
 
   const { registerUser } = useAuth();
-  const { setLoading } = useLoading();
+  const { loading, setLoading } = useLoading();
 
   async function handleRegister(form: SignUpData) {
     try {
+      setLoading(true);
       await registerUser(
         form.name,
         form.email,
         form.registration,
         form.password
       );
+
+      setLoading(false);
 
       Alert.alert(
         'Cadastro realizado com sucesso!',
@@ -54,6 +57,7 @@ export function SignUp({ navigation, route }: Props) {
         ]
       );
     } catch (error) {
+      setLoading(false);
       if (error === 'auth/email-already-in-use') {
         Alert.alert(
           'Ops! Esse e-mail já está sendo utilizado.',
@@ -69,10 +73,16 @@ export function SignUp({ navigation, route }: Props) {
   }
 
   React.useEffect(() => {
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-    }, 2000);
+    if (loading) {
+      setTimeout(() => {
+        setLoading(false);
+      }, 1500);
+    } else {
+      setLoading(true);
+      setTimeout(() => {
+        setLoading(false);
+      }, 1500);
+    }
   }, []);
 
   return (

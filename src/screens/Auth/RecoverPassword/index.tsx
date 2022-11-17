@@ -15,11 +15,13 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { RecoverPasswordSchema } from './schema';
 
 import { RecoverPasswordData } from '../../../entities/Forms/recoverPassword.data';
+import { useLoading } from '../../../contexts/loading';
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'RecoverPassword'>;
 
 export function RecoverPassword({ navigation, route }: Props) {
   const { recoverPassword } = useAuth();
+  const { loading, setLoading } = useLoading();
 
   const {
     control,
@@ -33,7 +35,10 @@ export function RecoverPassword({ navigation, route }: Props) {
 
   async function handleRecoverPassword({ email }: RecoverPasswordData) {
     try {
+      setLoading(true);
       await recoverPassword(email);
+
+      setLoading(false);
       Alert.alert(
         'Sucesso!',
         'Enviamos um e-mail para você recuperar sua senha',
@@ -45,6 +50,7 @@ export function RecoverPassword({ navigation, route }: Props) {
         ]
       );
     } catch (error) {
+      setLoading(false);
       if (error === 'auth/user-not-found') {
         Alert.alert('Erro!', 'E-mail não cadastrado');
       } else {
@@ -52,6 +58,19 @@ export function RecoverPassword({ navigation, route }: Props) {
       }
     }
   }
+
+  React.useEffect(() => {
+    if (loading) {
+      setTimeout(() => {
+        setLoading(false);
+      }, 1500);
+    } else {
+      setLoading(true);
+      setTimeout(() => {
+        setLoading(false);
+      }, 1500);
+    }
+  }, []);
 
   return (
     <Container>

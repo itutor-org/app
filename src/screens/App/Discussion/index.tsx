@@ -57,6 +57,8 @@ export function Discussion({ navigation, route }: Props) {
     });
 
   const [countdown, setCountdown] = React.useState('');
+  const [countdownInterval, setCountdownInterval] =
+    React.useState<NodeJS.Timeout>();
 
   function timer(duration: number) {
     let timer = duration,
@@ -74,8 +76,18 @@ export function Discussion({ navigation, route }: Props) {
       if (--timer < 0) {
         timer = 0;
         clearInterval(interval);
+        Alert.alert('Tempo esgotado!', 'A discussão foi encerrada.', [
+          {
+            text: 'OK',
+            onPress: () => {
+              handleCreateDiscussionResult();
+            }
+          }
+        ]);
       }
     }, 1000);
+
+    setCountdownInterval(interval);
   }
 
   function handleSelectStudent(
@@ -218,13 +230,18 @@ export function Discussion({ navigation, route }: Props) {
 
   async function handleUnsavedChanges(action: any) {
     try {
+      clearInterval(countdownInterval);
+      setLoading(true);
       await deleteInteractionsByDiscussion(route.params.discussion_id);
 
       await deleteDiscussion(route.params.discussion_id);
 
       navigation.dispatch(action);
+
+      setLoading(false);
     } catch (error) {
-      console.log(error);
+      setLoading(false);
+      Alert.alert('Erro ao deletar discussão', error.message);
     }
   }
 
@@ -240,6 +257,7 @@ export function Discussion({ navigation, route }: Props) {
 
   async function handleCreateDiscussionResult() {
     try {
+      setLoading(true);
       const interactions = await getInteractionByDiscussion(
         route.params.discussion_id
       );
@@ -262,7 +280,8 @@ export function Discussion({ navigation, route }: Props) {
         discussion_result: discussionResultFromApi
       });
     } catch (error) {
-      console.log(error);
+      setLoading(false);
+      Alert.alert('Erro ao criar resultado da discussão', error.message);
     }
   }
 
@@ -283,15 +302,16 @@ export function Discussion({ navigation, route }: Props) {
     } catch (error) {
       console.log(error);
     } finally {
-      timer(60 * route.params.duration);
     }
   }
 
   React.useEffect(() => {
-    handleLoadStudents();
-    setTimeout(() => {
-      setLoading(false);
-    }, 2000);
+    handleLoadStudents().finally(() => {
+      timer(route.params.duration * 60);
+      setTimeout(() => {
+        setLoading(false);
+      }, 1000);
+    });
   }, []);
 
   React.useEffect(() => {
@@ -304,11 +324,11 @@ export function Discussion({ navigation, route }: Props) {
           'Você tem certeza que deseja sair? Todas os seus dados serão perdidos.',
           [
             {
-              text: 'Voltar',
+              text: 'Cancelar',
               style: 'cancel'
             },
             {
-              text: 'Sair',
+              text: 'Confirmar',
 
               onPress: () => {
                 handleUnsavedChanges(e.data.action);
@@ -399,10 +419,7 @@ export function Discussion({ navigation, route }: Props) {
               },
               {
                 text: 'Sim',
-                onPress: () => {
-                  timer(0);
-                  handleCreateDiscussionResult();
-                }
+                onPress: () => handleCreateDiscussionResult()
               }
             ])
           }

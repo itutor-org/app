@@ -1,7 +1,8 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React from 'react';
-import { ActivityIndicator, StatusBar } from 'react-native';
+import { ActivityIndicator } from 'react-native';
 import { Button } from '../../../components/Button';
+import { useLoading } from '../../../contexts/loading';
 import { AppStackParamList } from '../../../routes/app.routes';
 import { theme } from '../../../styles/theme';
 import {
@@ -17,12 +18,27 @@ import {
 type Props = NativeStackScreenProps<AppStackParamList, 'Results'>;
 
 export function Results({ navigation, route }: Props) {
+  const { loading, setLoading } = useLoading();
+
   React.useEffect(() => {
     navigation.addListener('beforeRemove', (e) => {
       e.preventDefault();
       if (e.data.action.type === 'NAVIGATE') navigation.dispatch(e.data.action);
     });
   }, [navigation]);
+
+  React.useEffect(() => {
+    if (loading) {
+      setTimeout(() => {
+        setLoading(false);
+      }, 1500);
+    } else {
+      setLoading(true);
+      setTimeout(() => {
+        setLoading(false);
+      }, 1500);
+    }
+  }, []);
 
   return (
     <Container>

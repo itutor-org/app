@@ -17,7 +17,7 @@ import {
 import DiscussionCard from '../../../components/DiscussionCard';
 import ModalComponent from '../../../components/Modal';
 import { Discussion } from '../../../entities/discussion.entity';
-import { DeleteDiscussionResult } from '../../../services/graphService';
+import { deleteDiscussionResult } from '../../../services/graphService';
 
 import { TopBar } from '../../../components/TopBar';
 import { SearchBar } from '../../../components/SearchBar';
@@ -27,6 +27,8 @@ import { CreateDiscussionSchema } from './schema';
 import { InputForm } from '../../../components/Form/InputForm';
 import { Button } from '../../../components/Button';
 import { CreateDiscussionData } from '../../../entities/Forms/createDiscussion.data';
+import { useLoading } from '../../../contexts/loading';
+import { Alert } from 'react-native';
 
 type Props = NativeStackScreenProps<AppStackParamList, 'DiscussionsList'>;
 
@@ -34,6 +36,7 @@ export function DiscussionsList({ navigation, route }: Props) {
   const [discussions, setDiscussions] = React.useState<Discussion[]>([]);
   const [showCreateDiscussionModal, setShowCreateDiscussionModal] =
     React.useState(false);
+  const { loading, setLoading } = useLoading();
 
   const [searchText, setSearchText] = React.useState('');
 
@@ -50,15 +53,19 @@ export function DiscussionsList({ navigation, route }: Props) {
 
   async function handleDeleteDiscussion(discussion_id: string) {
     try {
+      setLoading(true);
       await deleteDiscussion(discussion_id);
-      await DeleteDiscussionResult(discussion_id);
+      await deleteDiscussionResult(discussion_id);
 
       discussions.splice(
         discussions.findIndex((discussion) => discussion.id === discussion_id),
         1
       );
+
+      setLoading(false);
     } catch (error) {
-      console.log(error);
+      setLoading(false);
+      Alert.alert('Erro ao deletar a discussão', error);
     }
   }
 
@@ -69,6 +76,7 @@ export function DiscussionsList({ navigation, route }: Props) {
   }: CreateDiscussionData) {
     try {
       setShowCreateDiscussionModal(false);
+      setLoading(true);
       const discussion = await createDiscussion(
         route.params.group_id,
         general_subject,
@@ -77,7 +85,7 @@ export function DiscussionsList({ navigation, route }: Props) {
         duration
       );
 
-      navigation.push('Discussion', {
+      navigation.navigate('Discussion', {
         group_id: route.params.group_id,
         discussion_id: discussion.id,
         duration: discussion.duration,
@@ -86,7 +94,8 @@ export function DiscussionsList({ navigation, route }: Props) {
         participants_number: discussion.participants_number
       });
     } catch (error) {
-      console.log(error);
+      setLoading(false);
+      Alert.alert('Erro ao criar a discussão', error);
     }
   }
 
@@ -103,6 +112,19 @@ export function DiscussionsList({ navigation, route }: Props) {
   React.useEffect(() => {
     loadDiscussions();
   }, [discussions]);
+
+  React.useEffect(() => {
+    if (loading) {
+      setTimeout(() => {
+        setLoading(false);
+      }, 1500);
+    } else {
+      setLoading(true);
+      setTimeout(() => {
+        setLoading(false);
+      }, 1500);
+    }
+  }, []);
 
   return (
     <Container>

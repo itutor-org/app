@@ -21,10 +21,12 @@ import { InputForm } from '../../../components/Form/InputForm';
 import { Button } from '../../../components/Button';
 import { EditGroupData } from '../../../entities/Forms/editStudent.data';
 import { StudentArea } from '../../../components/StudentArea';
+import { useLoading } from '../../../contexts/loading';
 
 type Props = NativeStackScreenProps<AppStackParamList, 'EditGroup'>;
 
 export function EditGroup({ navigation, route }: Props) {
+  const { loading, setLoading } = useLoading();
   const [registerModalVisible, setRegisterModalVisible] = React.useState(false);
   const [students, setStudents] = React.useState<Student[]>([]);
   const [studentsToDelete, setStudentsToDelete] = React.useState<string[]>([]);
@@ -57,11 +59,21 @@ export function EditGroup({ navigation, route }: Props) {
 
   async function handleUpdateGroup({ group_name, class_name }: EditGroupData) {
     try {
+      setLoading(true);
       await handleDeleteStudentFromFirebase();
 
       await handleCreateStudentOnFirebase();
 
       await handleEditGroupOnFirebase({ group_name, class_name });
+
+      setLoading(false);
+
+      Alert.alert('Sucesso', 'O grupo foi editado com sucesso!', [
+        {
+          text: 'Ok',
+          onPress: () => navigation.navigate('Home')
+        }
+      ]);
     } catch (error) {
       Alert.alert('Erro ao editar grupo', error.message);
     }
@@ -80,7 +92,7 @@ export function EditGroup({ navigation, route }: Props) {
           setRegisterModalVisible(false);
         })
         .catch((error) => {
-          Alert.alert('Erro ao adicionar aluno', error.message);
+          throw error;
         });
     });
   }
@@ -94,7 +106,7 @@ export function EditGroup({ navigation, route }: Props) {
           );
         })
         .catch((error) => {
-          Alert.alert('Erro ao deletar aluno', error.message);
+          throw error;
         });
     });
   }
@@ -110,15 +122,8 @@ export function EditGroup({ navigation, route }: Props) {
         class_name,
         students.length
       );
-
-      Alert.alert('Sucesso', 'O grupo foi editado com sucesso!', [
-        {
-          text: 'Ok',
-          onPress: () => navigation.navigate('Home')
-        }
-      ]);
     } catch (error) {
-      Alert.alert('Erro ao editar grupo', error.message);
+      throw error;
     }
   }
 
@@ -157,6 +162,19 @@ export function EditGroup({ navigation, route }: Props) {
     getStudentsFromGroup();
   }, []);
 
+  React.useEffect(() => {
+    if (loading) {
+      setTimeout(() => {
+        setLoading(false);
+      }, 1500);
+    } else {
+      setLoading(true);
+      setTimeout(() => {
+        setLoading(false);
+      }, 1500);
+    }
+  }, []);
+
   return (
     <Container>
       <MaterialIcons
@@ -165,8 +183,8 @@ export function EditGroup({ navigation, route }: Props) {
         color={theme.colors.dark_yellow}
         style={{
           position: 'absolute',
-          left: 0,
-          top: 0
+          left: 20,
+          top: 20
         }}
         onPress={() =>
           Alert.alert(

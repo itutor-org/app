@@ -15,24 +15,30 @@ import { Group } from '../../../entities/group.entity';
 
 import { TopBar } from '../../../components/TopBar';
 import { SearchBar } from '../../../components/SearchBar';
+import { useLoading } from '../../../contexts/loading';
+import { Alert } from 'react-native';
 
 type Props = NativeStackScreenProps<AppStackParamList, 'Home'>;
 
 export function Home({ navigation, route }: Props) {
   const { user } = useAuth();
+  const { loading, setLoading } = useLoading();
 
   const [groups, setGroups] = React.useState<Group[]>([]);
   const [searchText, setSearchText] = React.useState('');
 
   async function handleDeleteGroup(group_id: string): Promise<void> {
     try {
+      setLoading(true);
       await deleteGroup(group_id);
       groups.splice(
         groups.findIndex((group) => group.id === group_id),
         1
       );
+      setLoading(false);
     } catch (error) {
-      console.log(error);
+      setLoading(false);
+      Alert.alert('Erro ao deletar grupo', error);
     }
   }
 
@@ -41,7 +47,7 @@ export function Home({ navigation, route }: Props) {
       const groups = await getGroups(user?.id);
       setGroups(groups);
     } catch (error) {
-      console.log(error);
+      Alert.alert('Erro ao carregar grupos', error);
     }
   }
 
@@ -54,6 +60,19 @@ export function Home({ navigation, route }: Props) {
       e.preventDefault();
     });
   }, [navigation]);
+
+  React.useEffect(() => {
+    if (loading) {
+      setTimeout(() => {
+        setLoading(false);
+      }, 1500);
+    } else {
+      setLoading(true);
+      setTimeout(() => {
+        setLoading(false);
+      }, 1500);
+    }
+  }, []);
 
   return (
     <Container>

@@ -5,7 +5,7 @@ import { AppStackParamList } from '../../../routes/app.routes';
 import { Container, Title } from './styles';
 import { MaterialIcons } from '@expo/vector-icons';
 import { theme } from '../../../styles/theme';
-import { Alert, StatusBar } from 'react-native';
+import { Alert } from 'react-native';
 import ModalComponent from '../../../components/Modal';
 import { useAuth } from '../../../contexts/useAuth';
 import { createGroup } from '../../../services/groupService';
@@ -17,11 +17,13 @@ import { AddGroupData } from '../../../entities/Forms/addGroup.data';
 import { Button } from '../../../components/Button';
 import { InputForm } from '../../../components/Form/InputForm';
 import { StudentArea } from '../../../components/StudentArea';
+import { useLoading } from '../../../contexts/loading';
 
 type Props = NativeStackScreenProps<AppStackParamList, 'AddGroup'>;
 
 export function AddGroup({ navigation, route }: Props) {
   const { user } = useAuth();
+  const { loading, setLoading } = useLoading();
 
   const [modalVisible, setModalVisible] = React.useState(false);
   const [students, setStudents] = React.useState<Student[]>([]);
@@ -49,6 +51,7 @@ export function AddGroup({ navigation, route }: Props) {
 
   async function handleCreateGroup({ class_name, group_name }: AddGroupData) {
     try {
+      setLoading(true);
       await createGroup(
         user.id,
         group_name,
@@ -57,6 +60,8 @@ export function AddGroup({ navigation, route }: Props) {
         students
       );
 
+      setLoading(false);
+
       Alert.alert('Sucesso', 'O grupo criado com sucesso!', [
         {
           text: 'Ok',
@@ -64,6 +69,7 @@ export function AddGroup({ navigation, route }: Props) {
         }
       ]);
     } catch (error) {
+      setLoading(false);
       Alert.alert('Erro ao criar grupo', error.message);
     }
   }
@@ -82,6 +88,19 @@ export function AddGroup({ navigation, route }: Props) {
     }
   }
 
+  React.useEffect(() => {
+    if (loading) {
+      setTimeout(() => {
+        setLoading(false);
+      }, 1500);
+    } else {
+      setLoading(true);
+      setTimeout(() => {
+        setLoading(false);
+      }, 1500);
+    }
+  }, []);
+
   return (
     <Container>
       <MaterialIcons
@@ -90,8 +109,8 @@ export function AddGroup({ navigation, route }: Props) {
         color={theme.colors.dark_yellow}
         style={{
           position: 'absolute',
-          left: 0,
-          top: 0
+          left: 20,
+          top: 20
         }}
         onPress={() =>
           Alert.alert(
