@@ -26,7 +26,7 @@ export const getDiscussionGraph = async (id: string) => {
     });
 };
 
-export const DeleteDiscussionResult = async (id: string) => {
+export const deleteDiscussionResult = async (id: string) => {
   return await api.delete(`/graph/${id}`).catch((error) => {
     throw error.code;
   });

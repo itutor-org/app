@@ -79,26 +79,25 @@ export const updateGroup = async (
 };
 
 export const deleteGroup = async (group_id: string) => {
-  const discussions = await getDiscussions(group_id);
+  try {
+    const discussions = await getDiscussions(group_id);
 
-  discussions.forEach(async (discussion) => {
-    await deleteInteractionsByDiscussion(discussion.id);
-  });
-
-  discussions.forEach(async (discussion) => {
-    await deleteDiscussion(discussion.id);
-  });
-
-  const students = await getStudentsByGroup(group_id);
-
-  students.forEach(async (student) => {
-    await deleteStudent(student.id);
-  });
-
-  await groupsCollection
-    .doc(group_id)
-    .delete()
-    .catch((error) => {
-      throw error.code;
+    discussions.forEach(async (discussion) => {
+      await deleteInteractionsByDiscussion(discussion.id);
     });
+
+    discussions.forEach(async (discussion) => {
+      await deleteDiscussion(discussion.id);
+    });
+
+    const students = await getStudentsByGroup(group_id);
+
+    students.forEach(async (student) => {
+      await deleteStudent(student.id);
+    });
+
+    await groupsCollection.doc(group_id).delete();
+  } catch (error) {
+    throw error.code;
+  }
 };

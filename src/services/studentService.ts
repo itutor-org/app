@@ -9,16 +9,20 @@ export const createStudent = async (
   registration: string,
   group_id: string
 ): Promise<Student> => {
-  const res = await studentsCollection.add({
-    name,
-    email,
-    registration,
-    group_id
-  });
+  try {
+    const res = await studentsCollection.add({
+      name,
+      email,
+      registration,
+      group_id
+    });
 
-  const student = await getStudent(res.id);
+    const student = await getStudent(res.id);
 
-  return student;
+    return student;
+  } catch (error) {
+    throw error;
+  }
 };
 
 export const getStudent = async (id: string): Promise<Student> => {
@@ -71,6 +75,9 @@ export const deleteStudentByRegistration = async (
       querySnapshot.forEach((doc) => {
         doc.ref.delete();
       });
+    })
+    .catch((error) => {
+      throw error.code;
     });
 };
 
