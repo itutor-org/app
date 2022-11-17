@@ -2,7 +2,6 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { AuthStackParamList } from '../../../routes/auth.routes';
 
 import {
-  TopContainer,
   LogoText,
   WelcomeText,
   RecoverPasswordButton,
@@ -18,8 +17,7 @@ import { MaterialIcons, Entypo } from '@expo/vector-icons';
 import { useAuth } from '../../../contexts/useAuth';
 import React from 'react';
 
-import { Alert, ScrollView } from 'react-native';
-import { theme } from '../../../styles/theme';
+import { Alert } from 'react-native';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { SignInSchema } from './schema';
@@ -59,64 +57,52 @@ export function SignIn({ navigation, route }: Props) {
 
   return (
     <Container>
-      <TopContainer>
-        <LogoText>iTutor</LogoText>
-        <WelcomeText>Seja bem vind@</WelcomeText>
-      </TopContainer>
+      <LogoText>iTutor</LogoText>
+      <WelcomeText>Seja bem vind@</WelcomeText>
 
-      <ScrollView
-        contentContainerStyle={{
-          flexGrow: 1,
-          justifyContent: 'flex-start',
-          alignItems: 'center',
-          backgroundColor: theme.colors.dark_blue
-        }}
-        showsVerticalScrollIndicator={false}
-        keyboardShouldPersistTaps="handled"
-        showsHorizontalScrollIndicator={false}>
-        <InputForm
-          name="email"
-          control={control}
-          error={errors.email && (errors.email.message as any)}
-          icon={
-            <MaterialIcons
-              name="person"
-              size={19}
-              color={'#8D8D99'}
-              style={{ marginRight: 7 }}
-            />
-          }
-          keyboardType="email-address"
-          placeholder="Email"
-        />
+      <InputForm
+        name="email"
+        control={control}
+        error={errors.email && (errors.email.message as any)}
+        icon={
+          <MaterialIcons
+            name="person"
+            size={19}
+            color={'#8D8D99'}
+            style={{ marginRight: 7 }}
+          />
+        }
+        keyboardType="email-address"
+        placeholder="Email"
+      />
 
-        <InputForm
-          name="password"
-          control={control}
-          error={errors.password && (errors.password.message as any)}
-          icon={
-            <MaterialIcons
-              name="lock"
-              size={19}
-              color={'#8D8D99'}
-              style={{ marginRight: 7 }}
-            />
-          }
-          secureTextEntry={isPasswordVisible}
-          keyboardType="default"
-          placeholder="Senha"
-          isPassword={true}
-          PasswordIcon={
-            <Entypo
-              name={isPasswordVisible ? 'eye' : 'eye-with-line'}
-              size={19}
-              color={'#8D8D99'}
-              style={{ marginLeft: -20, zIndex: 1 }}
-              onPress={() => setIsPasswordVisible(!isPasswordVisible)}
-            />
-          }
-        />
-      </ScrollView>
+      <InputForm
+        name="password"
+        control={control}
+        error={errors.password && (errors.password.message as any)}
+        icon={
+          <MaterialIcons
+            name="lock"
+            size={19}
+            color={'#8D8D99'}
+            style={{ marginRight: 7 }}
+          />
+        }
+        secureTextEntry={isPasswordVisible}
+        keyboardType="default"
+        placeholder="Senha"
+        isPassword={true}
+        PasswordIcon={
+          <Entypo
+            name={isPasswordVisible ? 'eye' : 'eye-with-line'}
+            size={19}
+            color={'#8D8D99'}
+            style={{ marginLeft: -20, zIndex: 1 }}
+            onPress={() => setIsPasswordVisible(!isPasswordVisible)}
+          />
+        }
+      />
+
       <RecoverPasswordButton
         onPress={() => navigation.navigate('RecoverPassword')}>
         <RecoverPasswordButtonText>

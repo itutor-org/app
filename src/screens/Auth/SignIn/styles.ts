@@ -11,15 +11,6 @@ export const Container = styled.View`
   padding: 20px;
 `;
 
-export const TopContainer = styled.View`
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  align-items: center;
-  height: 40%;
-  width: 100%;
-`;
-
 export const LogoText = styled.Text`
   font-size: ${({ theme }) => theme.font_size.XL}px;
   font-weight: ${({ theme }) => theme.font_weight.bold};

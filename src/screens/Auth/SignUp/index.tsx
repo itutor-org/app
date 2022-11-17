@@ -14,6 +14,7 @@ import { InputForm } from '../../../components/Form/InputForm';
 import { SignUpSchema } from './schema';
 import { SignUpData } from '../../../entities/Forms/signUp.data';
 import { Button } from '../../../components/Button';
+import { useLoading } from '../../../contexts/loading';
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'SignUp'>;
 
@@ -29,6 +30,7 @@ export function SignUp({ navigation, route }: Props) {
   });
 
   const { registerUser } = useAuth();
+  const { setLoading } = useLoading();
 
   async function handleRegister(form: SignUpData) {
     try {
@@ -65,6 +67,13 @@ export function SignUp({ navigation, route }: Props) {
       }
     }
   }
+
+  React.useEffect(() => {
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+    }, 2000);
+  }, []);
 
   return (
     <Container>
