@@ -107,7 +107,7 @@ export function DiscussionCard({
                   <LoadingContainer>
                     {graph ? (
                       <GraphImage
-                        resizeMode="stretch"
+                        resizeMode="cover"
                         source={{
                           uri: graph
                         }}
@@ -124,10 +124,11 @@ export function DiscussionCard({
                   <ClassificationWrapper>
                     <ClassificationTextWrapper>
                       <ClassificationText>Classificação</ClassificationText>
-                      <ClassificationText>0 a 0,4: Ruim</ClassificationText>
-                      <ClassificationText>0,4 a 0,6: Ideal</ClassificationText>
                       <ClassificationText>
-                        0,6 a 1,0: Demasiado
+                        0%: Sem Aleatoriedade
+                      </ClassificationText>
+                      <ClassificationText>
+                        100%: Totalmente Aleatório
                       </ClassificationText>
                     </ClassificationTextWrapper>
                     <RandomnessIndexWrapper>

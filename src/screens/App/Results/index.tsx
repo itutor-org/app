@@ -47,7 +47,7 @@ export function Results({ navigation, route }: Props) {
       <LoadingContainer>
         {route.params.discussion_result.graph ? (
           <GraphImage
-            resizeMode="stretch"
+            resizeMode="cover"
             source={{
               uri: route.params.discussion_result.graph
             }}
