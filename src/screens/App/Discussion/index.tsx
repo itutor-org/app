@@ -64,7 +64,7 @@ export function Discussion({ navigation, route }: Props) {
     let timer = duration,
       minutes: string | number,
       seconds: string | number;
-    const interval = setInterval(function () {
+    const interval = setInterval(async function () {
       minutes = parseInt(String(timer / 60), 10);
       seconds = parseInt(String(timer % 60), 10);
 
@@ -76,14 +76,47 @@ export function Discussion({ navigation, route }: Props) {
       if (--timer < 0) {
         timer = 0;
         clearInterval(interval);
-        Alert.alert('Tempo esgotado!', 'A discussão foi encerrada.', [
-          {
-            text: 'OK',
-            onPress: () => {
-              handleCreateDiscussionResult();
-            }
+        setCountdown('00:00');
+
+        try {
+          const interactions = await getInteractionByDiscussion(
+            route.params.discussion_id
+          );
+
+          if (interactions.length > 0) {
+            Alert.alert('Tempo esgotado!', 'A discussão foi encerrada.', [
+              {
+                text: 'OK',
+                onPress: () => {
+                  handleCreateDiscussionResult();
+                }
+              }
+            ]);
+          } else {
+            Alert.alert(
+              'Tempo esgotado!',
+              'Como a discussão não possui nenhuma interação, iremos levá-lo de volta à listagem de discussões',
+              [
+                {
+                  text: 'OK',
+                  onPress: async () => {
+                    try {
+                      await deleteDiscussion(route.params.discussion_id);
+                      navigation.navigate('DiscussionsList', {
+                        group_id: route.params.group_id,
+                        participants_number: route.params.participants_number
+                      });
+                    } catch (error) {
+                      console.log(error);
+                    }
+                  }
+                }
+              ]
+            );
           }
-        ]);
+        } catch (error) {
+          Alert.alert('Erro', 'Não foi possível finalizar a discussão');
+        }
       }
     }, 1000);
 
@@ -230,8 +263,9 @@ export function Discussion({ navigation, route }: Props) {
 
   async function handleUnsavedChanges(action: any) {
     try {
-      clearInterval(countdownInterval);
       setLoading(true);
+      clearInterval(countdownInterval);
+      setCountdown('00:00');
       await deleteInteractionsByDiscussion(route.params.discussion_id);
 
       await deleteDiscussion(route.params.discussion_id);
@@ -258,6 +292,8 @@ export function Discussion({ navigation, route }: Props) {
   async function handleCreateDiscussionResult() {
     try {
       setLoading(true);
+      clearInterval(countdownInterval);
+      setCountdown('00:00');
       const interactions = await getInteractionByDiscussion(
         route.params.discussion_id
       );
