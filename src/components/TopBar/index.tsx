@@ -36,7 +36,9 @@ export function TopBar({ navigation, isHome }: TopBarProps) {
         color={theme.colors.white}
         onPress={() => {
           setLoading(true);
-          logoff();
+          setTimeout(() => {
+            logoff();
+          }, 2000);
         }}
       />
     </Container>

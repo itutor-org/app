@@ -23,6 +23,8 @@ export const Title = styled.Text`
 export const GroupsWrapper = styled.View`
   width: 100%;
   height: 75%;
+  align-items: center;
+  justify-content: center;
   background-color: #f1f1f1;
   border-top-right-radius: ${({ theme }) => theme.margins.MD}px;
   border-top-left-radius: ${({ theme }) => theme.margins.MD}px;

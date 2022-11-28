@@ -68,6 +68,8 @@ export function SignUp({ navigation, route }: Props) {
           'Ops! Esse e-mail é inválido.',
           'Por favor, tente novamente.'
         );
+      } else {
+        Alert.alert('Ops! Ocorreu um erro ao cadastrar.', error);
       }
     }
   }
@@ -97,7 +99,22 @@ export function SignUp({ navigation, route }: Props) {
             left: 0,
             top: 0
           }}
-          onPress={() => navigation.navigate('SignIn')}
+          onPress={() =>
+            Alert.alert(
+              'Atenção',
+              'Deseja sair da criação? Sua alterações serão perdidas',
+              [
+                {
+                  text: 'Não',
+                  style: 'cancel'
+                },
+                {
+                  text: 'Sim',
+                  onPress: () => navigation.navigate('SignIn')
+                }
+              ]
+            )
+          }
         />
         <LogoText>iTutor</LogoText>
         <ActionText>Cadastro</ActionText>
@@ -175,22 +192,6 @@ export function SignUp({ navigation, route }: Props) {
           }
           keyboardType="visible-password"
           placeholder="Confirme sua senha"
-        />
-        <InputForm
-          name="registration"
-          control={control}
-          error={errors.registration && (errors.registration.message as any)}
-          icon={
-            <Octicons
-              name="number"
-              size={19}
-              color={'#8D8D99'}
-              style={{ marginRight: 10 }}
-            />
-          }
-          keyboardType="numeric"
-          placeholder="Registration"
-          maxLength={8}
         />
       </ScrollView>
       <Button

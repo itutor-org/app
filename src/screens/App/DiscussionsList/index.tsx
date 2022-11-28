@@ -140,33 +140,39 @@ export function DiscussionsList({ navigation, route }: Props) {
         />
 
         <GroupsWrapper>
-          <GroupList
-            showsVerticalScrollIndicator={false}
-            data={discussions.filter((discussion) => {
-              if (searchText === '') {
-                return discussion;
-              } else if (
-                discussion.specific_subject
-                  .toLowerCase()
-                  .includes(searchText.toLowerCase())
-              ) {
-                return discussion;
-              }
-            })}
-            keyExtractor={({ id }: Discussion) => id}
-            renderItem={({ item }: any) => (
-              <DiscussionCard
-                id={item.id}
-                general_subject={item.general_subject}
-                randomness_index={item.randomness_index}
-                specific_subject={item.specific_subject}
-                participantsNumber={item.participants_number}
-                deleteAction={() => handleDeleteDiscussion(item.id)}
-                navigation={navigation}
-                graph={item.graph}
-              />
-            )}
-          />
+          {discussions.length > 0 ? (
+            <GroupList
+              showsVerticalScrollIndicator={false}
+              data={discussions.filter((discussion) => {
+                if (searchText === '') {
+                  return discussion;
+                } else if (
+                  discussion.specific_subject
+                    .toLowerCase()
+                    .includes(searchText.toLowerCase())
+                ) {
+                  return discussion;
+                }
+              })}
+              keyExtractor={({ id }: Discussion) => id}
+              renderItem={({ item }: any) => (
+                <DiscussionCard
+                  id={item.id}
+                  general_subject={item.general_subject}
+                  randomness_index={item.randomness_index}
+                  specific_subject={item.specific_subject}
+                  participantsNumber={item.participants_number}
+                  deleteAction={() => handleDeleteDiscussion(item.id)}
+                  navigation={navigation}
+                  graph={item.graph}
+                />
+              )}
+            />
+          ) : (
+            <Title style={{ color: 'black', fontSize: 20, margin: 0 }}>
+              Nenhuma discussão encontrada
+            </Title>
+          )}
         </GroupsWrapper>
       </GroupContainer>
 

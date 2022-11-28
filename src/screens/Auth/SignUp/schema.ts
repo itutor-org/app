@@ -2,10 +2,7 @@ import * as Yup from 'yup';
 
 export const SignUpSchema = Yup.object().shape({
   name: Yup.string().required('Nome obrigatório'),
-  email: Yup.string()
-    .required('E-mail obrigatório')
-    .email('E-mail inválido')
-    .matches(/@prof.cesupa.br$/, 'O email deve ser de professor do cesupa'),
+  email: Yup.string().required('E-mail obrigatório').email('E-mail inválido'),
   password: Yup.string()
     .required('Senha obrigatória')
     .min(6, 'A senha deve ter no mínimo 6 caracteres')
@@ -16,9 +13,5 @@ export const SignUpSchema = Yup.object().shape({
     ),
   password_confirmation: Yup.string()
     .required('Confirmação de senha obrigatória')
-    .oneOf([Yup.ref('password'), null], 'As senhas devem ser iguais'),
-
-  registration: Yup.string()
-    .required('Matrícula obrigatória')
-    .min(8, 'Matrícula inválida')
+    .oneOf([Yup.ref('password'), null], 'As senhas devem ser iguais')
 });

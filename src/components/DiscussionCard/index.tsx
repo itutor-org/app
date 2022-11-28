@@ -79,8 +79,8 @@ export function DiscussionCard({
               }}
               onPress={() =>
                 Alert.alert(
-                  'Excluir grupo',
-                  'Tem certeza que deseja excluir este grupo?',
+                  'Excluir Discussão',
+                  'Tem certeza que deseja excluir esta discussão?',
                   [
                     {
                       text: 'Cancelar',

@@ -12,10 +12,6 @@ export type AuthStackParamList = {
 const { Navigator, Screen } = createNativeStackNavigator<AuthStackParamList>();
 
 export function AuthRoutes() {
-  const navigation = useNavigation();
-
-  console.log('isLoggedIn', navigation.getState());
-
   return (
     <Navigator
       screenOptions={{

@@ -86,29 +86,33 @@ export function Home({ navigation, route }: Props) {
         />
 
         <GroupsWrapper>
-          <GroupList
-            showsVerticalScrollIndicator={false}
-            data={groups.filter((group) => {
-              if (searchText === '') {
-                return group;
-              } else if (
-                group.name.toLowerCase().includes(searchText.toLowerCase())
-              ) {
-                return group;
-              }
-            })}
-            keyExtractor={({ id }: Group) => id}
-            renderItem={({ item }: any) => (
-              <HomeCard
-                id={item.id}
-                name={item.name}
-                participants_number={item.participants_number}
-                class_name={item.class_name}
-                deleteAction={() => handleDeleteGroup(item.id)}
-                navigation={navigation}
-              />
-            )}
-          />
+          {groups.length > 0 ? (
+            <GroupList
+              showsVerticalScrollIndicator={false}
+              data={groups.filter((group) => {
+                if (searchText === '') {
+                  return group;
+                } else if (
+                  group.name.toLowerCase().includes(searchText.toLowerCase())
+                ) {
+                  return group;
+                }
+              })}
+              keyExtractor={({ id }: Group) => id}
+              renderItem={({ item }: any) => (
+                <HomeCard
+                  id={item.id}
+                  name={item.name}
+                  participants_number={item.participants_number}
+                  class_name={item.class_name}
+                  deleteAction={() => handleDeleteGroup(item.id)}
+                  navigation={navigation}
+                />
+              )}
+            />
+          ) : (
+            <Title style={{ color: 'black' }}>Nenhum grupo encontrado</Title>
+          )}
         </GroupsWrapper>
       </GroupContainer>
     </Container>
