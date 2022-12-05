@@ -23,7 +23,6 @@ interface UserContextData {
   registerUser: (
     name: string,
     email: string,
-    registration: string,
     password: string
   ) => Promise<void>;
 }
@@ -83,17 +82,12 @@ export function UserProvider({ children }: UserProviderProps) {
       });
   }
 
-  async function registerUser(
-    name: string,
-    email: string,
-    registration: string,
-    password: string
-  ) {
+  async function registerUser(name: string, email: string, password: string) {
     await auth()
       .createUserWithEmailAndPassword(email, password)
       .then(async () => {
         const id = auth().currentUser.uid;
-        await createUser({ name, email, id, registration });
+        await createUser({ name, email, id });
         auth().signOut();
       })
       .catch((error) => {

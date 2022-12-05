@@ -35,12 +35,7 @@ export function SignUp({ navigation, route }: Props) {
   async function handleRegister(form: SignUpData) {
     try {
       setLoading(true);
-      await registerUser(
-        form.name,
-        form.email,
-        form.registration,
-        form.password
-      );
+      await registerUser(form.name, form.email, form.password);
 
       setLoading(false);
 

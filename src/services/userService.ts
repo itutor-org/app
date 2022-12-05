@@ -3,12 +3,11 @@ import { User } from '../entities/user.entity';
 
 const usersCollection = firestore().collection('users');
 
-export const createUser = async ({ name, email, id, registration }) => {
+export const createUser = async ({ name, email, id }) => {
   await usersCollection.add({
     name,
     email,
-    id,
-    registration
+    id
   });
 };
 
