@@ -1,13 +1,13 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { AuthStackParamList } from '../../../routes/auth.routes';
 
-import { Container, LogoText, Title } from './styles';
+import { Container, LogoImage, Title } from './styles';
 
 import { MaterialIcons } from '@expo/vector-icons';
 import { theme } from '../../../styles/theme';
-import { Alert, ScrollView } from 'react-native';
+import { Alert, Keyboard, Platform, ScrollView } from 'react-native';
 import { useAuth } from '../../../contexts/useAuth';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from '../../../components/Button';
 import { InputForm } from '../../../components/Form/InputForm';
 import { useForm } from 'react-hook-form';
@@ -22,6 +22,36 @@ type Props = NativeStackScreenProps<AuthStackParamList, 'RecoverPassword'>;
 export function RecoverPassword({ navigation, route }: Props) {
   const { recoverPassword } = useAuth();
   const { loading, setLoading } = useLoading();
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+
+  // Event handler para quando o teclado é exibido
+  const keyboardDidShow = () => {
+    setKeyboardVisible(true);
+  };
+
+  // Event handler para quando o teclado é ocultado
+  const keyboardDidHide = () => {
+    setKeyboardVisible(false);
+  };
+
+  useEffect(() => {
+    // Registrar os listeners para os eventos do teclado
+    const showSubscription = Keyboard.addListener(
+      Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow',
+      keyboardDidShow
+    );
+
+    const hideSubscription = Keyboard.addListener(
+      Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide',
+      keyboardDidHide
+    );
+
+    // Remover os listeners quando o componente é desmontado
+    return () => {
+      showSubscription.remove();
+      hideSubscription.remove();
+    };
+  }, []);
 
   const {
     control,
@@ -83,7 +113,7 @@ export function RecoverPassword({ navigation, route }: Props) {
         <MaterialIcons
           name="arrow-back"
           size={30}
-          color={theme.colors.dark_yellow}
+          color={theme.colors.light_orange}
           style={{
             position: 'absolute',
             left: 0,
@@ -91,7 +121,9 @@ export function RecoverPassword({ navigation, route }: Props) {
           }}
           onPress={() => navigation.navigate('SignIn')}
         />
-        <LogoText>ITutor</LogoText>
+         {!isKeyboardVisible && (
+        <LogoImage source={require('../../../assets/images/logo.png')} />
+        )}
         <Title>Recuperação de senha</Title>
 
         <InputForm

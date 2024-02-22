@@ -1,6 +1,7 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { AuthStackParamList } from '../../../routes/auth.routes';
 
+
 import {
   LogoText,
   WelcomeText,
@@ -10,14 +11,15 @@ import {
   SignUpText,
   SignUpLink,
   SignUpLinkText,
-  Container
+  Container,
+  LogoImage
 } from './styles';
 
 import { MaterialIcons, Entypo } from '@expo/vector-icons';
 import { useAuth } from '../../../contexts/useAuth';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
-import { Alert } from 'react-native';
+import { Alert, Keyboard, Platform } from 'react-native';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { SignInSchema } from './schema';
@@ -25,6 +27,7 @@ import { SignInData } from '../../../entities/Forms/signIn.data';
 import { InputForm } from '../../../components/Form/InputForm';
 import { Button } from '../../../components/Button';
 import { useLoading } from '../../../contexts/loading';
+import { Image } from 'react-native';
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'SignIn'>;
 
@@ -32,6 +35,36 @@ export function SignIn({ navigation, route }: Props) {
   const [isPasswordVisible, setIsPasswordVisible] = React.useState(true);
   const { signIn } = useAuth();
   const { loading, setLoading } = useLoading();
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+
+  // Event handler para quando o teclado é exibido
+  const keyboardDidShow = () => {
+    setKeyboardVisible(true);
+  };
+
+  // Event handler para quando o teclado é ocultado
+  const keyboardDidHide = () => {
+    setKeyboardVisible(false);
+  };
+
+  useEffect(() => {
+    // Registrar os listeners para os eventos do teclado
+    const showSubscription = Keyboard.addListener(
+      Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow',
+      keyboardDidShow
+    );
+
+    const hideSubscription = Keyboard.addListener(
+      Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide',
+      keyboardDidHide
+    );
+
+    // Remover os listeners quando o componente é desmontado
+    return () => {
+      showSubscription.remove();
+      hideSubscription.remove();
+    };
+  }, []);
 
   const {
     control,
@@ -74,9 +107,11 @@ export function SignIn({ navigation, route }: Props) {
 
   return (
     <Container>
-      <LogoText>iTutor</LogoText>
-      <WelcomeText>Seja bem vind@</WelcomeText>
-
+      {!isKeyboardVisible && (
+      <LogoImage source={require('../../../assets/images/logo.png')} />
+      )}
+      <WelcomeText>Seja bem-vindo(a)!</WelcomeText>
+      
       <InputForm
         name="email"
         control={control}

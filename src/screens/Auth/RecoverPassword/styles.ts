@@ -11,12 +11,12 @@ export const Container = styled.View`
   padding: 20px;
 `;
 
-export const LogoText = styled.Text`
-  font-size: ${({ theme }) => theme.font_size.XL}px;
-  font-weight: ${({ theme }) => theme.font_weight.bold};
-  color: ${({ theme }) => theme.colors.dark_yellow};
-  margin-bottom: ${({ theme }) => theme.margins.MD}px;
-`;
+export const LogoImage = styled.Image`
+  width: 100%;
+  height: 23%;
+  resizeMode: stretch;
+  margin-bottom: ${({ theme }) => theme.margins.XXL}px;
+`
 
 export const Title = styled.Text`
   font-size: ${({ theme }) => theme.font_size.MD_LG}px;

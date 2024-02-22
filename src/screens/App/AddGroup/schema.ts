@@ -6,7 +6,11 @@ export const AddGroupSchema = Yup.object().shape({
 });
 
 export const AddStudentSchema = Yup.object().shape({
-  name: Yup.string().required('Nome obrigatório'),
+  name: Yup.string()
+    .required('Nome obrigatório')
+    .test('first-name-only', 'Por favor, insira apenas o primeiro nome.', value => {
+      return !value.includes(' ');
+    }),
   email: Yup.string()
     .required('E-mail obrigatório')
     .email('E-mail inválido')

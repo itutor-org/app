@@ -1,5 +1,5 @@
 import axios from 'axios';
 
 export const api = axios.create({
-  baseURL: 'https://itutor-service-zeifba777q-uc.a.run.app'
+  baseURL: 'https://netmetric-service-6fkgzk7ifq-rj.a.run.app'
 });

@@ -2,7 +2,7 @@ import styled from 'styled-components/native';
 
 export const Container = styled.View`
   flex: 1;
-  padding: 10px 20px 0;
+  padding: 20px 20px 0;
   background-color: ${({ theme }) => theme.colors.dark_blue};
 `;
 
@@ -26,13 +26,19 @@ export const GroupsWrapper = styled.View`
   height: 75%;
   align-items: center;
   justify-content: center;
-  background-color: #f1f1f1;
+  background-color: #050A26;
   border-top-right-radius: ${({ theme }) => theme.margins.MD}px;
   border-top-left-radius: ${({ theme }) => theme.margins.MD}px;
-  padding: ${({ theme }) => theme.margins.LG}px
-    ${({ theme }) => theme.margins.LG}px 0 ${({ theme }) => theme.margins.LG}px;
+  padding: ${({ theme }) => theme.margins.MD}px
+    ${({ theme }) => theme.margins.MD}px 0 ${({ theme }) => theme.margins.MD}px;
 `;
 
 export const GroupList = styled.FlatList`
   min-width: 100%;
+`;
+
+export const HeaderContainer = styled.View`
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 7px;
 `;

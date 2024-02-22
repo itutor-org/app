@@ -180,7 +180,7 @@ export function EditGroup({ navigation, route }: Props) {
       <MaterialIcons
         name="arrow-back"
         size={30}
-        color={theme.colors.dark_yellow}
+        color={theme.colors.light_orange}
         style={{
           position: 'absolute',
           left: 20,

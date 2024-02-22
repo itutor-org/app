@@ -27,7 +27,7 @@ export const getDiscussions = async (
       ) as Discussion[];
     })
     .catch((error) => {
-      throw error.code;
+      throw error.response.data;
     });
 };
 
@@ -81,7 +81,7 @@ export const createDiscussion = async (
           )
     )
     .catch((error) => {
-      throw error.code;
+      throw error.response.data;
     });
 };
 

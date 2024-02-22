@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useAuth } from '../../../contexts/useAuth';
 import { AppStackParamList } from '../../../routes/app.routes';
@@ -16,16 +16,51 @@ import { Group } from '../../../entities/group.entity';
 import { TopBar } from '../../../components/TopBar';
 import { SearchBar } from '../../../components/SearchBar';
 import { useLoading } from '../../../contexts/loading';
-import { Alert } from 'react-native';
+import { Alert, Keyboard, Platform } from 'react-native';
+import { Header } from '../../../components/Header/Header';
 
-type Props = NativeStackScreenProps<AppStackParamList, 'Home'>;
 
-export function Home({ navigation, route }: Props) {
+type Props = NativeStackScreenProps<AppStackParamList, 'Home'> & {
+  iconAction: () => void;
+};
+
+export function Home({ navigation, route, iconAction }: Props) {
   const { user } = useAuth();
   const { loading, setLoading } = useLoading();
 
   const [groups, setGroups] = React.useState<Group[]>([]);
   const [searchText, setSearchText] = React.useState('');
+
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+
+  // Event handler para quando o teclado é exibido
+  const keyboardDidShow = () => {
+    setKeyboardVisible(true);
+  };
+
+  // Event handler para quando o teclado é ocultado
+  const keyboardDidHide = () => {
+    setKeyboardVisible(false);
+  };
+
+  useEffect(() => {
+    // Registrar os listeners para os eventos do teclado
+    const showSubscription = Keyboard.addListener(
+      Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow',
+      keyboardDidShow
+    );
+
+    const hideSubscription = Keyboard.addListener(
+      Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide',
+      keyboardDidHide
+    );
+
+    // Remover os listeners quando o componente é desmontado
+    return () => {
+      showSubscription.remove();
+      hideSubscription.remove();
+    };
+  }, []);
 
   async function handleDeleteGroup(group_id: string): Promise<void> {
     try {
@@ -76,13 +111,16 @@ export function Home({ navigation, route }: Props) {
 
   return (
     <Container>
+      {!isKeyboardVisible && (
       <TopBar navigation={navigation} isHome={true} />
+      )}
       <GroupContainer>
-        <Title>GRUPOS</Title>
+
+        <Header title='GRUPOS'
+        iconAction={() => navigation.navigate('AddGroup')} />
 
         <SearchBar
           onChangeText={(value) => setSearchText(value)}
-          iconAction={() => navigation.navigate('AddGroup')}
         />
 
         <GroupsWrapper>
@@ -111,10 +149,11 @@ export function Home({ navigation, route }: Props) {
               )}
             />
           ) : (
-            <Title style={{ color: 'black' }}>Nenhum grupo encontrado</Title>
+            <Title style={{ color: 'white' }}>Nenhum grupo encontrado</Title>
           )}
         </GroupsWrapper>
       </GroupContainer>
     </Container>
   );
 }
+ 

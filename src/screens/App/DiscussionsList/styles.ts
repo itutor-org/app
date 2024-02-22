@@ -25,11 +25,11 @@ export const GroupsWrapper = styled.View`
   height: 75%;
   align-items: center;
   justify-content: center;
-  background-color: #f1f1f1;
+  background-color: #050A26;
   border-top-right-radius: ${({ theme }) => theme.margins.MD}px;
   border-top-left-radius: ${({ theme }) => theme.margins.MD}px;
-  padding: ${({ theme }) => theme.margins.LG}px
-    ${({ theme }) => theme.margins.LG}px 0 ${({ theme }) => theme.margins.LG}px;
+  padding: ${({ theme }) => theme.margins.MD}px
+    ${({ theme }) => theme.margins.MD}px 0 ${({ theme }) => theme.margins.MD}px;
 `;
 
 export const GroupList = styled.FlatList`

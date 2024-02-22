@@ -1,41 +1,62 @@
 {
   "project_info": {
-    "project_number": "1020977752098",
-    "project_id": "itutor-app",
-    "storage_bucket": "itutor-app.appspot.com"
+    "project_number": "1066208052954",
+    "project_id": "netmetric",
+    "storage_bucket": "netmetric.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1020977752098:android:f74e25658a8829a379c27b",
+        "mobilesdk_app_id": "1:1066208052954:android:08e59b4a7ffe203ce987e3",
         "android_client_info": {
           "package_name": "com.itutor"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1020977752098-5b02vi33phkd3g3qugcspuu6v75ohgtv.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.itutor",
-            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
-          }
-        },
-        {
-          "client_id": "1020977752098-cnkeqnl1v3mi9gs75da9mogpll6bvjvd.apps.googleusercontent.com",
+          "client_id": "1066208052954-gjk2eirhdupshbgkkbldoe5seghadqio.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyC-MJRs228A6l1KfuDvdasZbiLm5aFdwtY"
+          "current_key": "AIzaSyCuCgdgzBNRT84dCixqRpvunLn7YJWofdU"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "1020977752098-cnkeqnl1v3mi9gs75da9mogpll6bvjvd.apps.googleusercontent.com",
+              "client_id": "1066208052954-gjk2eirhdupshbgkkbldoe5seghadqio.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1066208052954:android:4d13ee08e5c1a768e987e3",
+        "android_client_info": {
+          "package_name": "com.netmetric"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1066208052954-gjk2eirhdupshbgkkbldoe5seghadqio.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCuCgdgzBNRT84dCixqRpvunLn7YJWofdU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1066208052954-gjk2eirhdupshbgkkbldoe5seghadqio.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
