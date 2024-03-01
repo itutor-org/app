@@ -1,5 +1,6 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React from 'react';
+import { Foundation } from '@expo/vector-icons';
 import { AppStackParamList } from '../../../routes/app.routes';
 import {
   Container,
@@ -16,11 +17,13 @@ import {
   InteractionCardText,
   ButtonsWrapper,
   InteractionButtonsWrapper,
-  TopicWrapper
+  TopicWrapper,
+  StudentCardView,
+  ImageBackgroundStudent
 } from './styles';
 import { AntDesign } from '@expo/vector-icons';
 import { theme } from '../../../styles/theme';
-import { Alert } from 'react-native';
+import { Alert, Dimensions, ImageBackground, View } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import {
   deleteDiscussion,
@@ -39,6 +42,8 @@ import { getStudentsByGroup } from '../../../services/studentService';
 import { actionsList } from './actions';
 import { Button } from '../../../components/Button';
 import { useLoading } from '../../../contexts/loading';
+import { ButtonInteraction } from '../../../components/ButtonInteraction';
+import { images, ImageItem } from './images';
 
 type Props = NativeStackScreenProps<AppStackParamList, 'Discussion'>;
 
@@ -377,6 +382,147 @@ export function Discussion({ navigation, route }: Props) {
       }
     });
   }, [navigation]);
+  
+  //pegar as dimensões altura e largura da tela
+  const screenWidth = Dimensions.get('window').width;
+  const screenHeight = Dimensions.get('window').height;
+
+  // Calcula as dimensões e posição central da mesa
+  const rectangleWidth = screenWidth * 0.8;
+  const rectangleHeight = screenHeight * 0.67;
+  const centerX = screenWidth / 2;
+  const centerY = screenHeight / 2;
+
+  // Calcula a posição de cada estudante ao redor da mesa
+  const studentsCount = students.length;
+  const topStudentsCount = 1;
+  const sideStudentsCount = 4;
+
+  const topCardY = centerY - rectangleHeight / 1.7;
+  const sideCardX = centerX - rectangleWidth / 2.2;
+  const sideCardYStep = rectangleHeight / (sideStudentsCount + 1);
+  const bottomCardY = centerY + rectangleHeight / 2.2;
+
+  const topCard = students.slice(0, topStudentsCount).map((student) => {
+    return (
+      <StudentCardView
+      style={{
+        position: 'absolute',
+        left: centerX - 65 / 2,
+        top: centerY - rectangleHeight / 1.65,
+      }}
+      >
+        <StudentCardText>{student.name}</StudentCardText>
+        
+      <StudentCard
+        key={student.name}
+        isSelected={student.isSelected}
+        color={() => handleColor(student.id)}
+        onPress={() => handleSelectStudent(student, students, setStudents)}
+        
+      >
+        {images.map((image: ImageItem) => (
+        <ImageBackgroundStudent
+         key={image.id}
+         source={image.source}
+       />
+       ))}
+      </StudentCard>
+      </StudentCardView>
+    );
+  });
+
+  const leftCards = students.slice(topStudentsCount, topStudentsCount + sideStudentsCount).map((student, index) => {
+    const cardY = topCardY + sideCardYStep * (index + 1);
+
+    return (
+      <StudentCardView
+      style={{
+        position: 'absolute',
+        left: sideCardX,
+        top: cardY,
+      }}>
+        <StudentCardText>{student.name}</StudentCardText>
+      <StudentCard
+        key={student.name}
+        isSelected={student.isSelected}
+        color={() => handleColor(student.id)}
+        onPress={() => handleSelectStudent(student, students, setStudents)}
+       
+      >
+        {images.map((image: ImageItem) => (
+        <ImageBackgroundStudent
+         key={image.id}
+         source={image.source}
+       />
+       ))}
+        
+      </StudentCard>
+      </StudentCardView>
+    );
+  });
+
+  const rightCards = students.slice(topStudentsCount + sideStudentsCount, topStudentsCount + sideStudentsCount * 2).map((student, index) => {
+    const cardY = topCardY + sideCardYStep * (index + 1);
+
+    return (
+      <StudentCardView
+      style={{
+        position: 'absolute',
+        left: sideCardX + rectangleWidth - 100,
+        top: cardY,
+      }}
+      >
+        <StudentCardText>{student.name}</StudentCardText>
+      <StudentCard
+        key={student.name}
+        isSelected={student.isSelected}
+        color={() => handleColor(student.id)}
+        onPress={() => handleSelectStudent(student, students, setStudents)}
+        
+      >
+        {images.map((image: ImageItem) => (
+        <ImageBackgroundStudent
+         key={image.id}
+         source={image.source}
+       />
+       ))}
+        
+      </StudentCard>
+      </StudentCardView>
+    );
+  });
+
+  const bottomCards = students.slice(topStudentsCount + sideStudentsCount * 2).map((student, index) => {
+    const cardY = bottomCardY;
+    return (
+      <StudentCardView
+      style={{
+        position: 'absolute',
+        left: centerX - 65 / 2,
+        top: cardY,
+      }}
+      >
+        <StudentCardText>{student.name}</StudentCardText>
+      <StudentCard
+        key={student.name}
+        isSelected={student.isSelected}
+        color={() => handleColor(student.id)}
+        onPress={() => handleSelectStudent(student, students, setStudents)}
+        
+      >
+        {images.map((image: ImageItem) => (
+        <ImageBackgroundStudent
+         key={image.id}
+         source={image.source}
+       />
+       ))}
+        
+      </StudentCard>
+      </StudentCardView>
+    );
+  });
+
 
   return (
     <Container>
@@ -389,6 +535,10 @@ export function Discussion({ navigation, route }: Props) {
           />
           <TimeText>{countdown} min</TimeText>
         </Wrapper>
+        <TopicWrapper>
+          <Title>{route.params.general_subject}</Title>
+          <Subtitle>{route.params.specific_subject}</Subtitle>
+        </TopicWrapper>
         <AntDesign
           name="closecircleo"
           size={30}
@@ -397,22 +547,12 @@ export function Discussion({ navigation, route }: Props) {
         />
       </TopBar>
 
-      <TopicWrapper>
-        <Title>{route.params.general_subject}</Title>
-        <Subtitle>{route.params.specific_subject}</Subtitle>
-      </TopicWrapper>
-      <CardsWrapper>
-        {students.map((student) => (
-          <StudentCard
-            key={student.name}
-            isSelected={student.isSelected}
-            color={() => handleColor(student.id)}
-            onPress={() => handleSelectStudent(student, students, setStudents)}>
-            <StudentCardText>{student.name}</StudentCardText>
-          </StudentCard>
-        ))}
-      </CardsWrapper>
-      <InteractionsWrapper>
+      <InteractionsWrapper style={{ 
+  transform: [
+    { translateX: -(screenWidth * 0.25) / 2 }, 
+    { translateY: -(screenHeight * 0.5) / 2 }
+  ] 
+}}>
         {actions.map((interaction) => (
           <InteractionCard
             key={interaction.name}
@@ -421,46 +561,56 @@ export function Discussion({ navigation, route }: Props) {
             onPress={() => {
               handleStoreAction(interaction.name);
             }}>
-            <InteractionCardText>{interaction.tag}</InteractionCardText>
+            <Foundation key={interaction.name} name={interaction.iconName} size={30} color="white" />
           </InteractionCard>
         ))}
+         <ButtonInteraction
+            
+          onPress={handleStoreInteraction}
+          style={{
+            marginTop: theme.margins.SSM,
+            marginBottom: theme.margins.SSM,
+            backgroundColor: theme.colors.medium_green
+          }} name={'check'} size={30} color={'white'}          />
+          <ButtonInteraction
+          onPress={handleResetInteraction}
+          style={{
+            marginTop: theme.margins.SSM,
+            marginBottom: theme.margins.SSM,
+            backgroundColor: theme.colors.light_orange
+          }} name={'alert'} size={30} color={'white'}          />
+          
       </InteractionsWrapper>
-      <ButtonsWrapper>
-        <InteractionButtonsWrapper>
-          <Button
-            text="GUARDAR INTERAÇÃO"
-            onPress={handleStoreInteraction}
-            style={{
-              width: '63%',
-              backgroundColor: theme.colors.medium_green
-            }}
-          />
-          <Button
-            text="DESCARTAR"
-            onPress={handleResetInteraction}
-            style={{
-              width: '35%',
-              backgroundColor: theme.colors.light_red
-            }}
-          />
-        </InteractionButtonsWrapper>
 
-        <Button
-          text="FINALIZAR DISCUSSÃO"
-          onPress={() =>
-            Alert.alert('Atenção', 'Deseja realmente finalizar a discussão?', [
-              {
-                text: 'Não',
-                style: 'cancel'
-              },
-              {
-                text: 'Sim',
-                onPress: () => handleCreateDiscussionResult()
-              }
-            ])
+
+      <CardsWrapper style={{
+        position: 'absolute',
+      }}>
+        {topCard}
+        {leftCards}
+        {rightCards}
+        {bottomCards}
+      </CardsWrapper>
+
+       <ButtonInteraction
+          style={{
+            position: 'absolute',
+            left: sideCardX,
+            top: bottomCardY + 25,
+            backgroundColor: theme.colors.red
+          }}
+          
+        onPress={() => Alert.alert('Atenção', 'Deseja realmente finalizar a discussão?', [
+          {
+            text: 'Não',
+            style: 'cancel'
+          },
+          {
+            text: 'Sim',
+            onPress: () => handleCreateDiscussionResult()
           }
-        />
-      </ButtonsWrapper>
+        ])} name={'flag'} size={30} color={'white'}        /> 
+
     </Container>
   );
 }

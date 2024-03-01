@@ -18,14 +18,16 @@ export function StudentArea({
 }: StudentAreaProps) {
   return (
     <Container>
-      <Button
-        text="Adicionar aluno"
-        onPress={openRegisterModal}
-        style={{
-          marginBottom: 5,
-          backgroundColor: theme.colors.medium_green
-        }}
-      />
+      {students.length < 10 && (
+        <Button
+          text="Adicionar aluno"
+          onPress={openRegisterModal}
+          style={{
+            marginBottom: 5,
+            backgroundColor: theme.colors.medium_green
+          }}
+        />
+      )}
       <StudentsList
         students={students}
         handleDeleteStudent={handleDeleteStudent}

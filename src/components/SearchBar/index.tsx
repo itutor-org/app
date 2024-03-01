@@ -6,10 +6,9 @@ import { SearchWrapper } from './styles';
 
 interface SearchBarProps {
   onChangeText: (text: string) => void;
-  iconAction: () => void;
 }
 
-export function SearchBar({ onChangeText, iconAction }: SearchBarProps) {
+export function SearchBar({ onChangeText}: SearchBarProps) {
   return (
     <SearchWrapper>
       <Input
@@ -21,16 +20,9 @@ export function SearchBar({ onChangeText, iconAction }: SearchBarProps) {
             style={{ marginLeft: 5 }}
           />
         }
-        width={'90%'}
+        width={'100%'}
         placeholder="Pesquisar"
         onChangeText={(value) => onChangeText(value)}
-      />
-      <MaterialIcons
-        name="add-circle-outline"
-        size={30}
-        color={theme.colors.white}
-        onPress={iconAction}
-        style={{ marginBottom: 7 }}
       />
     </SearchWrapper>
   );

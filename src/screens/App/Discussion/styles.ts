@@ -1,5 +1,9 @@
 import styled, { DefaultTheme } from 'styled-components/native';
 
+import { Dimensions } from 'react-native';
+
+const screenHeight = Dimensions.get('window').height;
+
 interface CardProps {
   theme: DefaultTheme;
   isSelected: boolean;
@@ -9,7 +13,9 @@ interface StudentCardProps {
   theme: DefaultTheme;
   color: () => string;
   isSelected: boolean;
+  source?: string;
 }
+
 
 interface InteractionCardProps extends CardProps {
   color: string;
@@ -20,6 +26,7 @@ export const Container = styled.View`
   background-color: ${({ theme }) => theme.colors.dark_blue};
   width: 100%;
   height: 100%;
+  align-items: center;
   padding-top: 10px;
 `;
 
@@ -43,9 +50,8 @@ export const TopicWrapper = styled.View`
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-right: 40px;
   justify-content: center;
-  width: 100%;
-  padding: 8px 0;
 `;
 
 export const Title = styled.Text`
@@ -73,7 +79,6 @@ export const CardsWrapper = styled.View`
   justify-content: space-around;
   width: 100%;
   flex-wrap: wrap;
-  padding: 0 10px;
 `;
 
 export const StudentCard = styled.TouchableOpacity<StudentCardProps>`
@@ -81,31 +86,43 @@ export const StudentCard = styled.TouchableOpacity<StudentCardProps>`
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  width: 80px;
-  height: 80px;
-  border-radius: 10px;
-  margin-bottom: ${({ theme }) => theme.margins.SM}px;
-  background-color: ${({ theme }) => theme.colors.white};
-  border: 5px solid
+  width: 65px;
+  height: 65px;
+  ${({ theme }) => `
+    border-radius: ${theme.border_radius.round}px;
+  `}
+  overflow: hidden;
+  border: 2px solid
     ${(props) => (props.isSelected ? props.color : props.theme.colors.white)};
 `;
 
 export const StudentCardText = styled.Text`
   font-size: ${({ theme }) => theme.font_size.MD}px;
-  color: ${({ theme }) => theme.colors.black};
+  color: ${({ theme }) => theme.colors.white};
   font-weight: ${({ theme }) => theme.font_weight.bold};
   text-align: center;
+  margin-bottom: ${({ theme }) => theme.margins.SSM}px;
 `;
+
 
 export const InteractionsWrapper = styled.View`
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
   justify-content: space-evenly;
-  width: 100%;
+  width: 25%;
+  height: ${screenHeight * 0.54}px;
   padding: ${({ theme }) => theme.margins.MD}px 0;
-  margin: ${({ theme }) => theme.margins.SM}px 0;
-  background-color: ${({ theme }) => theme.colors.light_blue};
+  margin: ${({ theme }) => theme.margins.MD}px 0;
+  background-color: ${({ theme }) => theme.colors.gray_blue};
+  border: 4px solid 
+    ${({ theme }) => theme.colors.blue_border};
+  ${({ theme }) => `
+    border-radius: ${theme.border_radius.round}px;
+  `}
+  position: absolute;
+  top: 50%;
+  left: 50%;
 `;
 
 export const InteractionCard = styled.TouchableOpacity<InteractionCardProps>`
@@ -113,11 +130,12 @@ export const InteractionCard = styled.TouchableOpacity<InteractionCardProps>`
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  width: 80px;
-  height: 80px;
+  width: 65px;
+  height: 65px;
   border-radius: 40px;
+  margin: ${({ theme }) => theme.margins.SSM}px;
   background-color: ${(props) => props.color};
-  border: 10px solid
+  border: 2px solid
     ${(props) => (props.isSelected ? props.theme.colors.white : props.color)};
 `;
 
@@ -141,4 +159,17 @@ export const InteractionButtonsWrapper = styled(ButtonsWrapper)`
   width: 100%;
   margin-bottom: ${({ theme }) => theme.margins.SM}px;
   padding: ${({ theme }) => theme.margins.SSM}px 0;
+`;
+
+export const StudentCardView = styled.View`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+
+export const ImageBackgroundStudent = styled.ImageBackground`
+  object-fit: cover;
+  width: 65px;
+  height: 65px;
 `;

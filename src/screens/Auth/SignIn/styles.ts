@@ -18,6 +18,13 @@ export const LogoText = styled.Text`
   margin-bottom: ${({ theme }) => theme.margins.MD}px;
 `;
 
+export const LogoImage = styled.Image`
+  width: 100%;
+  height: 23%;
+  resizeMode: stretch;
+  margin-bottom: ${({ theme }) => theme.margins.XXL}px;
+`
+
 export const WelcomeText = styled.Text`
   font-size: ${({ theme }) => theme.font_size.MD_LG}px;
   font-weight: ${({ theme }) => theme.font_weight.bold};

@@ -5,13 +5,14 @@ import { api } from './axios';
 export const createDiscussionResult = async (
   interactions: Interaction[]
 ): Promise<DiscussionResult> => {
+  console.log(interactions)
   return await api
     .post('/graph', interactions)
     .then((response) => {
       return response.data;
     })
     .catch((error) => {
-      console.log(error);
+      console.log(error.code);
     });
 };
 

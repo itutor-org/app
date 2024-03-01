@@ -5,7 +5,7 @@ import { useLoading } from '../../contexts/loading';
 import { useAuth } from '../../contexts/useAuth';
 import { AppStackParamList } from '../../routes/app.routes';
 import { theme } from '../../styles/theme';
-import { Container, TeacherInfo, TeacherName, TeacherEmail } from './styles';
+import { Container, TeacherInfo, TeacherName, TeacherEmail, TeacherImage, ContainerChildren } from './styles';
 
 interface TopBarProps {
   navigation: NativeStackNavigationProp<AppStackParamList, any>;
@@ -22,14 +22,23 @@ export function TopBar({ navigation, isHome }: TopBarProps) {
         <MaterialIcons
           name="arrow-back"
           size={30}
-          color={theme.colors.dark_yellow}
+          color={theme.colors.light_orange}
           onPress={() => navigation.popToTop()}
         />
       )}
-      <TeacherInfo>
-        <TeacherName>Prof. {user.name}</TeacherName>
-        <TeacherEmail>{user.email}</TeacherEmail>
-      </TeacherInfo>
+        {isHome && (
+        <ContainerChildren>
+        
+          <TeacherImage
+            source={require('../../assets/images/prof.png')}
+          />
+          
+        <TeacherInfo>
+          <TeacherName>Prof. {user.name}</TeacherName>
+          <TeacherEmail>{user.email}</TeacherEmail>
+        </TeacherInfo>
+        </ContainerChildren>
+        )}
       <MaterialIcons
         name="logout"
         size={30}

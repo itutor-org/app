@@ -29,6 +29,7 @@ import { Button } from '../../../components/Button';
 import { CreateDiscussionData } from '../../../entities/Forms/createDiscussion.data';
 import { useLoading } from '../../../contexts/loading';
 import { Alert } from 'react-native';
+import { Header } from '../../../components/Header/Header';
 
 type Props = NativeStackScreenProps<AppStackParamList, 'DiscussionsList'>;
 
@@ -130,13 +131,14 @@ export function DiscussionsList({ navigation, route }: Props) {
     <Container>
       <TopBar navigation={navigation} />
       <GroupContainer>
-        <Title>DISCUSSÕES</Title>
+        <Header
+          title='DISCUSSÃO'
+          iconAction={() =>
+            setShowCreateDiscussionModal(!showCreateDiscussionModal)
+          } />
 
         <SearchBar
           onChangeText={(value) => setSearchText(value)}
-          iconAction={() =>
-            setShowCreateDiscussionModal(!showCreateDiscussionModal)
-          }
         />
 
         <GroupsWrapper>
@@ -169,7 +171,7 @@ export function DiscussionsList({ navigation, route }: Props) {
               )}
             />
           ) : (
-            <Title style={{ color: 'black', fontSize: 20, margin: 0 }}>
+            <Title style={{ color: 'white', fontSize: 20, margin: 0 }}>
               Nenhuma discussão encontrada
             </Title>
           )}

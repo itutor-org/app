@@ -1,3 +1,4 @@
+
 import { Student } from './student.entity';
 
 export interface Interaction {
@@ -10,7 +11,7 @@ export interface Interaction {
 
 export interface Action {
   name: string;
-  tag: string;
+  iconName: string;
   color: string;
   isSelected: boolean;
 }

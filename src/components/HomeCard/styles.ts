@@ -38,7 +38,7 @@ export const CardTitle = styled.Text`
 export const Button = styled.TouchableOpacity`
   width: 120px;
   height: 33px;
-  background-color: ${({ theme }) => theme.colors.dark_yellow};
+  background-color: ${({ theme }) => theme.colors.light_orange};
   border-radius: 6px;
   display: flex;
   flex-direction: row;

@@ -1,13 +1,13 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { Alert, ScrollView } from 'react-native';
+import { Alert, Keyboard, Platform, ScrollView } from 'react-native';
 import { AuthStackParamList } from '../../../routes/auth.routes';
 
-import { Top, ActionText, LogoText, Container } from './styles';
+import { Top, ActionText, Container, LogoImage } from './styles';
 
 import { MaterialIcons, Octicons } from '@expo/vector-icons';
 import { theme } from '../../../styles/theme';
 import { useAuth } from '../../../contexts/useAuth';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { InputForm } from '../../../components/Form/InputForm';
@@ -31,6 +31,36 @@ export function SignUp({ navigation, route }: Props) {
 
   const { registerUser } = useAuth();
   const { loading, setLoading } = useLoading();
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+
+  // Event handler para quando o teclado é exibido
+  const keyboardDidShow = () => {
+    setKeyboardVisible(true);
+  };
+
+  // Event handler para quando o teclado é ocultado
+  const keyboardDidHide = () => {
+    setKeyboardVisible(false);
+  };
+
+  useEffect(() => {
+    // Registrar os listeners para os eventos do teclado
+    const showSubscription = Keyboard.addListener(
+      Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow',
+      keyboardDidShow
+    );
+
+    const hideSubscription = Keyboard.addListener(
+      Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide',
+      keyboardDidHide
+    );
+
+    // Remover os listeners quando o componente é desmontado
+    return () => {
+      showSubscription.remove();
+      hideSubscription.remove();
+    };
+  }, []);
 
   async function handleRegister(form: SignUpData) {
     try {
@@ -84,11 +114,11 @@ export function SignUp({ navigation, route }: Props) {
 
   return (
     <Container>
-      <Top>
+      <Top style={{ marginTop: isKeyboardVisible ? -100 : 0 }}>
         <MaterialIcons
           name="arrow-back"
           size={30}
-          color={theme.colors.dark_yellow}
+          color={theme.colors.light_orange}
           style={{
             position: 'absolute',
             left: 0,
@@ -111,14 +141,16 @@ export function SignUp({ navigation, route }: Props) {
             )
           }
         />
-        <LogoText>iTutor</LogoText>
+         {!isKeyboardVisible && (
+        <LogoImage source={require('../../../assets/images/logo.png')} />
+         )}
         <ActionText>Cadastro</ActionText>
       </Top>
       <ScrollView
         contentContainerStyle={{
           flexGrow: 1,
           justifyContent: 'flex-start',
-          alignItems: 'center'
+          alignItems: 'center',
         }}
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
